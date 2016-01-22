@@ -29,6 +29,13 @@ public class API {
 
         return availSamples;
 	}
+	
+	@Path("/plain")
+	@GET
+	@Produces(MediaType.TEXT_PLAIN)
+	public String sayPlainTextHello() {
+		return "Hello World!";
+	}
  
 
 } 
