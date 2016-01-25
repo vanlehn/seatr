@@ -13,9 +13,10 @@
 - 'Run as' -> Run on server -> Select Tomcat 8
 - The following URL should display a sample json: [http://localhost:8080/seatr/rest/hello](http://localhost:8080/seatr/rest/hello)
 - Tomcat Server console can be accessed using the following URL : [http://ec2-52-35-118-9.us-west-2.compute.amazonaws.com:8080/](http://ec2-52-35-118-9.us-west-2.compute.amazonaws.com:8080/)
+- The Hello World application can be accessed on amazon ec2 using the following URL : [http://ec2-52-35-118-9.us-west-2.compute.amazonaws.com:8080/seatr-0.0.1-SNAPSHOT/rest/hello](http://ec2-52-35-118-9.us-west-2.compute.amazonaws.com:8080/seatr-0.0.1-SNAPSHOT/rest/hello)
 
 ## JMeter
-- JMeter tests can be found at src/com/asu/seatr/test/jmeter.
+- JMeter tests can be found at jmeter directory on the master branch.
 - Either Load the JMeter test plans in JMeter GUI or run it on command line using command:  
   jmeter -n -t  "testcase location"   "output log file location"
   
