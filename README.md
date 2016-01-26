@@ -20,7 +20,8 @@
 - Install maven - `sudo apt-get install maven`
 - Checkout the project from git: `git clone https://github.com/vanlehn/seatr.git`
 - Edit the params.cfg (configuration file) - don't leave anything empty
-- execute the following command from project's home `bash deploy.sh`
+- execute the following command from project's home `sudo bash deploy.sh`
+- Basically, this script copies the newly generated war file onto the tomcat webapps location (sudo to get permissions to copy)
 
 ## JMeter
 - JMeter tests cases for testing on aws ec2 server can be found at jmeter/tests/aws_ec2/.
