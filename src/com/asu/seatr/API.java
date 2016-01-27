@@ -1,11 +1,17 @@
 package com.asu.seatr;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
+
+import com.asu.seatr.hibernate.*;
+
+import com.asu.seatr.utilities.*;
+
 
 //Sets the path to base URL + /hello
 @Path("/hello")
@@ -35,6 +41,14 @@ public class API {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String sayPlainTextHello() {
 		return "Hello World!";
+	}
+	
+	@Path("/db")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List getDB(){
+		List list = DatabaseHandler.readAll();
+		return list;
 	}
  
 
