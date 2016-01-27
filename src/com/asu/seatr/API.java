@@ -23,11 +23,11 @@ public class API {
 		
 		Sample ts = new Sample();
         ts.setId("1");
-        ts.setVal("HelloWorld");
+        ts.setVal("Hello World");
         
         Sample ts2 = new Sample();
         ts2.setId("2");
-        ts2.setVal("HelloASU");
+        ts2.setVal("Hello Arizona");
 
         ArrayList<Sample> availSamples = new ArrayList<Sample>();
         availSamples.add(ts);
