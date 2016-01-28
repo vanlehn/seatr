@@ -8,8 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import com.asu.seatr.hibernate.*;
-
+import com.asu.seatr.common.*;
 import com.asu.seatr.utilities.*;
 
 
@@ -47,7 +46,7 @@ public class API {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List getDB(){
-		List list = DatabaseHandler.readAll();
+		List list = DemoHandler.readAll();
 		return list;
 	}
  

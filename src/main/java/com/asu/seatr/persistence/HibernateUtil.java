@@ -1,4 +1,4 @@
-package com.asu.seatr.hibernate;
+package com.asu.seatr.persistence;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;

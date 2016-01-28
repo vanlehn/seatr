@@ -5,8 +5,9 @@ import java.util.List;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import com.asu.seatr.hibernate.*;
-public class DatabaseHandler {
+import com.asu.seatr.common.*;
+import com.asu.seatr.persistence.HibernateUtil;
+public class DemoHandler {
 
 	public static Demo save(Demo demo) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
