@@ -30,11 +30,11 @@ public class DemoHandler {
 		return demo;
 	}
 	
-	public static List readAll()
+	public static List<Demo> readAll()
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		List records = session.createQuery("from Demo").list();
+		List<Demo> records = session.createQuery("from Demo").list();
 		session.close();
 		return records;
 	}
