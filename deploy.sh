@@ -7,6 +7,6 @@ echo "starting: maven build"
 mvn clean install
 echo "maven build: completed"
 echo "deploying on tomcat"
-cp target/$snapshot_name $deploy_location/$snapshot_name
+cp target/$snapshot_name $deploy_location/seatr.war
 echo ".WAR files copied."
 echo "Deploy complete!"
