@@ -45,4 +45,5 @@
   
 ## MongoDB
 - Location of the configuration file
+  
   /etc/mongo.conf  bindIp is comment out to allow any computers to connect to the server.
