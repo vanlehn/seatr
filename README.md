@@ -42,3 +42,7 @@
   jmeter -n -t  "testcase location"   "output log file location"
   
   eg.  jmeter -n -t ../../Test_Plan1.jmx -l ../../log.jtl
+  
+## MongoDB
+-Location of the configuration file
+  /etc/mongo.conf  bindIp is comment out to allow any computers to connect to the server.
