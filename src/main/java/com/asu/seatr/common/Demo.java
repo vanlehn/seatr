@@ -1,4 +1,5 @@
 package com.asu.seatr.common;
+	
 
 public class Demo {
 	private int id;

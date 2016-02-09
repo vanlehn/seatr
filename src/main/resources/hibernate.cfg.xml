@@ -30,5 +30,6 @@
 		<property name="hbm2ddl.auto">update</property>
 		
 		<mapping resource="com/asu/seatr/common/Demo.hbm.xml"/>
+		<mapping class="com.asu.seatr.common.Try"/>
 	</session-factory>
 </hibernate-configuration>

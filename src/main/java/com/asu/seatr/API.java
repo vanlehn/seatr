@@ -45,16 +45,18 @@ public class API {
 	@Path("/db")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<Demo> getDB(){
-		List<Demo> list = DemoHandler.readAll();
+	public List<Try> getDB(){
+		List<Try> list = TryHandler.readAll();
 		return list;
 	}
 	
-	@Path("/demotest")
+	@Path("/trytest")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Object getDBTest(){
-		Object list = DemoHandler.readAll();
+		Try trry = new Try("Great");		
+		TryHandler.save(trry);
+		Object list = TryHandler.readAll();
 		return list;
 	}
  
