@@ -2,7 +2,6 @@ package com.asu.seatr.models;
 
 public class StudentTask {
 	private int id;
-	private int course_id;
 	private int student_id;
 	private int task_id;	
 	
@@ -11,12 +10,6 @@ public class StudentTask {
 	}
 	public void setId(int id) {
 		this.id = id;
-	}
-	public int getCourse_id() {
-		return course_id;
-	}
-	public void setCourse_id(int course_id) {
-		this.course_id = course_id;
 	}
 	public int getStudent_id() {
 		return student_id;
