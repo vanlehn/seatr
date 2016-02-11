@@ -1,8 +1,21 @@
 package com.asu.seatr.models;
 
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table( name="course")
+
 public class Course {
+	@Column(name="id")
 	private int id;
+	
+	@Column(name="description")
 	private String description;
+	
 	public int getId() {
 		return id;
 	}
