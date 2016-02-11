@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
 
-public class ST_A1 implements StudentTaskAnalyzerI{
+public class ST_A1 extends StudentTask implements StudentTaskAnalyzerI{
 
 	@Override
 	public void createStudentTask(int student_id, int course_id, int task_id, int analyzer_id,

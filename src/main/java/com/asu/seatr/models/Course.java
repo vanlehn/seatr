@@ -2,17 +2,17 @@ package com.asu.seatr.models;
 
 public class Course {
 	private int id;
-	private int analyzer_id;
+	private String description;
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getAnalyzer_id() {
-		return analyzer_id;
+	public String getDescription() {
+		return description;
 	}
-	public void setAnalyzer_id(int analyzer_id) {
-		this.analyzer_id = analyzer_id;
-	}
+	public void setDescription(String description) {
+		this.description = description;
+	}	
 }

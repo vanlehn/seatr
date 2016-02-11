@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 
-public class T_A1 implements TaskAnalyzerI{
+public class T_A1 extends Task implements TaskAnalyzerI{
 
 	@Override
 	public void createTask(int task_ext_id, int course_id, int analyzer_id, HashMap<String, String> properties) {
