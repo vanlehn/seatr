@@ -5,7 +5,7 @@ import java.util.HashMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
 
-public class S_A1 extends Student implements StudentAnalyzerI{
+public class S_A1 implements StudentAnalyzerI{
 
 	@Override
 	public void createStudent(int student_ext_id, int course_id, int analyzer_id, HashMap<String, String> properties) {
