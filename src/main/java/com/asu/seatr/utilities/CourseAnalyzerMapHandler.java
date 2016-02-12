@@ -6,12 +6,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import com.asu.seatr.constants.DatabaseConstants;
-import com.asu.seatr.models.CourseAnalyzer;
+import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.persistence.HibernateUtil;
 
-public class CourseAnalyzerHandler {
+public class CourseAnalyzerMapHandler {
 
-	public static CourseAnalyzer save(CourseAnalyzer courseAnalyzer) {
+	public static CourseAnalyzerMap save(CourseAnalyzerMap courseAnalyzer) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
@@ -23,25 +23,25 @@ public class CourseAnalyzerHandler {
 	    return courseAnalyzer;
 	}
 	
-	public static CourseAnalyzer read(int id)
+	public static CourseAnalyzerMap read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		CourseAnalyzer courseAnalyzer = (CourseAnalyzer)session.get(CourseAnalyzer.class, id);
+		CourseAnalyzerMap courseAnalyzer = (CourseAnalyzerMap)session.get(CourseAnalyzerMap.class, id);
 		session.close();
 		return courseAnalyzer;
 	}
 	
-	public static List<CourseAnalyzer> readAll()
+	public static List<CourseAnalyzerMap> readAll()
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		List<CourseAnalyzer> records = session.createQuery("from " + DatabaseConstants.COURSE_ANALYZER_TABLE_NAME).list();
+		List<CourseAnalyzerMap> records = session.createQuery("from " + DatabaseConstants.COURSE_ANALYZER_TABLE_NAME).list();
 		session.close();
 		return records;
 	}
 	
-	public static CourseAnalyzer update(CourseAnalyzer courseAnalyzer)
+	public static CourseAnalyzerMap update(CourseAnalyzerMap courseAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -51,7 +51,7 @@ public class CourseAnalyzerHandler {
 		session.close();
 		return courseAnalyzer;
 	}
-	public static void delete(CourseAnalyzer courseAnalyzer)
+	public static void delete(CourseAnalyzerMap courseAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();

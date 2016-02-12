@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table( name = "course_analyzer", uniqueConstraints = @UniqueConstraint(columnNames = {"course_id", "analyzer_id"}))
-public class CourseAnalyzer {
+public class CourseAnalyzerMap {
 	
 	@Id
 	@GeneratedValue(generator = "increment")
