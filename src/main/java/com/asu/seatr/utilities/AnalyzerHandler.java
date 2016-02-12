@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.metadata.ClassMetadata;
 
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
@@ -63,10 +64,11 @@ public class AnalyzerHandler<T> {
 		session.getTransaction().commit();
 		session.close();
 	}
-	
-
-
-
-
-
+	public String[] getColumnNames(Class<T> typeParameterClass)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		ClassMetadata classMetadata = sf.getClassMetadata(typeParameterClass);
+		String propertyNames[] = classMetadata.getPropertyNames();
+		return propertyNames;
+	}
 }

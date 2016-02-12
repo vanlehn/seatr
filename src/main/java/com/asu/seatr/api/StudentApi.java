@@ -25,7 +25,10 @@ public class StudentApi {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void createStudent(String createTicket)
 	{
-		
+		//input external student id, courseid ,properties
+		//populate student table
+		//retrieve the analyzer name using courseid, like a1,a2,or a3...
+		//
 	}
 	@Path("/update")
 	@PUT
