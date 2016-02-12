@@ -7,7 +7,7 @@ import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 
 
 
-public class C_A1 extends Course implements CourseAnalyzerI{
+public class C_A1 implements CourseAnalyzerI{
 
 	@Override
 	public void createCourse(int course_id, int analyzer_id, HashMap<String, String> properties) {
