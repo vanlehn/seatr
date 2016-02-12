@@ -7,14 +7,15 @@ import com.asu.seatr.models.Course;
 import com.asu.seatr.persistence.HibernateUtil;
 
 public class CourseHandler {
-	public static void save(Course course) {
+	public static int save(Course course) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
 	    
-	    session.save(course);
+	    int id=(int)session.save(course);
 	    session.getTransaction().commit();
 	    session.close();
+	    return id;
 	}
 	
 	public static Course read(int id)
