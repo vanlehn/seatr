@@ -19,13 +19,14 @@ public class CourseAnalyzer {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
+	
 	@ManyToOne
 	@JoinColumn(name = "course_id", referencedColumnName = "id")
-	private int course_id;
+	private Course course;
 	
 	@ManyToOne
 	@JoinColumn(name = "analyzer_id", referencedColumnName = "id")
-	private int analyzer_id;
+	private Analyzer analyzer;
 	
 	@Column(name = "active")
 	private boolean active;
@@ -36,17 +37,17 @@ public class CourseAnalyzer {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getCourse_id() {
-		return course_id;
+	public Course getCourse() {
+		return course;
 	}
-	public void setCourse_id(int course_id) {
-		this.course_id = course_id;
+	public void setCourse(Course course) {
+		this.course = course;
 	}
-	public int getAnalyzer_id() {
-		return analyzer_id;
+	public Analyzer getAnalyzer() {
+		return analyzer;
 	}
-	public void setAnalyzer_id(int analyzer_id) {
-		this.analyzer_id = analyzer_id;
+	public void setAnalyzer(Analyzer analyzer) {
+		this.analyzer = analyzer;
 	}
 	public boolean isActive() {
 		return active;

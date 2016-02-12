@@ -1,5 +1,6 @@
 package com.asu.seatr.models;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -18,13 +19,12 @@ public class Task {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
 	
-	@ManyToOne
-	@JoinColumn(name = "external_id", referencedColumnName = "id")
+	@Column(name = "external_id")
 	private String external_id;
 	
 	@ManyToOne
 	@JoinColumn(name = "course_id", referencedColumnName = "id")
-	private int course_id;
+	private Course course;
 	
 	public int getId() {
 		return id;
@@ -38,10 +38,10 @@ public class Task {
 	public void setExternal_id(String external_id) {
 		this.external_id = external_id;
 	}
-	public int getCourse_id() {
-		return course_id;
+	public Course getCourse() {
+		return course;
 	}
-	public void setCourse_id(int course_id) {
-		this.course_id = course_id;
+	public void setCourse(Course course) {
+		this.course = course;
 	}	
 }
