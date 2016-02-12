@@ -24,7 +24,7 @@ public class Student {
 	
 	@ManyToOne
 	@JoinColumn(name = "course_id", referencedColumnName = "id")
-	private int course_id;
+	private Course course;
 
 	public int getId() {
 		return id;
@@ -38,10 +38,10 @@ public class Student {
 	public void setExternal_id(int external_id) {
 		this.external_id = external_id;
 	}
-	public int getCourse_id() {
-		return course_id;
+	public Course getCourse() {
+		return course;
 	}
-	public void setCourse_id(int course_id) {
-		this.course_id = course_id;
+	public void setCourse(Course course) {
+		this.course = course;
 	}		
 }

@@ -21,11 +21,11 @@ public class StudentTask {
 	
 	@ManyToOne
 	@JoinColumn(name = "student_id", referencedColumnName = "id")//internal student id
-	private int student_id;
+	private Student student;
 	
 	@ManyToOne
 	@JoinColumn(name = "task_id", referencedColumnName = "id")
-	private int task_id;	
+	private Task task;	
 	
 	public int getId() {
 		return id;
@@ -33,16 +33,16 @@ public class StudentTask {
 	public void setId(int id) {
 		this.id = id;
 	}
-	public int getStudent_id() {
-		return student_id;
+	public Student getStudent() {
+		return student;
 	}
-	public void setStudent_id(int student_id) {
-		this.student_id = student_id;
+	public void setStudent(Student student) {
+		this.student = student;
 	}
-	public int getTask_id() {
-		return task_id;
+	public Task getTask() {
+		return task;
 	}
-	public void setTask_id(int task_id) {
-		this.task_id = task_id;
+	public void setTask(Task task) {
+		this.task = task;
 	}
 }

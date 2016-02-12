@@ -7,7 +7,19 @@ import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 
 
 
-public class C_A1 extends Course implements CourseAnalyzerI{
+public class C_A1 implements CourseAnalyzerI{
+	
+	@Override
+	public int getId() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void setId(int id) {
+		// TODO Auto-generated method stub
+		
+	}
 
 	@Override
 	public void createCourse(int course_id, int analyzer_id, HashMap<String, String> properties) {
@@ -31,4 +43,6 @@ public class C_A1 extends Course implements CourseAnalyzerI{
 	public Course getCourse(int course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		return null;
-	}}
+	}
+
+}

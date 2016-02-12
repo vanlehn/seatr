@@ -5,6 +5,8 @@ import java.util.HashMap;
 import com.asu.seatr.models.StudentTask;
 
 public interface StudentTaskAnalyzerI {
+	public int getId();
+	public void setId(int id);
 	public void createStudentTask(int student_id, int course_id, int task_id, int analyzer_id, HashMap<String,String> properties);
 	public void deleteStudentTask(int student_id, int course_id, int task_id);
 	public void updateStudentTask(int student_ext_id,int course_id, int task_id, int analyzer_id, HashMap<String,String> properties);
