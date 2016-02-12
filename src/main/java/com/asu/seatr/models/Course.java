@@ -1,5 +1,7 @@
 package com.asu.seatr.models;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -12,7 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 @Table( name="course")
 
 public class Course {
-	
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
@@ -35,5 +37,13 @@ public class Course {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+	public int getExternal_id() {
+		return external_id;
+	}
+	public void setExternal_id(int external_id) {
+		this.external_id = external_id;
 	}	
+	
+	
 }

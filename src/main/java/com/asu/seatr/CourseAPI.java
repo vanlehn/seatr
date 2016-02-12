@@ -21,18 +21,35 @@ public class CourseAPI {
 	@Context UriInfo uriInfo;
 	String container;
 	
+	@Path("/test")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Course test(){
+		Course course = new Course();
+		course.setDescription("test course");
+		CourseHandler.save(course);
+		return course;
+	}
+	
 	@Path("/find")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Course getCourse(@QueryParam("id") int id){
-		Course course = CourseHandler.read(id);
+	public Course getCourse(@QueryParam("id") String idStr,@QueryParam("external_id") String external_idStr){
+		Course course=null;
+		if(idStr!=null)
+			course= CourseHandler.readById(Integer.valueOf(idStr));
+		else if(external_idStr!=null)
+			course=CourseHandler.getByExternalId(Integer.valueOf(external_idStr));
 		return course;
 	}
 	
 	@Path("/delete")
 	@GET
-	public void delCourse(@QueryParam("id") int id){
-		CourseHandler.delete(CourseHandler.read(id));
+	public void delCourse(@QueryParam("id") String idStr,@QueryParam("external_id") String external_idStr){
+		if(idStr!=null)
+			CourseHandler.delete(CourseHandler.readById(Integer.valueOf(idStr)));
+		else if(external_idStr!=null)
+			CourseHandler.delete(CourseHandler.getByExternalId(Integer.valueOf(external_idStr)));
 		//Course course = CourseHandler.delete(course);
 	}
 	
@@ -41,6 +58,13 @@ public class CourseAPI {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void addCourse(Course c){
 		CourseHandler.save(c);
+	}
+	
+	@Path("/update")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public int updateCourse(@QueryParam("external_id") int external_id,Course c ){
+		return CourseHandler.updateCourseByExternalID(external_id, c);
 	}
 	
 	

@@ -31,5 +31,6 @@
 		
 		<mapping resource="com/asu/seatr/common/Demo.hbm.xml"/>
 		<mapping class="com.asu.seatr.common.Try"/>
+		<mapping class="com.asu.seatr.models.Course"/>
 	</session-factory>
 </hibernate-configuration>

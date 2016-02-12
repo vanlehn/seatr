@@ -19,21 +19,23 @@ public class CourseAPITest extends JerseyTest{
 	protected Application configure(){
 		return new ResourceConfig(CourseAPI.class);
 	}
-	
-	
-	@Test
-	public void testGet(){
-		System.out.println(target("course/get").queryParam("id", 1).request().get());
+	/*
+	@Test void test(){
+		int id=testAdd();
+		testGet(id);
 	}
 	
-	@Test
-	public void testAdd(){
+	private void testGet(int id){
+		System.out.println(target("course/get").queryParam("id", id).request().get());
+	}
+	
+	private int testAdd(){
 		Course c=new Course();
 		c.setDescription("new course");
 		Entity<Course> courseEntity=Entity.entity(c,MediaType.APPLICATION_JSON);
-		target("course/add").request().put(courseEntity);
-		Response response=target("course/find").queryParam("id", 1).request().get();
+		Response response=target("course/add").request().put(courseEntity);
+		response.getEntity().
 		assertEquals("new course", response.readEntity(Course.class).getDescription());
-	}
+	}*/
 	
 }
