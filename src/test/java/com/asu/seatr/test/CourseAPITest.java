@@ -22,12 +22,12 @@ public class CourseAPITest extends JerseyTest{
 	
 	
 	@Test
-	private void testGet(){
+	public void testGet(){
 		System.out.println(target("course/get").queryParam("id", 1).request().get());
 	}
 	
 	@Test
-	private void testAdd(){
+	public void testAdd(){
 		Course c=new Course();
 		c.setDescription("new course");
 		Entity<Course> courseEntity=Entity.entity(c,MediaType.APPLICATION_JSON);
