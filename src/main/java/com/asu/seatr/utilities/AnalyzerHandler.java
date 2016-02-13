@@ -1,9 +1,13 @@
 package com.asu.seatr.utilities;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.hibernate.metadata.ClassMetadata;
 
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
@@ -11,8 +15,14 @@ import com.asu.seatr.persistence.HibernateUtil;
 
 public class AnalyzerHandler<T> {
 
-
-
+	private static AnalyzerHandler analyzerHandler;
+	
+	public static AnalyzerHandler getInstance(){
+		if(analyzerHandler == null){
+			analyzerHandler = new AnalyzerHandler();
+		}
+		return analyzerHandler;
+	}
 	public int save(T analyzer) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
@@ -30,9 +40,19 @@ public class AnalyzerHandler<T> {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		@SuppressWarnings("unchecked")
-		T analyzer = (T)session.get(CourseAnalyzerI.class, id);
+		T analyzer = (T)session.get(typeParameterClass, id);
 		session.close();
 		return analyzer;
+	}
+
+	public List<T> readByCriteria(Class <T> typeParameterClass, HashMap<String, Object> eqRestrictions) {
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(typeParameterClass);
+		cr.add(Restrictions.allEq(eqRestrictions));
+		List<T> result = cr.list();
+		session.close();
+		return result;		
 	}
 	
 	public List<T> readAll(String tableName)

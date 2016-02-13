@@ -32,5 +32,14 @@
 		<mapping resource="com/asu/seatr/common/Demo.hbm.xml"/>
 		<mapping class="com.asu.seatr.common.Try"/>
 		<mapping class="com.asu.seatr.models.Course"/>
+		<mapping class="com.asu.seatr.models.Analyzer"/>
+		<mapping class="com.asu.seatr.models.CourseAnalyzerMap"/>
+		<mapping class="com.asu.seatr.models.Student"/>
+		<mapping class="com.asu.seatr.models.StudentTask"/>
+		<mapping class="com.asu.seatr.models.Task"/>
+		
+		<mapping class="com.asu.seatr.models.analyzers.student.S_A1"/>
+		
+		
 	</session-factory>
 </hibernate-configuration>

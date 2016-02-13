@@ -5,6 +5,7 @@ import java.util.HashMap;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
@@ -15,12 +16,14 @@ import org.hibernate.annotations.GenericGenerator;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
+import com.asu.seatr.utilities.CourseHandler;
+import com.asu.seatr.utilities.StudentHandler;
 
 @Entity
 @Table(name = "s_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "course_id"}))
 // Sample analyzer with properties placement_score and year
 public class S_A1 implements StudentAnalyzerI{
-	@Column(name = "id")
+	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
@@ -58,35 +61,42 @@ public class S_A1 implements StudentAnalyzerI{
 	@Override
 	public int getId() {
 		// TODO Auto-generated method stub
-		return 0;
+		return this.id;
 	}
 
 	@Override
 	public void setId(int id) {
 		// TODO Auto-generated method stub
-		
+		this.id = id;
 	}
 
 	@Override
-	public void createStudent(int student_ext_id, int course_id, int analyzer_id, HashMap<String, String> properties) {
+	public void createStudent(String student_ext_id, int external_course_id, int analyzer_id) {
+		
+		Course course = CourseHandler.getByExternalId(external_course_id);		
+		Student student = new Student();
+		student.setExternal_id(student_ext_id);
+		student.setCourse(course);
+		student = StudentHandler.save(student);
+		
+		this.student = student;
+		this.course = course;
+	}
+
+	@Override
+	public void deleteStudent(String student_ext_id, int external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void deleteStudent(int student_ext_id, int course_id, int analyzer_id) {
+	public void updateStudent(String student_ext_id, int external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateStudent(int student_ext_id, int course_id, int analyzer_id, HashMap<String, String> properties) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public Student getStudent(int student_ext_id, int course_id, int analyzer_id) {
+	public Student getStudent(String student_ext_id, int external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
