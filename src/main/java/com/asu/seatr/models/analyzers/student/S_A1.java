@@ -96,9 +96,12 @@ public class S_A1 implements StudentAnalyzerI{
 	}
 
 	@Override
-	public Student getStudent(String student_ext_id, int external_course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Student getStudent(String external_student_id, int external_course_id, int analyzer_id) {
+		
+		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);		
+		this.student = student;
+		this.course = student.getCourse();
+		return student;
 	}
 
 }

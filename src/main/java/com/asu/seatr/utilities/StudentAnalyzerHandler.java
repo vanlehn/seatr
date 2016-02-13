@@ -81,7 +81,8 @@ public class StudentAnalyzerHandler {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
-		session.merge(studentAnalyzer);
+		session.update(studentAnalyzer);
+		//session.merge(studentAnalyzer);
 		session.getTransaction().commit();
 		session.close();
 		return studentAnalyzer;
