@@ -6,18 +6,19 @@ public class TAReader1 implements TaskReaderI{
 	private Integer external_course_id;
 	private Integer s_difficulty_level;
 	
+	@Override
 	public String getExternal_task_id() {
 		return external_task_id;
 	}
-	
+	@Override
 	public void setExternal_task_id(String external_task_id) {
 		this.external_task_id = external_task_id;
 	}
-	
+	@Override
 	public Integer getExternal_course_id() {
 		return external_course_id;
 	}
-	
+	@Override
 	public void setExternal_course_id(Integer external_course_id) {
 		this.external_course_id = external_course_id;
 	}
