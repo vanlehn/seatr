@@ -39,6 +39,9 @@
 		<mapping class="com.asu.seatr.models.Task"/>
 		
 		<mapping class="com.asu.seatr.models.analyzers.student.S_A1"/>
+		<mapping class="com.asu.seatr.models.analyzers.task.T_A1"/>
+		<mapping class="com.asu.seatr.models.analyzers.course.C_A1"/>
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A1"/>
 		
 		
 	</session-factory>
