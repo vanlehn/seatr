@@ -36,8 +36,7 @@ public class StudentAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public SAReader1 getStudent(
 			@QueryParam("external_student_id") String external_student_id, 
-			@QueryParam("external_course_id") Integer external_course_id ) {
-		
+			@QueryParam("external_course_id") Integer external_course_id ) {		
 		
 		//handle cases
 		S_A1 sa1 = (S_A1)StudentAnalyzerHandler.readByExtId(S_A1.class, external_student_id, external_course_id).get(0);
@@ -53,31 +52,40 @@ public class StudentAPI {
 	}
 	
 	@Path("/create/1")
-	@POST
+	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void createStudent(SAReader1 sa)
 	{
 		//input external student id, courseid ,properties
 		//populate student table
 		//retrieve the analyzer name using courseid, like a1,a2,or a3...
-		
-	
+			
 		S_A1 s_a1 = new S_A1();
 		
 		s_a1.createStudent(sa.getExternal_student_id(), sa.getExternal_course_id(), 1);
 		s_a1.setS_placement_score(sa.getS_placement_score());
 		s_a1.setS_year(sa.getS_year());
 		
-		AnalyzerHandler.getInstance().save(s_a1);
+		StudentAnalyzerHandler.save(s_a1);
+		//AnalyzerHandler.getInstance().save(s_a1);
 		
 	}
 	
 	
 	@Path("/update/1")
-	@PUT
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateStudent(SAReader1 sa){
-		//AnalyzerHandler.getInstance().
+		
+		S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
+				(S_A1.class, sa.getExternal_student_id(), sa.getExternal_course_id()).get(0);
+		
+		//S_A1 s_a1 = new S_A1();
+		//s_a1.getStudent(sa.getExternal_student_id(), sa.getExternal_course_id(), 1);
+		s_a1.setS_placement_score(sa.getS_placement_score());
+		s_a1.setS_year(sa.getS_year());
+		StudentAnalyzerHandler.update(s_a1);
+		
 	}
 	@Path("/delete")
 	@DELETE
