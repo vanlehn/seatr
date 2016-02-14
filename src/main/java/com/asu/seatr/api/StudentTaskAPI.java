@@ -9,6 +9,8 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import com.asu.seatr.models.analyzers.studenttask.ST_A1;
 import com.asu.seatr.rest.models.STAReader1;
@@ -44,36 +46,39 @@ public class StudentTaskAPI {
 	@Path("/create/1")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void createStudentTask(STAReader1 sta){
+	public Response createStudentTask(STAReader1 sta){
 		
 		ST_A1 sta1 = new ST_A1();
 		sta1.createStudentTask(sta.getExternal_student_id(),sta.getExternal_course_id(),sta.getExternal_task_id(), 1);
 		sta1.setD_status(sta.getD_status());
 		sta1.setD_time_lastattempt(sta.getD_time_lastattempt());
 		StudentTaskAnalyzerHandler.save(sta1);
+		return Response.status(Status.CREATED).build();
 		
 	}
 	
 	@Path("/update/1")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void updateStudentTask(STAReader1 sta){
+	public Response updateStudentTask(STAReader1 sta){
 		
 		ST_A1 sta1 = (ST_A1) StudentTaskAnalyzerHandler.readByExtId(ST_A1.class, sta.getExternal_student_id(), 
 				sta.getExternal_course_id(), sta.getExternal_task_id()).get(0);
 		sta1.setD_status(sta.getD_status());
 		sta1.setD_time_lastattempt(sta.getD_time_lastattempt());
 		StudentTaskAnalyzerHandler.update(sta1);
+		return Response.status(Status.ACCEPTED).build();
 		
 	}
 			
 	@Path("/delete/1")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void deleteStudentTask(STAReader1 sta){
+	public Response deleteStudentTask(STAReader1 sta){
 		ST_A1 sta1 = (ST_A1) StudentTaskAnalyzerHandler.readByExtId(ST_A1.class, sta.getExternal_student_id(), 
 				sta.getExternal_course_id(), sta.getExternal_task_id()).get(0);
 		StudentTaskAnalyzerHandler.delete(sta1);
+		return Response.status(Status.ACCEPTED).build();
 		
 	}
 	
