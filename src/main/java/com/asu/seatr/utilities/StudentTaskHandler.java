@@ -2,10 +2,13 @@ package com.asu.seatr.utilities;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
+import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.persistence.HibernateUtil;
 
@@ -39,6 +42,15 @@ public class StudentTaskHandler {
 		List<StudentTask> records = session.createQuery("from " + DatabaseConstants.STUDENT_TASK_TABLE_NAME).list();
 		session.close();
 		return records;
+	}
+	public static List<StudentTask> readByStudent(Student student)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(StudentTask.class);
+		cr.add(Restrictions.eq("student", student));
+		List<StudentTask> studentTaskList= cr.list();
+		return studentTaskList;
 	}
 	
 	public static StudentTask update(StudentTask studentTask)

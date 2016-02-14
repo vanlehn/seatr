@@ -35,7 +35,18 @@ public class TaskHandler {
 		session.close();
 		return student;
 	}
-	
+	public static List<Task> readByExtCourseId(Integer external_course_id)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr= session.createCriteria(Course.class);
+		cr.add(Restrictions.eq("external_id", external_course_id));
+		Course course = (Course)cr.list().get(0);
+		cr = session.createCriteria(Task.class);
+		cr.add(Restrictions.eq("course", course));
+		List<Task> taskList = cr.list();
+		return taskList;
+	}
 	public static Task readByExtId(String external_task_id, Integer external_course_id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
