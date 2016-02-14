@@ -34,7 +34,7 @@ public class TaskApi {
 	}
 	
 	@Path("/create/1")
-	@POST
+	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void createTask(TAReader1 taReader1)
 	{
@@ -44,7 +44,7 @@ public class TaskApi {
 		TaskAnalyzerHandler.save(t_a1);
 	}
 	@Path("/update/1")
-	@PUT
+	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	public void updateTask(TAReader1 taReader1)
 	{

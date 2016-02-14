@@ -50,6 +50,19 @@ public class StudentHandler {
 		return student;
 	}
 	
+	public static Student readByExtStudentId_and_ExtCourseId(String external_student_id, Integer external_course_id)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(Course.class);
+		cr.add(Restrictions.eq("external_id", external_course_id));
+		Course course = (Course)cr.list().get(0);
+		cr = session.createCriteria(Student.class);
+		cr.add(Restrictions.eq("external_id", external_student_id));
+		cr.add(Restrictions.eq("course", course));
+		Student student = (Student)cr.list().get(0);
+		return student;
+	}
 	public static List<Student> readAll()
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
