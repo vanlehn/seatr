@@ -1,9 +1,5 @@
 package com.asu.seatr.api;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,20 +9,10 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.MultivaluedMap;
 
-import org.json.JSONObject;
-
-import com.asu.seatr.models.Course;
-import com.asu.seatr.models.Student;
 import com.asu.seatr.models.analyzers.student.S_A1;
-import com.asu.seatr.models.interfaces.StudentAnalyzerI;
 import com.asu.seatr.rest.models.SAReader1;
-import com.asu.seatr.utilities.AnalyzerHandler;
-import com.asu.seatr.utilities.CourseHandler;
 import com.asu.seatr.utilities.StudentAnalyzerHandler;
-import com.asu.seatr.utilities.StudentHandler;
-import com.asu.seatr.utils.AnalyzersMap;
 
 @Path("/students")
 public class StudentAPI {
@@ -36,7 +22,7 @@ public class StudentAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public SAReader1 getStudent(
 			@QueryParam("external_student_id") String external_student_id, 
-			@QueryParam("external_course_id") Integer external_course_id ) {		
+			@QueryParam("external_course_id") Integer external_course_id) {		
 		
 		//handle cases
 		S_A1 sa1 = (S_A1)StudentAnalyzerHandler.readByExtId(S_A1.class, external_student_id, external_course_id).get(0);
@@ -80,22 +66,28 @@ public class StudentAPI {
 		S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
 				(S_A1.class, sa.getExternal_student_id(), sa.getExternal_course_id()).get(0);
 		
-		//S_A1 s_a1 = new S_A1();
-		//s_a1.getStudent(sa.getExternal_student_id(), sa.getExternal_course_id(), 1);
 		s_a1.setS_placement_score(sa.getS_placement_score());
 		s_a1.setS_year(sa.getS_year());
 		StudentAnalyzerHandler.update(s_a1);
 		
 	}
+	
 	@Path("/delete")
 	@DELETE
-	public void deleteStudent()
-	{
-		
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void deleteStudent(){
+		// implement this
 	}
 	
 	
-	
+	@Path("/delete/1")
+	@DELETE
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void deleteStudent(SAReader1 sa){		
+		S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
+				(S_A1.class, sa.getExternal_student_id(), sa.getExternal_course_id()).get(0);
+		StudentAnalyzerHandler.delete(s_a1);
+	}
 
 
 }

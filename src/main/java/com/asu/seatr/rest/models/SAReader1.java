@@ -1,6 +1,6 @@
 package com.asu.seatr.rest.models;
 
-public class SAReader1 implements StudentReaderI {
+public class SAReader1 implements SAReaderI {
 	
 	private String external_student_id;
 	private Integer external_course_id;

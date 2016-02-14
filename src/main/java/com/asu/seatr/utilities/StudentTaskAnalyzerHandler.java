@@ -10,13 +10,16 @@ import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
+import com.asu.seatr.models.StudentTask;
+import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
+import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 
-public class StudentAnalyzerHandler {
+public class StudentTaskAnalyzerHandler {
 
 	
-	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, Integer external_course_id) {
+	public static List<StudentTaskAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, Integer external_course_id, String external_task_id) {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Course.class);
@@ -26,73 +29,81 @@ public class StudentAnalyzerHandler {
 		cr.add(Restrictions.eq("external_id", external_student_id));
 		cr.add(Restrictions.eq("course", course));
 		Student student = (Student) cr.list().get(0);
-		cr = session.createCriteria(typeParameterClass);
-		cr.add(Restrictions.eq("student", student));
+		cr = session.createCriteria(Task.class);
+		cr.add(Restrictions.eq("external_id", external_task_id));
 		cr.add(Restrictions.eq("course", course));
-		List<StudentAnalyzerI> result = cr.list(); 
+		Task task = (Task) cr.list().get(0);
+		cr = session.createCriteria(StudentTask.class);
+		cr.add(Restrictions.eq("student", student));
+		cr.add(Restrictions.eq("task", task));
+		StudentTask student_task = (StudentTask) cr.list().get(0);		
+		cr = session.createCriteria(typeParameterClass);
+		cr.add(Restrictions.eq("studentTask", student_task));		
+		
+		List<StudentTaskAnalyzerI> result = cr.list(); 
 		session.close();
 		return result;		
 	}
 	
 
-	public static List<StudentAnalyzerI> readByCriteria(Class typeParameterClass, HashMap<String, Object> eqRestrictions) {
+	public static List<StudentTaskAnalyzerI> readByCriteria(Class typeParameterClass, HashMap<String, Object> eqRestrictions) {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.allEq(eqRestrictions));
-		List<StudentAnalyzerI> result = cr.list();
+		List<StudentTaskAnalyzerI> result = cr.list();
 		session.close();
 		return result;		
 	}
 	
 
-	public static StudentAnalyzerI save(StudentAnalyzerI studentAnalyzer) {
+	public static StudentTaskAnalyzerI save(StudentTaskAnalyzerI studentTaskAnalyzer) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
 	    
-	    int id = (int)session.save(studentAnalyzer);
-	    studentAnalyzer.setId(id);
+	    int id = (int)session.save(studentTaskAnalyzer);
+	    studentTaskAnalyzer.setId(id);
 	    session.getTransaction().commit();
 	    session.close();
-	    return studentAnalyzer;
+	    return studentTaskAnalyzer;
 	}
 	
-	public static StudentAnalyzerI read(int id)
+	public static StudentTaskAnalyzerI read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		StudentAnalyzerI studentAnalyzer = (StudentAnalyzerI)session.get(StudentAnalyzerI.class, id);
+		StudentTaskAnalyzerI studentTaskAnalyzer = (StudentTaskAnalyzerI)session.get(StudentTaskAnalyzerI.class, id);
 		session.close();
-		return studentAnalyzer;
+		return studentTaskAnalyzer;
 	}
 	
-	public static List<StudentAnalyzerI> readAll(String tableName)
+	public static List<StudentTaskAnalyzerI> readAll(String tableName)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		List<StudentAnalyzerI> records = session.createQuery("from " + tableName).list();
+		List<StudentTaskAnalyzerI> records = session.createQuery("from " + tableName).list();
 		session.close();
 		return records;
 	}
 	
-	public static StudentAnalyzerI update(StudentAnalyzerI studentAnalyzer)
+	public static StudentTaskAnalyzerI update(StudentTaskAnalyzerI studentTaskAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
-		//session.update(studentAnalyzer);
-		session.merge(studentAnalyzer);
+		session.update(studentTaskAnalyzer);
+		//session.merge(studentTaskAnalyzer);
 		session.getTransaction().commit();
 		session.close();
-		return studentAnalyzer;
+		return studentTaskAnalyzer;
 	}
-	public static void delete(StudentAnalyzerI studentAnalyzer)
+	public static void delete(StudentTaskAnalyzerI studentTaskAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
-		session.delete(studentAnalyzer);
+		session.delete(studentTaskAnalyzer);
 		session.getTransaction().commit();
 		session.close();
 	}
