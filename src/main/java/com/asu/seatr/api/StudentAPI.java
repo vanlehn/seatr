@@ -18,9 +18,11 @@ import javax.ws.rs.core.Response.Status;
 import org.hibernate.exception.ConstraintViolationException;
 import org.json.JSONObject;
 
+import com.asu.seatr.models.Student;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.rest.models.SAReader1;
 import com.asu.seatr.utilities.StudentAnalyzerHandler;
+import com.asu.seatr.utilities.StudentHandler;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -124,8 +126,31 @@ public class StudentAPI {
 	@Path("/")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void deleteStudent(){
-		// implement this
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteStudent(SAReader1 sa){
+		try {
+			// implement this
+			S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
+					(S_A1.class, sa.getExternal_student_id(), sa.getExternal_course_id()).get(0);
+			//delete all other analyzers here			
+			StudentAnalyzerHandler.delete(s_a1);
+			Student student = (Student)StudentHandler.getByExternalId(sa.getExternal_student_id(), sa.getExternal_course_id());
+			StudentHandler.delete(student);
+			return Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
+		} catch(IndexOutOfBoundsException iob) {
+			Response rb = Response.status(Status.NOT_FOUND)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND))
+					.build();
+			throw new WebApplicationException(rb);
+		}
+		catch(Exception e){
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
+		
+		
 	}
 	
 	//delete
@@ -133,13 +158,13 @@ public class StudentAPI {
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteStudent(SAReader1 sa){	
+	public Response deleteStudent1Analyzer(SAReader1 sa){	
 		try {
 			S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
 					(S_A1.class, sa.getExternal_student_id(), sa.getExternal_course_id()).get(0);
 			StudentAnalyzerHandler.delete(s_a1);
 			return Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_ANALYZER_DELETED)).build();
 		} catch(IndexOutOfBoundsException iob) {
 			Response rb = Response.status(Status.NOT_FOUND)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND))
