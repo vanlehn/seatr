@@ -57,14 +57,23 @@ public class StudentTaskAPI {
 	@Path("/update/1")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void updateStudentTask(STAReader1 sa){
+	public void updateStudentTask(STAReader1 sta){
+		
+		ST_A1 sta1 = (ST_A1) StudentTaskAnalyzerHandler.readByExtId(ST_A1.class, sta.getExternal_student_id(), 
+				sta.getExternal_course_id(), sta.getExternal_task_id()).get(0);
+		sta1.setD_status(sta.getD_status());
+		sta1.setD_time_lastattempt(sta.getD_time_lastattempt());
+		StudentTaskAnalyzerHandler.update(sta1);
 		
 	}
 			
 	@Path("/delete/1")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
-	public void deleteStudentTask(STAReader1 sa){
+	public void deleteStudentTask(STAReader1 sta){
+		ST_A1 sta1 = (ST_A1) StudentTaskAnalyzerHandler.readByExtId(ST_A1.class, sta.getExternal_student_id(), 
+				sta.getExternal_course_id(), sta.getExternal_task_id()).get(0);
+		StudentTaskAnalyzerHandler.delete(sta1);
 		
 	}
 	
