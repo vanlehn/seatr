@@ -10,6 +10,7 @@ import org.hibernate.criterion.Restrictions;
 import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
+import com.asu.seatr.models.Task;
 import com.asu.seatr.persistence.HibernateUtil;
 
 public class StudentTaskHandler {
@@ -52,7 +53,18 @@ public class StudentTaskHandler {
 		List<StudentTask> studentTaskList= cr.list();
 		return studentTaskList;
 	}
-	
+	public static List<StudentTask> readByExtId(String external_student_id, Integer external_course_id, String external_task_id)
+	{
+		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
+		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(StudentTask.class);
+		cr.add(Restrictions.eq("student", student));
+		cr.add(Restrictions.eq("task", task));
+		List<StudentTask> studentTaskList = cr.list();
+		return studentTaskList;
+	}
 	public static StudentTask update(StudentTask studentTask)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -63,6 +75,7 @@ public class StudentTaskHandler {
 		session.close();
 		return studentTask;
 	}
+	
 	public static void delete(StudentTask studentTask)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
