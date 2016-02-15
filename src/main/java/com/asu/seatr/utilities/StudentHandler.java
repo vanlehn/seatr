@@ -15,7 +15,7 @@ import com.asu.seatr.persistence.HibernateUtil;
 public class StudentHandler {
 
 
-	public static Student getByExternalId(String external_student_id, int external_course_id){
+	public static Student getByExternalId(String external_student_id, String external_course_id){
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();

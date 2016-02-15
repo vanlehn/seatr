@@ -19,7 +19,7 @@ import com.asu.seatr.persistence.HibernateUtil;
 public class StudentTaskAnalyzerHandler {
 
 	
-	public static List<StudentTaskAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, Integer external_course_id, String external_task_id) {
+	public static List<StudentTaskAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id, String external_task_id) {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Course.class);

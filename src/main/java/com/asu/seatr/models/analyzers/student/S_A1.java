@@ -71,7 +71,7 @@ public class S_A1 implements StudentAnalyzerI{
 	}
 
 	@Override
-	public void createStudent(String student_ext_id, int external_course_id, int analyzer_id) {
+	public void createStudent(String student_ext_id, String external_course_id, int analyzer_id) {
 		
 		Course course = CourseHandler.getByExternalId(external_course_id);		
 		Student student = new Student();
@@ -84,19 +84,19 @@ public class S_A1 implements StudentAnalyzerI{
 	}
 
 	@Override
-	public void deleteStudent(String student_ext_id, int external_course_id, int analyzer_id) {
+	public void deleteStudent(String student_ext_id, String external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateStudent(String student_ext_id, int external_course_id, int analyzer_id) {
+	public void updateStudent(String student_ext_id, String external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Student getStudent(String external_student_id, int external_course_id, int analyzer_id) {
+	public Student getStudent(String external_student_id, String external_course_id, int analyzer_id) {
 		
 		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);		
 		this.student = student;

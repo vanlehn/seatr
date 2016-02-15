@@ -1,4 +1,4 @@
-package com.asu.seatr;
+package com.asu.seatr.api;
 
 
 
@@ -34,12 +34,10 @@ public class CourseAPI {
 	@Path("/find")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Course getCourse(@QueryParam("id") String idStr,@QueryParam("external_id") String external_idStr){
+	public Course getCourse(@QueryParam("external_id") String external_idStr){
 		Course course=null;
-		if(idStr!=null)
-			course= CourseHandler.readById(Integer.valueOf(idStr));
-		else if(external_idStr!=null)
-			course=CourseHandler.getByExternalId(Integer.valueOf(external_idStr));
+		if(external_idStr!=null)
+			course=CourseHandler.getByExternalId(external_idStr);
 		return course;
 	}
 	
@@ -49,7 +47,7 @@ public class CourseAPI {
 		if(idStr!=null)
 			CourseHandler.delete(CourseHandler.readById(Integer.valueOf(idStr)));
 		else if(external_idStr!=null)
-			CourseHandler.delete(CourseHandler.getByExternalId(Integer.valueOf(external_idStr)));
+			CourseHandler.delete(CourseHandler.getByExternalId(external_idStr));
 		//Course course = CourseHandler.delete(course);
 	}
 	
@@ -63,7 +61,7 @@ public class CourseAPI {
 	@Path("/update")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public int updateCourse(@QueryParam("external_id") int external_id,Course c ){
+	public int updateCourse(@QueryParam("external_id") String external_id,Course c ){
 		return CourseHandler.updateCourseByExternalID(external_id, c);
 	}
 	

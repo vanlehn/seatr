@@ -36,7 +36,7 @@ public class TaskApi {
 	@Produces(MediaType.APPLICATION_JSON)
 	public TAReader1 getTask(
 	@QueryParam("external_task_id") String external_task_id,
-	@QueryParam("external_course_id") Integer external_course_id
+	@QueryParam("external_course_id") String external_course_id
 			)
 	{
 		try{
@@ -116,7 +116,7 @@ public class TaskApi {
 	@Path("/1")
 	@DELETE
 	public Response deleteTask1Analyzer(
-			@QueryParam("external_course_id") Integer external_course_id,
+			@QueryParam("external_course_id") String external_course_id,
 			@QueryParam("external_task_id") String external_task_id
 			)
 	{
@@ -145,7 +145,7 @@ public class TaskApi {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteTask(
-			@QueryParam("external_course_id") Integer external_course_id,
+			@QueryParam("external_course_id") String external_course_id,
 			@QueryParam("external_task_id") String external_task_id
 			)
 	{

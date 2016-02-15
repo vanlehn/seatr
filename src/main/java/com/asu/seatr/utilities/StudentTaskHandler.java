@@ -53,7 +53,7 @@ public class StudentTaskHandler {
 		List<StudentTask> studentTaskList= cr.list();
 		return studentTaskList;
 	}
-	public static List<StudentTask> readByExtId(String external_student_id, Integer external_course_id, String external_task_id)
+	public static List<StudentTask> readByExtId(String external_student_id, String external_course_id, String external_task_id)
 	{
 		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);

@@ -36,7 +36,7 @@ public class TaskAnalyzerHandler {
 		session.close();
 		return taskAnalyzer;
 	}
-	public static List<TaskAnalyzerI> readByExtId(Class typeParameterClass, String external_task_id, Integer external_course_id)
+	public static List<TaskAnalyzerI> readByExtId(Class typeParameterClass, String external_task_id, String external_course_id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();

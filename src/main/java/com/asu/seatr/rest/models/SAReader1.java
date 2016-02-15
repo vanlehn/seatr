@@ -3,7 +3,7 @@ package com.asu.seatr.rest.models;
 public class SAReader1 implements SAReaderI {
 	
 	private String external_student_id;
-	private Integer external_course_id;
+	private String external_course_id;
 	private Double s_placement_score;
 	private String s_year;
 	
@@ -13,10 +13,10 @@ public class SAReader1 implements SAReaderI {
 	public void setExternal_student_id(String external_student_id) {
 		this.external_student_id = external_student_id;
 	}
-	public Integer getExternal_course_id() {
+	public String getExternal_course_id() {
 		return external_course_id;
 	}
-	public void setExternal_course_id(Integer external_course_id) {
+	public void setExternal_course_id(String external_course_id) {
 		this.external_course_id = external_course_id;
 	}
 	public Double getS_placement_score() {

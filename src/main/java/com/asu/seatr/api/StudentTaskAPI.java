@@ -39,7 +39,7 @@ public class StudentTaskAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public STAReader1 getStudentTask(
 		@QueryParam("external_student_id") String external_student_id, 
-		@QueryParam("external_course_id") Integer external_course_id,
+		@QueryParam("external_course_id") String external_course_id,
 		@QueryParam("external_task_id") String external_task_id
 		) {
 		try
@@ -127,7 +127,7 @@ public class StudentTaskAPI {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteStudentTask1Analyzer(
 			@QueryParam("external_student_id") String external_student_id,
-			@QueryParam("external_course_id") Integer external_course_id,
+			@QueryParam("external_course_id") String external_course_id,
 			@QueryParam("external_task_id") String external_task_id
 			){
 		
@@ -159,7 +159,7 @@ public class StudentTaskAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteStudentTask(
 			@QueryParam("external_student_id") String external_student_id,
-			@QueryParam("external_course_id") Integer external_course_id,
+			@QueryParam("external_course_id") String external_course_id,
 			@QueryParam("external_task_id") String external_task_id
 			)
 	{
