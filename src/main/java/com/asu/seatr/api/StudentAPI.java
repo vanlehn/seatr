@@ -127,14 +127,22 @@ public class StudentAPI {
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteStudent(SAReader1 sa){
+	public Response deleteStudent(
+			@QueryParam("external_student_id") String external_student_id, 
+			@QueryParam("external_course_id") Integer external_course_id){
 		try {
 			// implement this
-			S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
-					(S_A1.class, sa.getExternal_student_id(), sa.getExternal_course_id()).get(0);
-			//delete all other analyzers here			
-			StudentAnalyzerHandler.delete(s_a1);
-			Student student = (Student)StudentHandler.getByExternalId(sa.getExternal_student_id(), sa.getExternal_course_id());
+			try {
+				S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
+						(S_A1.class, external_student_id, external_course_id).get(0);
+				//delete all other analyzers here			
+				StudentAnalyzerHandler.delete(s_a1);
+			} catch (IndexOutOfBoundsException iob) {
+				//possibly only the student record exists, so try to delete that 
+			} 
+			
+			Student student = (Student)StudentHandler
+					.getByExternalId(external_student_id, external_course_id);
 			StudentHandler.delete(student);
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
@@ -158,13 +166,16 @@ public class StudentAPI {
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteStudent1Analyzer(SAReader1 sa){	
+	public Response deleteStudent1Analyzer(
+			@QueryParam("external_student_id") String external_student_id, 
+			@QueryParam("external_course_id") Integer external_course_id){	
 		try {
 			S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
-					(S_A1.class, sa.getExternal_student_id(), sa.getExternal_course_id()).get(0);
+					(S_A1.class, external_student_id, external_course_id).get(0);
 			StudentAnalyzerHandler.delete(s_a1);
 			return Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_ANALYZER_DELETED)).build();
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_ANALYZER_DELETED))
+					.build();
 		} catch(IndexOutOfBoundsException iob) {
 			Response rb = Response.status(Status.NOT_FOUND)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND))
