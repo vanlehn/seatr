@@ -1,6 +1,7 @@
 package com.asu.seatr.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -58,11 +59,9 @@ public class RecommenderApi {
 					throw new WebApplicationException(rb);
 				}
 				ListIterator<Task> taskListIterator = taskList.listIterator();
-				int counter = number_of_tasks;
-				while(taskListIterator.hasNext() && counter >0)
+				while(taskListIterator.hasNext())
 					{
 						resultTaskSet.add(taskListIterator.next().getExternal_id());
-						--counter;
 					}
 			}
 			else
@@ -80,7 +79,7 @@ public class RecommenderApi {
 			throw new WebApplicationException(rb);
 		}
 		
-		
-		return resultTaskSet;
+		Collections.shuffle(resultTaskSet);
+		return resultTaskSet.subList(0, (resultTaskSet.size()>number_of_tasks)?number_of_tasks:resultTaskSet.size());
 	}
 }
