@@ -16,7 +16,7 @@ import com.asu.seatr.persistence.HibernateUtil;
 public class StudentAnalyzerHandler {
 
 	
-	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id) {
+	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id) throws Exception{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Course.class);

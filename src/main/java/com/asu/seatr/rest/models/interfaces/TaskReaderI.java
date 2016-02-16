@@ -1,4 +1,4 @@
-package com.asu.seatr.rest.models;
+package com.asu.seatr.rest.models.interfaces;
 
 public interface TaskReaderI {
 	public String getExternal_task_id();

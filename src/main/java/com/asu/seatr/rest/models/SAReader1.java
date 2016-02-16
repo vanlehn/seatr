@@ -1,5 +1,7 @@
 package com.asu.seatr.rest.models;
 
+import com.asu.seatr.rest.models.interfaces.SAReaderI;
+
 public class SAReader1 implements SAReaderI {
 	
 	private String external_student_id;

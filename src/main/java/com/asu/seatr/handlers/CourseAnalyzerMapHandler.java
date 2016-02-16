@@ -43,7 +43,7 @@ public class CourseAnalyzerMapHandler {
 		session.close();
 		return records;
 	}
-	public static List<CourseAnalyzerMap> getAnalyzerIdFromExtCourseId(int external_course_id)
+	public static List<CourseAnalyzerMap> getAnalyzerIdFromExtCourseId(String external_course_id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -55,7 +55,7 @@ public class CourseAnalyzerMapHandler {
 		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
 		return courseAnalyzerMapList;
 	}
-	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(int external_course_id)
+	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(String external_course_id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -65,7 +65,12 @@ public class CourseAnalyzerMapHandler {
 		criteria = session.createCriteria(CourseAnalyzerMap.class);
 		criteria.add(Restrictions.eq("course", course));
 		criteria.add(Restrictions.eq("active", true));
-		CourseAnalyzerMap courseAnalyzerMap = (CourseAnalyzerMap)criteria.list().get(0);
+		List<CourseAnalyzerMap> courseAnalyzerMapList = (List<CourseAnalyzerMap>)criteria.list();
+		if(courseAnalyzerMapList.size() < 1)
+		{
+			return null;//a null here indicates that primary analyzer does not exist and a default analyzer will be used
+		}
+		CourseAnalyzerMap  courseAnalyzerMap = courseAnalyzerMapList.get(0);
 		return courseAnalyzerMap;
 	}
 	

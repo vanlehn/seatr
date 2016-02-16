@@ -1,5 +1,7 @@
 package com.asu.seatr.rest.models;
 
+import com.asu.seatr.rest.models.interfaces.TaskReaderI;
+
 public class TAReader1 implements TaskReaderI{
 
 	private String external_task_id;

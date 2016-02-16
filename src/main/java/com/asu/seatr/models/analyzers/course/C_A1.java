@@ -8,6 +8,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -19,15 +20,15 @@ import com.asu.seatr.handlers.CourseHandler;
 
 
 @Entity
-@Table(name="c_a1", uniqueConstraints=@UniqueConstraint(columnNames={"student_id", "course_id"}))
+@Table(name="c_a1")
 public class C_A1{
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
 	private int id;
 	
-	@ManyToOne
-	@JoinColumn(name="course", referencedColumnName="id") //id of a course
+	@OneToOne
+	@JoinColumn(name="course", referencedColumnName="id", unique = true) //id of a course
 	Course course;
 	
 	//Properties

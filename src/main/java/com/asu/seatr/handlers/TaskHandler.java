@@ -35,7 +35,7 @@ public class TaskHandler {
 		session.close();
 		return student;
 	}
-	public static List<Task> readByExtCourseId(Integer external_course_id)
+	public static List<Task> readByExtCourseId(String external_course_id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();

@@ -1,5 +1,7 @@
 package com.asu.seatr.rest.models;
 
+import com.asu.seatr.rest.models.interfaces.STAReaderI;
+
 public class STAReader1 implements STAReaderI {
 	
 	private String external_task_id;
