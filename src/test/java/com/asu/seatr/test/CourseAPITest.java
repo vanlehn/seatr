@@ -11,7 +11,7 @@ import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
-import com.asu.seatr.CourseAPI;
+import com.asu.seatr.api.CourseAPI;
 import com.asu.seatr.models.Course;
 
 

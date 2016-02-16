@@ -3,7 +3,7 @@ package com.asu.seatr.rest.models;
 public class TAReader1 implements TaskReaderI{
 
 	private String external_task_id;
-	private Integer external_course_id;
+	private String external_course_id;
 	private Integer s_difficulty_level;
 	
 	@Override
@@ -15,11 +15,11 @@ public class TAReader1 implements TaskReaderI{
 		this.external_task_id = external_task_id;
 	}
 	@Override
-	public Integer getExternal_course_id() {
+	public String getExternal_course_id() {
 		return external_course_id;
 	}
 	@Override
-	public void setExternal_course_id(Integer external_course_id) {
+	public void setExternal_course_id(String external_course_id) {
 		this.external_course_id = external_course_id;
 	}
 	

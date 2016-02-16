@@ -5,7 +5,7 @@ public interface STAReaderI {
 	public void setExternal_task_id(String external_task_id);
 	public String getExternal_student_id();
 	public void setExternal_student_id(String external_student_id);
-	public Integer getExternal_course_id();
-	public void setExternal_course_id(Integer external_course_id);
+	public String getExternal_course_id();
+	public void setExternal_course_id(String external_course_id);
 	
 }

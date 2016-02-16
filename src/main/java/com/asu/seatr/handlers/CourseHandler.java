@@ -40,10 +40,10 @@ public class CourseHandler {
 		session.close();
 	}
 	
-	public static Course getByExternalId(int external_id){
+	public static Course getByExternalId(String external_id){
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
-		Query query=session.createQuery("FROM Course where external_id="+external_id);
+		Query query=session.createQuery("FROM Course where external_id='"+external_id+"'");
 		@SuppressWarnings("unchecked")
 		List<Course> results=query.list();
 		session.close();
@@ -54,7 +54,7 @@ public class CourseHandler {
 		
 	}
 	
-	public static int updateCourseByExternalID(int external_id,Course course){ //return how many lines are affected.
+	public static int updateCourseByExternalID(String external_id,Course course){ //return how many lines are affected.
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
 		session.beginTransaction();

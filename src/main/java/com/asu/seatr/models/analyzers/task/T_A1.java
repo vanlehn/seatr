@@ -78,7 +78,7 @@ public class T_A1 implements TaskAnalyzerI{
 	}
 
 	@Override
-	public void createTask(String task_ext_id, int external_course_id, int analyzer_id) {
+	public void createTask(String task_ext_id, String external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		Task task = new Task();
@@ -91,19 +91,19 @@ public class T_A1 implements TaskAnalyzerI{
 	}
 
 	@Override
-	public void deleteTask(String task_ext_id, int course_id, int analyzer_id) {
+	public void deleteTask(String task_ext_id, String course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateTask(String task_ext_id, int course_id, int analyzer_id) {
+	public void updateTask(String task_ext_id, String course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public Task getTask(String task_ext_id, int course_id, int analyzer_id) {
+	public Task getTask(String task_ext_id, String course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
 		return null;
 	}

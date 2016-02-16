@@ -21,7 +21,7 @@ public class Course {
 	private int id;
 	
 	@Column(name="external_id")
-	private int external_id;
+	private String external_id;
 	
 	@Column(name="description")
 	private String description;
@@ -38,10 +38,10 @@ public class Course {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	public int getExternal_id() {
+	public String getExternal_id() {
 		return external_id;
 	}
-	public void setExternal_id(int external_id) {
+	public void setExternal_id(String external_id) {
 		this.external_id = external_id;
 	}	
 	

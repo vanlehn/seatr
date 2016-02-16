@@ -35,7 +35,7 @@ public class StudentAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public SAReader1 getStudent(
 			@QueryParam("external_student_id") String external_student_id, 
-			@QueryParam("external_course_id") Integer external_course_id) {		
+			@QueryParam("external_course_id") String external_course_id) {		
 		
 		//handle cases
 		try {
@@ -129,7 +129,7 @@ public class StudentAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteStudent(
 			@QueryParam("external_student_id") String external_student_id, 
-			@QueryParam("external_course_id") Integer external_course_id){
+			@QueryParam("external_course_id") String external_course_id){
 		try {
 			// implement this
 			try {
@@ -168,7 +168,7 @@ public class StudentAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteStudent1Analyzer(
 			@QueryParam("external_student_id") String external_student_id, 
-			@QueryParam("external_course_id") Integer external_course_id){	
+			@QueryParam("external_course_id") String external_course_id){	
 		try {
 			S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
 					(S_A1.class, external_student_id, external_course_id).get(0);

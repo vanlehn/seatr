@@ -4,7 +4,7 @@ public class STAReader1 implements STAReaderI {
 	
 	private String external_task_id;
 	private String external_student_id;
-	private Integer external_course_id;
+	private String external_course_id;
 	private String d_status; 
 	private Integer d_time_lastattempt;
 	
@@ -25,11 +25,11 @@ public class STAReader1 implements STAReaderI {
 		this.external_student_id = external_student_id;
 	}
 	@Override
-	public Integer getExternal_course_id() {
+	public String getExternal_course_id() {
 		return external_course_id;
 	}
 	@Override
-	public void setExternal_course_id(Integer external_course_id) {
+	public void setExternal_course_id(String external_course_id) {
 		this.external_course_id = external_course_id;
 	}
 	public String getD_status() {
