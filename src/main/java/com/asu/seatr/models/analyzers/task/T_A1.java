@@ -13,11 +13,11 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.asu.seatr.handlers.CourseHandler;
+import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
-import com.asu.seatr.utilities.CourseHandler;
-import com.asu.seatr.utilities.TaskHandler;
 
 @Entity
 @Table(name = "t_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id","course_id"}))

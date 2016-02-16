@@ -18,11 +18,11 @@ import javax.ws.rs.core.Response.Status;
 import org.hibernate.exception.ConstraintViolationException;
 import org.json.JSONObject;
 
+import com.asu.seatr.handlers.StudentAnalyzerHandler;
+import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.rest.models.SAReader1;
-import com.asu.seatr.utilities.StudentAnalyzerHandler;
-import com.asu.seatr.utilities.StudentHandler;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -70,7 +70,6 @@ public class StudentAPI {
 		//input external student id, courseid ,properties
 		//populate student table
 		//retrieve the analyzer name using courseid, like a1,a2,or a3...
-		
 		try {
 			S_A1 s_a1 = new S_A1();
 			
@@ -89,6 +88,7 @@ public class StudentAPI {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		
 		
 	}
 	

@@ -15,17 +15,17 @@ import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.asu.seatr.handlers.StudentAnalyzerHandler;
+import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
+import com.asu.seatr.handlers.StudentTaskHandler;
+import com.asu.seatr.handlers.TaskAnalyzerHandler;
+import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.studenttask.ST_A1;
 import com.asu.seatr.models.analyzers.task.T_A1;
 import com.asu.seatr.rest.models.STAReader1;
 import com.asu.seatr.rest.models.TAReader1;
-import com.asu.seatr.utilities.StudentAnalyzerHandler;
-import com.asu.seatr.utilities.StudentTaskAnalyzerHandler;
-import com.asu.seatr.utilities.StudentTaskHandler;
-import com.asu.seatr.utilities.TaskAnalyzerHandler;
-import com.asu.seatr.utilities.TaskHandler;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;

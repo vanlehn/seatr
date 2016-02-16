@@ -8,14 +8,14 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.asu.seatr.handlers.StudentHandler;
+import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
+import com.asu.seatr.handlers.StudentTaskHandler;
+import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.student.S_A1;
-import com.asu.seatr.utilities.StudentHandler;
-import com.asu.seatr.utilities.StudentTaskAnalyzerHandler;
-import com.asu.seatr.utilities.StudentTaskHandler;
-import com.asu.seatr.utilities.TaskHandler;
 
 @Path("/getrecommended")
 public class RecommenderApi {

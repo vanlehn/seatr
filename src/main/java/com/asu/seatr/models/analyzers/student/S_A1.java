@@ -13,11 +13,11 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.asu.seatr.handlers.CourseHandler;
+import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
-import com.asu.seatr.utilities.CourseHandler;
-import com.asu.seatr.utilities.StudentHandler;
 
 @Entity
 @Table(name = "s_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "course_id"}))

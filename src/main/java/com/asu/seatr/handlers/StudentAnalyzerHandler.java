@@ -1,4 +1,4 @@
-package com.asu.seatr.utilities;
+package com.asu.seatr.handlers;
 
 import java.util.HashMap;
 import java.util.List;

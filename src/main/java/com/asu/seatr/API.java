@@ -9,7 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import com.asu.seatr.common.*;
-import com.asu.seatr.utilities.*;
+import com.asu.seatr.handlers.*;
 
 
 //Sets the path to base URL + /hello

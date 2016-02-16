@@ -12,8 +12,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
+import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.models.Course;
-import com.asu.seatr.utilities.CourseHandler;
 
 //Sets the path to base URL + /hello
 @Path("/course")

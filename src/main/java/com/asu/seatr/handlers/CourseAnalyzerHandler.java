@@ -1,62 +1,69 @@
-package com.asu.seatr.utilities;
+package com.asu.seatr.handlers;
 
 import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import com.asu.seatr.common.*;
+import com.asu.seatr.constants.DatabaseConstants;
+import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
-public class TryHandler {
 
-	public static Try save(Try trry) {
+public class CourseAnalyzerHandler {
+
+
+	public static CourseAnalyzerI save(CourseAnalyzerI courseAnalyzer) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
 	    
-	    int id = (int)session.save(trry);
-	    trry.setId(id);
+	    int id = (int)session.save(courseAnalyzer);
+	    courseAnalyzer.setId(id);
 	    session.getTransaction().commit();
 	    session.close();
-	    return trry;
+	    return courseAnalyzer;
 	}
 	
-	public static Try read(int id)
+	public static CourseAnalyzerI read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Try trry = (Try)session.get(Try.class, id);
+		CourseAnalyzerI courseAnalyzer = (CourseAnalyzerI)session.get(CourseAnalyzerI.class, id);
 		session.close();
-		return trry;
+		return courseAnalyzer;
 	}
 	
-	public static List<Try> readAll()
+	public static List<CourseAnalyzerI> readAll(String tableName)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		List<Try> records = session.createQuery("from Try").list();
+		List<CourseAnalyzerI> records = session.createQuery("from " + tableName).list();
 		session.close();
 		return records;
 	}
 	
-	public static Try update(Try trry)
+	public static CourseAnalyzerI update(CourseAnalyzerI courseAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
-		session.merge(trry);
+		session.merge(courseAnalyzer);
 		session.getTransaction().commit();
 		session.close();
-		return trry;
+		return courseAnalyzer;
 	}
-	public static void delete(Try trry)
+	public static void delete(CourseAnalyzerI courseAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
-		session.delete(trry);
+		session.delete(courseAnalyzer);
 		session.getTransaction().commit();
 		session.close();
 	}
 	
+
+
+
+
 }

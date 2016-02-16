@@ -13,13 +13,13 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.asu.seatr.handlers.StudentHandler;
+import com.asu.seatr.handlers.StudentTaskHandler;
+import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
-import com.asu.seatr.utilities.StudentHandler;
-import com.asu.seatr.utilities.StudentTaskHandler;
-import com.asu.seatr.utilities.TaskHandler;
 
 
 @Entity

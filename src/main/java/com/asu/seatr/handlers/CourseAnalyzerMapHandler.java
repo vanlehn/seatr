@@ -1,11 +1,14 @@
-package com.asu.seatr.utilities;
+package com.asu.seatr.handlers;
 
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
+import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.persistence.HibernateUtil;
 
@@ -39,6 +42,31 @@ public class CourseAnalyzerMapHandler {
 		List<CourseAnalyzerMap> records = session.createQuery("from " + DatabaseConstants.COURSE_ANALYZER_TABLE_NAME).list();
 		session.close();
 		return records;
+	}
+	public static List<CourseAnalyzerMap> getAnalyzerIdFromExtCourseId(int external_course_id)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria criteria = session.createCriteria(Course.class);
+		criteria.add(Restrictions.eq("external_id", external_course_id));
+		Course course = (Course)criteria.list().get(0);
+		criteria = session.createCriteria(CourseAnalyzerMap.class);
+		criteria.add(Restrictions.eq("course", course));
+		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
+		return courseAnalyzerMapList;
+	}
+	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(int external_course_id)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria criteria = session.createCriteria(Course.class);
+		criteria.add(Restrictions.eq("external_id", external_course_id));
+		Course course = (Course)criteria.list().get(0);
+		criteria = session.createCriteria(CourseAnalyzerMap.class);
+		criteria.add(Restrictions.eq("course", course));
+		criteria.add(Restrictions.eq("active", true));
+		CourseAnalyzerMap courseAnalyzerMap = (CourseAnalyzerMap)criteria.list().get(0);
+		return courseAnalyzerMap;
 	}
 	
 	public static CourseAnalyzerMap update(CourseAnalyzerMap courseAnalyzer)
