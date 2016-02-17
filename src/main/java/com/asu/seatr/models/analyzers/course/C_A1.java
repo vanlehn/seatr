@@ -7,7 +7,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
@@ -16,7 +15,9 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
-import com.asu.seatr.handlers.CourseHandler;
+import com.asu.seatr.models.interfaces.StudentAnalyzerI;
+import com.asu.seatr.utilities.AnalyzerHandler;
+import com.asu.seatr.utilities.CourseHandler;
 
 
 @Entity
@@ -28,7 +29,7 @@ public class C_A1{
 	private int id;
 	
 	@OneToOne
-	@JoinColumn(name="course", referencedColumnName="id", unique = true) //id of a course
+	@JoinColumn(name="course_id", referencedColumnName="id", unique = true) //id of a course
 	Course course;
 	
 	//Properties
@@ -47,24 +48,34 @@ public class C_A1{
 		
 	}
 
-	public void createCourse(String course_ext_id, int analyzer_id) {
-		//Course course=CourseHandler.getByExternalId(external_id)
+	public void setCourseByExt_id(String course_ext_id) {
+		Course course=CourseHandler.getByExternalId(course_ext_id);
+		this.course=course;
 		
 	}
-
-	public void deleteCourse(int course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
-		
+	
+	public String getCourseExtId(){
+		return this.course.getExternal_id();
+	}
+	
+	public String getCourseDesc(){
+		return this.course.getDescription();
 	}
 
-	public void updateCourse(int course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
-		
+	public Double getThreshold() {
+		return threshold;
 	}
 
-	public Course getCourse(int course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
-		return null;
+	public void setThreshold(Double threshold) {
+		this.threshold = threshold;
+	}
+
+	public String getTeaching_unit() {
+		return teaching_unit;
+	}
+
+	public void setTeaching_unit(String teaching_unit) {
+		this.teaching_unit = teaching_unit;
 	}
 
 }

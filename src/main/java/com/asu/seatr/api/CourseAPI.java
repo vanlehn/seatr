@@ -12,8 +12,8 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.UriInfo;
 
-import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.models.Course;
+import com.asu.seatr.utilities.CourseHandler;
 
 //Sets the path to base URL + /hello
 @Path("/course")
@@ -61,8 +61,8 @@ public class CourseAPI {
 	@Path("/update")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
-	public int updateCourse(@QueryParam("external_id") String external_id,Course c ){
-		return CourseHandler.updateCourseByExternalID(external_id, c);
+	public void updateCourse(@QueryParam("external_id") String external_id,Course c ){
+		CourseHandler.updateCourseByExternalID(external_id, c);
 	}
 	
 	
