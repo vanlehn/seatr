@@ -10,14 +10,21 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.ConstraintViolationException;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyResponse;
+import com.asu.seatr.utils.MyStatus;
 
 @Entity
 @Table(name = "t_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id","course_id"}))
@@ -78,9 +85,15 @@ public class T_A1 implements TaskAnalyzerI{
 	}
 
 	@Override
-	public void createTask(String task_ext_id, String external_course_id, int analyzer_id) {
+	public void createTask(String task_ext_id, String external_course_id, int analyzer_id) throws CourseNotFoundException {
 		// TODO Auto-generated method stub
 		Course course = CourseHandler.getByExternalId(external_course_id);
+		if(course == null)
+		{
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
+			throw new CourseNotFoundException(rb);
+		}
 		Task task = new Task();
 		task.setExternal_id(task_ext_id);
 		task.setCourse(course);

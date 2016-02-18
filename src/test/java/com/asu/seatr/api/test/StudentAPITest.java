@@ -1,4 +1,4 @@
-package com.asu.seatr.test;
+package com.asu.seatr.api.test;
 
 import static org.junit.Assert.assertEquals;
 

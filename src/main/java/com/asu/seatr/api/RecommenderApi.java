@@ -40,9 +40,6 @@ public class RecommenderApi {
 			@QueryParam("number_of_tasks") Integer number_of_tasks
 			)
 	{
-		//Student student = StudentHandler.readByExtStudentId_and_ExtCourseId(external_student_id, external_course_id);
-		//List<Task> taskList = TaskHandler.readByExtCourseId(external_course_id);
-		//List<StudentTask> studentTaskList = StudentTaskHandler.readByStudent(student);
 		List<String> resultTaskSet = new ArrayList<String>();
 		try
 		{

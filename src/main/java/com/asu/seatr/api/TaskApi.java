@@ -15,6 +15,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.TaskNotFoundException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
@@ -47,6 +49,14 @@ public class TaskApi {
 			result.setS_difficulty_level(tal.getS_difficulty_level());
 			return result;
 		}
+		catch(CourseNotFoundException cob)
+		{
+			throw new WebApplicationException(cob.getResponse());
+		}
+		catch(TaskNotFoundException tob)
+		{
+			throw new WebApplicationException(tob.getResponse());
+		}
 		catch(IndexOutOfBoundsException iob) {			
 			Response rb = Response.status(Status.NOT_FOUND).
 					entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND)).build();
@@ -55,6 +65,7 @@ public class TaskApi {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+			
 		}
 	}
 	//create
@@ -66,11 +77,25 @@ public class TaskApi {
 		try
 		{
 			T_A1 t_a1 = new T_A1(); 
+			if(taReader1.getExternal_task_id().trim().equals(""))
+			{
+				Response rb = Response.status(Status.NOT_FOUND).
+						entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND)).build();
+				throw new TaskNotFoundException(rb);
+			}
 			t_a1.createTask(taReader1.getExternal_task_id(), taReader1.getExternal_course_id(), 1);
 			t_a1.setS_difficulty_level(taReader1.getS_difficulty_level());
 			TaskAnalyzerHandler.save(t_a1);
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_CREATED)).build();
+		}
+		catch(CourseNotFoundException cnf)
+		{
+			throw new WebApplicationException(cnf.getResponse());
+		}
+		catch(TaskNotFoundException tnf)
+		{
+			throw new WebApplicationException(tnf.getResponse());
 		}
 		catch (ConstraintViolationException cva){			
 			Response rb = Response.status(Status.OK)
@@ -100,12 +125,20 @@ public class TaskApi {
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_UPDATED))
 					.build();
 		}
+		catch(CourseNotFoundException cob)
+		{
+			throw new WebApplicationException(cob.getResponse());
+		}
+		catch(TaskNotFoundException tob)
+		{
+			throw new WebApplicationException(tob.getResponse());
+		}
 		catch(IndexOutOfBoundsException iob) {			 
 			Response rb = Response.status(Status.NOT_FOUND)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND))
 					.build();
 			throw new WebApplicationException(rb);
-		}		
+		}
 		catch(Exception e){			
 			Response rb = Response.status(Status.NOT_FOUND)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST))
@@ -122,11 +155,18 @@ public class TaskApi {
 	{
 		try
 		{
-		System.out.println("delete operation");
 		T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id).get(0);
 		TaskAnalyzerHandler.delete(t_a1);
 		return Response.status(Status.OK)
 				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_ANALYZER_DELETED)).build();
+		}
+		catch(CourseNotFoundException cob)
+		{
+			throw new WebApplicationException(cob.getResponse());
+		}
+		catch(TaskNotFoundException tob)
+		{
+			throw new WebApplicationException(tob.getResponse());
 		}
 		catch(IndexOutOfBoundsException iob) {
 			Response rb = Response.status(Status.NOT_FOUND)
@@ -160,7 +200,16 @@ public class TaskApi {
 			TaskHandler.delete(task);
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_DELETED)).build();
-		} catch(IndexOutOfBoundsException iob) {
+		} 
+		catch(CourseNotFoundException cob)
+		{
+			throw new WebApplicationException(cob.getResponse());
+		}
+		catch(TaskNotFoundException tob)
+		{
+			throw new WebApplicationException(tob.getResponse());
+		}
+		catch(IndexOutOfBoundsException iob) {
 			Response rb = Response.status(Status.NOT_FOUND)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND))
 					.build();
@@ -171,8 +220,5 @@ public class TaskApi {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
-		
-		
-	
 	}
 }

@@ -13,6 +13,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.TaskNotFoundException;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.StudentTaskHandler;
 import com.asu.seatr.handlers.TaskHandler;
@@ -76,7 +78,7 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 
 	@Override
 	public void createStudentTask(String external_student_id, String external_course_id, String external_task_id,
-			int analyzer_id) {
+			int analyzer_id) throws CourseNotFoundException, TaskNotFoundException {
 		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
 		StudentTask studentTask = new StudentTask();

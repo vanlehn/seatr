@@ -8,6 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
+import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.TaskNotFoundException;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
@@ -53,7 +55,7 @@ public class StudentTaskHandler {
 		List<StudentTask> studentTaskList= cr.list();
 		return studentTaskList;
 	}
-	public static List<StudentTask> readByExtId(String external_student_id, String external_course_id, String external_task_id)
+	public static List<StudentTask> readByExtId(String external_student_id, String external_course_id, String external_task_id) throws CourseNotFoundException, TaskNotFoundException
 	{
 		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);

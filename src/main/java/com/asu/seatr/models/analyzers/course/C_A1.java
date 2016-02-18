@@ -16,8 +16,8 @@ import org.hibernate.annotations.GenericGenerator;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
-import com.asu.seatr.utilities.AnalyzerHandler;
-import com.asu.seatr.utilities.CourseHandler;
+import com.asu.seatr.handlers.AnalyzerHandler;
+import com.asu.seatr.handlers.CourseHandler;
 
 
 @Entity

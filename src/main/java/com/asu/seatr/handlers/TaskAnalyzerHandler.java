@@ -2,15 +2,23 @@ package com.asu.seatr.handlers;
 
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.TaskNotFoundException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyResponse;
+import com.asu.seatr.utils.MyStatus;
 
 public class TaskAnalyzerHandler {
 
@@ -19,8 +27,7 @@ public class TaskAnalyzerHandler {
 	public static TaskAnalyzerI save(TaskAnalyzerI taskAnalyzer) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
+	    session.beginTransaction();	    
 	    int id = (int)session.save(taskAnalyzer);
 	    taskAnalyzer.setId(id);
 	    session.getTransaction().commit();
@@ -28,7 +35,12 @@ public class TaskAnalyzerHandler {
 	    return taskAnalyzer;
 	}
 	
-	public static TaskAnalyzerI read(int id)
+	/*
+	 * @param int id
+	 * @desc
+	 * Read by task analyzer table's unique is.
+	 */
+	public static TaskAnalyzerI readById(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -36,17 +48,32 @@ public class TaskAnalyzerHandler {
 		session.close();
 		return taskAnalyzer;
 	}
-	public static List<TaskAnalyzerI> readByExtId(Class typeParameterClass, String external_task_id, String external_course_id)
+	@SuppressWarnings("unchecked")
+	public static List<TaskAnalyzerI> readByExtId(Class typeParameterClass, String external_task_id, String external_course_id) throws CourseNotFoundException, TaskNotFoundException
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Course.class);
 		cr.add(Restrictions.eq("external_id", external_course_id));
-		Course course = (Course)cr.list().get(0);
+		List<Course> courseList = (List<Course>)cr.list();
+		if(courseList.size() < 1)
+		{
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
+			throw new CourseNotFoundException(rb);
+		}
+		Course course = courseList.get(0);
 		cr = session.createCriteria(Task.class);
 		cr.add(Restrictions.eq("external_id", external_task_id));
 		cr.add(Restrictions.eq("course", course));
-		Task task = (Task) cr.list().get(0);
+		List<Task> taskList = (List<Task>) cr.list();
+		if(taskList.size() < 1)
+		{
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND)).build();
+			throw new TaskNotFoundException(rb);
+		}
+		Task task = taskList.get(0);
 		cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("task", task));
 		cr.add(Restrictions.eq("course", course));
@@ -56,13 +83,15 @@ public class TaskAnalyzerHandler {
 		
 	}
 	
-	public static List<TaskAnalyzerI> readAll(String tableName)
+	@SuppressWarnings("unchecked")
+	public static List<TaskAnalyzerI> readAll(Class typeParameterClass)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		List<TaskAnalyzerI> records = session.createQuery("from " + tableName).list();
+		Criteria cr = session.createCriteria(typeParameterClass);
+		List<TaskAnalyzerI> taskAnalyzerList = (List<TaskAnalyzerI>)cr.list();
 		session.close();
-		return records;
+		return taskAnalyzerList;
 	}
 	
 	public static TaskAnalyzerI update(TaskAnalyzerI taskAnalyzer)

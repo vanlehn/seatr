@@ -26,6 +26,10 @@ public class Task {
 	@JoinColumn(name = "course_id", referencedColumnName = "id")
 	private Course course;
 	
+	public final static String p_id = "id";
+	public final static String p_external_id = "external_id";
+	public final static String p_course = "course";
+	
 	public int getId() {
 		return id;
 	}
