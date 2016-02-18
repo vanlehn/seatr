@@ -15,11 +15,11 @@ import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.asu.seatr.handlers.C_A1_Handler;
+import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.analyzers.course.C_A1;
 import com.asu.seatr.rest.models.CAReader1;
-import com.asu.seatr.utilities.C_A1_Handler;
-import com.asu.seatr.utilities.CourseHandler;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;

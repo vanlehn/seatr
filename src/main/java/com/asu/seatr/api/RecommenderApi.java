@@ -14,6 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.TaskNotFoundException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
@@ -66,6 +68,11 @@ public class RecommenderApi {
 				//select tasks based on analyzer
 			}
 		}
+		catch(CourseNotFoundException cnf)
+		{
+			throw new WebApplicationException(cnf.getResponse());
+		}
+		
 		catch(WebApplicationException e)
 		{
 			throw e;

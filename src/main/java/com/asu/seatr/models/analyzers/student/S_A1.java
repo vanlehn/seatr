@@ -13,6 +13,7 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.models.Course;
@@ -71,7 +72,7 @@ public class S_A1 implements StudentAnalyzerI{
 	}
 
 	@Override
-	public void createStudent(String student_ext_id, String external_course_id, int analyzer_id) {
+	public void createStudent(String student_ext_id, String external_course_id, int analyzer_id) throws CourseNotFoundException {
 		
 		Course course = CourseHandler.getByExternalId(external_course_id);		
 		Student student = new Student();

@@ -2,15 +2,22 @@ package com.asu.seatr.handlers;
 
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
+import com.asu.seatr.exceptions.CourseNotFoundException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.persistence.HibernateUtil;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyResponse;
+import com.asu.seatr.utils.MyStatus;
 
 public class CourseAnalyzerMapHandler {
 
@@ -43,26 +50,22 @@ public class CourseAnalyzerMapHandler {
 		session.close();
 		return records;
 	}
-	public static List<CourseAnalyzerMap> getAnalyzerIdFromExtCourseId(String external_course_id)
+	public static List<CourseAnalyzerMap> getAnalyzerIdFromExtCourseId(String external_course_id) throws CourseNotFoundException
 	{
+		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria criteria = session.createCriteria(Course.class);
-		criteria.add(Restrictions.eq("external_id", external_course_id));
-		Course course = (Course)criteria.list().get(0);
-		criteria = session.createCriteria(CourseAnalyzerMap.class);
+		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
 		criteria.add(Restrictions.eq("course", course));
 		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
 		return courseAnalyzerMapList;
 	}
-	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(String external_course_id)
+	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(String external_course_id) throws CourseNotFoundException
 	{
+		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria criteria = session.createCriteria(Course.class);
-		criteria.add(Restrictions.eq("external_id", external_course_id));
-		Course course = (Course)criteria.list().get(0);
-		criteria = session.createCriteria(CourseAnalyzerMap.class);
+		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
 		criteria.add(Restrictions.eq("course", course));
 		criteria.add(Restrictions.eq("active", true));
 		List<CourseAnalyzerMap> courseAnalyzerMapList = (List<CourseAnalyzerMap>)criteria.list();

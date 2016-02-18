@@ -44,40 +44,45 @@ public class TaskHandler {
 	}
 	public static List<Task> readByExtCourseId(String external_course_id) throws CourseNotFoundException
 	{
+		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria cr= session.createCriteria(Course.class);
-		cr.add(Restrictions.eq(Task.p_external_id, external_course_id));
-		List<Course> courseList = (List<Course>)cr.list();
-		if(courseList.size() < 1)
-		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
-			throw new CourseNotFoundException(rb);
-		}
-		Course course = courseList.get(0);
-		cr = session.createCriteria(Task.class);
+		Criteria cr = session.createCriteria(Task.class);
 		cr.add(Restrictions.eq(Task.p_course, course));
 		List<Task> taskList = cr.list();
 		session.close();
 		return taskList;
 	}
-	public static Task readByExtId(String external_task_id, String external_course_id) throws CourseNotFoundException, TaskNotFoundException
+	public static Task readByExtTaskId_Course(String external_task_id, Course course) throws TaskNotFoundException, CourseNotFoundException
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
-		Session session = sf.openSession();
-		Criteria cr = session.createCriteria(Course.class);
-		cr.add(Restrictions.eq(Task.p_external_id, external_course_id));
-		
-		List<Course> courseList = (List<Course>)cr.list();
-		if(courseList.size() < 1)
+		if(course == null)
 		{
 			Response rb = Response.status(Status.NOT_FOUND).
 					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
 			throw new CourseNotFoundException(rb);
 		}
-		Course course = courseList.get(0);
-		cr = session.createCriteria(Task.class);
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(Task.class);
+		cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
+		cr.add(Restrictions.eq(Task.p_course, course));
+		List<Task> taskList = (List<Task>) cr.list();
+		if(taskList.size() < 1)
+		{
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND)).build();
+			throw new TaskNotFoundException(rb);
+		}
+		Task task = taskList.get(0);
+		session.close();
+		return task;
+	}
+	public static Task readByExtId(String external_task_id, String external_course_id) throws CourseNotFoundException, TaskNotFoundException
+	{
+		Course course = CourseHandler.getByExternalId(external_course_id);
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(Task.class);
 		cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
 		cr.add(Restrictions.eq(Task.p_course, course));
 		List<Task> taskList = (List<Task>) cr.list();

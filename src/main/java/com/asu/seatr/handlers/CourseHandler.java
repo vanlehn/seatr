@@ -2,23 +2,31 @@ package com.asu.seatr.handlers;
 
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
+import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.persistence.HibernateUtil;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyResponse;
+import com.asu.seatr.utils.MyStatus;
 
 public class CourseHandler {
-	public static int save(Course course) {
+	public static void save(Course course) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
 	    
-	    int id=(int)session.save(course);
+	    session.save(course);
 	    session.getTransaction().commit();
 	    session.close();
-	    return id;
 	}
 	
 	public static Course readById(int id)
@@ -40,30 +48,33 @@ public class CourseHandler {
 		session.close();
 	}
 	
-	public static Course getByExternalId(String external_id){
+	public static Course getByExternalId(String external_course_id) throws CourseNotFoundException{
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
-		Query query=session.createQuery("FROM Course where external_id='"+external_id+"'");
-		@SuppressWarnings("unchecked")
-		List<Course> results=query.list();
+		Criteria cr = session.createCriteria(Course.class);
+		cr.add(Restrictions.eq("external_id", external_course_id));
+		List<Course> courseList = (List<Course>)cr.list();
+		if(courseList.size() < 1)
+		{
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
+			throw new CourseNotFoundException(rb);
+		}
+		Course course = courseList.get(0);
 		session.close();
-		if(results.size()>=1)
-			return results.get(0);
-		else 
-			return null;
+		return course;
 		
 	}
 	
-	public static int updateCourseByExternalID(String external_id,Course course){ //return how many lines are affected.
+	public static void updateCourseByExternalID(String external_id,Course course){
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
 		session.beginTransaction();
 		Query query=session.createQuery("update Course set description=:desc where external_id=:external_id");
 		query.setParameter("desc", course.getDescription());
 		query.setParameter("external_id", course.getExternal_id());
-		int num=query.executeUpdate();
+		query.executeUpdate();
 		session.getTransaction().commit();
 		session.close();
-		return num;
 	}
 }

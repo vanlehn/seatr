@@ -1,4 +1,4 @@
-package com.asu.seatr.utilities;
+package com.asu.seatr.handlers;
 
 
 import java.util.List;
@@ -9,6 +9,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.analyzers.course.C_A1;
@@ -19,7 +20,7 @@ import com.asu.seatr.persistence.HibernateUtil;
 public class C_A1_Handler {
 
 
-	public static void save(String c_ext_id, double threshold, String teaching_unit) {
+	public static void save(String c_ext_id, double threshold, String teaching_unit) throws CourseNotFoundException {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
@@ -67,7 +68,7 @@ public class C_A1_Handler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	public static void deleteByC_Ext_id(String ext_id)
+	public static void deleteByC_Ext_id(String ext_id) throws CourseNotFoundException
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();

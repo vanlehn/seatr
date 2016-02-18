@@ -85,7 +85,6 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 		studentTask.setStudent(student);
 		studentTask.setTask(task);
 		StudentTaskHandler.save(studentTask);
-		
 		this.studentTask = studentTask;
 		
 		

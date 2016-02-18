@@ -16,6 +16,7 @@ import org.hibernate.annotations.GenericGenerator;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
+import com.asu.seatr.exceptions.CourseNotFoundException;
 import com.asu.seatr.handlers.AnalyzerHandler;
 import com.asu.seatr.handlers.CourseHandler;
 
@@ -48,7 +49,7 @@ public class C_A1{
 		
 	}
 
-	public void setCourseByExt_id(String course_ext_id) {
+	public void setCourseByExt_id(String course_ext_id) throws CourseNotFoundException {
 		Course course=CourseHandler.getByExternalId(course_ext_id);
 		this.course=course;
 		

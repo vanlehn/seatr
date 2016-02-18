@@ -15,6 +15,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.TaskNotFoundException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
 import com.asu.seatr.handlers.StudentTaskHandler;
@@ -32,7 +34,10 @@ import com.asu.seatr.utils.MyStatus;
 
 @Path("/studenttasks")
 public class StudentTaskAPI {
-	
+	/*get,update and delete operations have been disabled because a single student can have multiple records of
+	the same task associated with it.
+	*/
+	/*
 	//read student task
 	@Path("/1")
 	@GET
@@ -63,6 +68,7 @@ public class StudentTaskAPI {
 			throw new WebApplicationException(rb);
 		}
 	}
+	*/
 	//create student task
 	@Path("/1")
 	@POST
@@ -79,6 +85,14 @@ public class StudentTaskAPI {
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_TASK_CREATED)).build();
 		}
+		catch(CourseNotFoundException cob)
+		{
+			throw new WebApplicationException(cob.getResponse());
+		}
+		catch(TaskNotFoundException tob)
+		{
+			throw new WebApplicationException(tob.getResponse());
+		}
 		catch (ConstraintViolationException cva){			
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_TASK_ALREADY_PRESENT)).build();			
@@ -90,7 +104,7 @@ public class StudentTaskAPI {
 		}
 		
 	}
-	
+	/*
 	//update
 	@Path("/1")
 	@PUT
@@ -189,6 +203,7 @@ public class StudentTaskAPI {
 		
 	
 	}
+	*/
 	
 
 }
