@@ -3,28 +3,46 @@ package com.asu.seatr.handlers;
 import java.util.HashMap;
 import java.util.List;
 
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
+
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
+import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.CourseNotFoundException1;
+import com.asu.seatr.exceptions.StudentNotFoundException1;
+import com.asu.seatr.exceptions.TaskNotFoundException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyResponse;
+import com.asu.seatr.utils.MyStatus;
 
 public class StudentAnalyzerHandler {
 
 	
-	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id) throws Exception{
+	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id) throws CourseNotFoundException1, StudentNotFoundException1{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Course.class);
 		cr.add(Restrictions.eq("external_id", external_course_id));
-		Course course = (Course) cr.list().get(0);
+		List<Course> courseList = cr.list();
+		if (courseList.size() == 0) {
+			throw new CourseNotFoundException1(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+		}		
+		Course course = courseList.get(0);
 		cr = session.createCriteria(Student.class);
 		cr.add(Restrictions.eq("external_id", external_student_id));
 		cr.add(Restrictions.eq("course", course));
+		List<Student> studentList = cr.list();
+		if (courseList.size() == 0) {
+			throw new StudentNotFoundException1(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
+		}
 		Student student = (Student) cr.list().get(0);
 		cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("student", student));
