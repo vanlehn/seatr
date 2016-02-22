@@ -67,11 +67,11 @@ public class T_A1 implements TaskAnalyzerI{
 		this.id = id;
 		
 	}
-
+	@Override
 	public Task getTask() {
 		return task;
 	}
-
+	@Override
 	public void setTask(Task task) {
 		this.task = task;
 	}
@@ -90,9 +90,7 @@ public class T_A1 implements TaskAnalyzerI{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		if(course == null)
 		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
-			throw new CourseNotFoundException(rb);
+			throw new CourseNotFoundException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
 		Task task = new Task();
 		task.setExternal_id(task_ext_id);

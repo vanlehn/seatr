@@ -49,7 +49,7 @@ public class TaskAnalyzerHandler {
 		return taskAnalyzer;
 	}
 	@SuppressWarnings("unchecked")
-	public static List<TaskAnalyzerI> readByExtId(Class typeParameterClass, String external_task_id, String external_course_id) throws CourseNotFoundException, TaskNotFoundException
+	public static TaskAnalyzerI readByExtId(Class typeParameterClass, String external_task_id, String external_course_id) throws CourseNotFoundException, TaskNotFoundException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		Task task = TaskHandler.readByExtTaskId_Course(external_task_id, course);
@@ -59,9 +59,28 @@ public class TaskAnalyzerHandler {
 		cr.add(Restrictions.eq("task", task));
 		cr.add(Restrictions.eq("course", course));
 		List<TaskAnalyzerI> result = cr.list();
+		if(result.size() < 1)
+		{
+			//task not present for given coursse
+			throw new TaskNotFoundException(MyStatus.ERROR, MyMessage.NO_TASK_PRESENT_FOR_COURSE);
+		}
+		TaskAnalyzerI taskAnalyzer = result.get(0);
 		session.close();
-		return result;
+		return taskAnalyzer;
 		
+	}
+	public static List<TaskAnalyzerI> readByCourse(Class typeParameterClass, Course course) throws CourseNotFoundException
+	{
+		if(course == null)
+		{
+			throw new CourseNotFoundException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+		}
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(typeParameterClass);
+		cr.add(Restrictions.eq("course", course));
+		List<TaskAnalyzerI> taskAnalyzerList = (List<TaskAnalyzerI>)cr.list();
+		return taskAnalyzerList;
 	}
 	
 	@SuppressWarnings("unchecked")

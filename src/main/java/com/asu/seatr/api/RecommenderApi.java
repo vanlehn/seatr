@@ -20,12 +20,15 @@ import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
 import com.asu.seatr.handlers.StudentTaskHandler;
+import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
+import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.student.S_A1;
+import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -54,7 +57,7 @@ public class RecommenderApi {
 				if(taskList.isEmpty())
 				{
 					Response rb = Response.status(Status.NOT_FOUND)
-							.entity(MyResponse.build(MyStatus.ERROR, MyMessage.NO_TASK_PRESENT)).build();
+							.entity(MyResponse.build(MyStatus.ERROR, MyMessage.NO_TASK_PRESENT_FOR_COURSE)).build();
 					throw new WebApplicationException(rb);
 				}
 				ListIterator<Task> taskListIterator = taskList.listIterator();
@@ -66,11 +69,28 @@ public class RecommenderApi {
 			else
 			{
 				//select tasks based on analyzer
+				Course course = courseAnalyzerMap.getCourse();
+				List<TaskAnalyzerI> taskAnalyzerList = TaskAnalyzerHandler.readByCourse(Class.forName("t_" + courseAnalyzerMap.getAnalyzer().toString()), course);
+				
+				if(taskAnalyzerList.isEmpty())
+				{
+					Response rb = Response.status(Status.NOT_FOUND)
+							.entity(MyResponse.build(MyStatus.ERROR, MyMessage.NO_TASK_PRESENT_FOR_COURSE)).build();
+					throw new WebApplicationException(rb);
+				}
+				ListIterator<TaskAnalyzerI> taskAnalyzerListIterator = taskAnalyzerList.listIterator();
+				while(taskAnalyzerListIterator.hasNext())
+				{
+					resultTaskSet.add(taskAnalyzerListIterator.next().getTask().getExternal_id());
+				}
+				
 			}
 		}
 		catch(CourseNotFoundException cnf)
 		{
-			throw new WebApplicationException(cnf.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cnf.getMyStatus(), cnf.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		
 		catch(WebApplicationException e)

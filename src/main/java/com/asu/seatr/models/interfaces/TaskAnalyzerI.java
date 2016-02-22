@@ -12,4 +12,6 @@ public interface TaskAnalyzerI {
 	public void deleteTask(String task_ext_id,String course_id,int analyzer_id);
 	public void updateTask(String task_ext_id,String course_id,int analyzer_id);
 	public Task getTask(String task_ext_id,String course_id,int analyzer_id);
+	public Task getTask();
+	public void setTask(Task task);
 }

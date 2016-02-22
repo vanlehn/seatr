@@ -87,11 +87,15 @@ public class StudentTaskAPI {
 		}
 		catch(CourseNotFoundException cob)
 		{
-			throw new WebApplicationException(cob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cob.getMyStatus(), cob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(TaskNotFoundException tob)
-		{
-			throw new WebApplicationException(tob.getResponse());
+		{			
+			Response rb = Response.status(Status.NOT_FOUND).
+		entity(MyResponse.build(tob.getMyStatus(), tob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch (ConstraintViolationException cva){			
 			Response rb = Response.status(Status.OK)

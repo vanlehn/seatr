@@ -12,8 +12,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.exceptions.CourseNotFoundException;
-import com.asu.seatr.exceptions.CourseNotFoundException1;
-import com.asu.seatr.exceptions.StudentNotFoundException1;
+import com.asu.seatr.exceptions.StudentNotFoundException;
 import com.asu.seatr.exceptions.TaskNotFoundException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
@@ -26,14 +25,14 @@ import com.asu.seatr.utils.MyStatus;
 public class StudentAnalyzerHandler {
 
 	
-	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id) throws CourseNotFoundException1, StudentNotFoundException1{
+	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id) throws CourseNotFoundException, StudentNotFoundException{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Course.class);
 		cr.add(Restrictions.eq("external_id", external_course_id));
 		List<Course> courseList = cr.list();
 		if (courseList.size() == 0) {
-			throw new CourseNotFoundException1(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+			throw new CourseNotFoundException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}		
 		Course course = courseList.get(0);
 		cr = session.createCriteria(Student.class);
@@ -41,7 +40,7 @@ public class StudentAnalyzerHandler {
 		cr.add(Restrictions.eq("course", course));
 		List<Student> studentList = cr.list();
 		if (courseList.size() == 0) {
-			throw new StudentNotFoundException1(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
+			throw new StudentNotFoundException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
 		}
 		Student student = (Student) cr.list().get(0);
 		cr = session.createCriteria(typeParameterClass);

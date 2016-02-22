@@ -11,7 +11,7 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.GenericGenerator;
 
 @Entity
-@Table(name = "student_task",uniqueConstraints = @UniqueConstraint(columnNames = {"student_id", "task_id"}))
+@Table(name = "student_task")
 public class StudentTask {
 	
 	@Id

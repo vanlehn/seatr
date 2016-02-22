@@ -40,9 +40,7 @@ public class StudentHandler {
 	{
 		if(course == null)
 		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
-			throw new CourseNotFoundException(rb);
+			throw new CourseNotFoundException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
@@ -54,8 +52,7 @@ public class StudentHandler {
 		List<Student> studentList = (List<Student>) cr.list();
 		if(studentList.size() < 1)
 		{
-			Response rb = Response.status(Status.NOT_FOUND).entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND)).build();
-			throw new StudentNotFoundException(rb);
+			throw new StudentNotFoundException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
 		}
 		Student student = studentList.get(0);
 		

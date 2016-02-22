@@ -42,7 +42,7 @@ public class TaskApi {
 			)
 	{
 		try{
-			T_A1 tal = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id).get(0);
+			T_A1 tal = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id);
 			TAReader1 result = new TAReader1();
 			result.setExternal_task_id(external_task_id);
 			result.setExternal_course_id(external_course_id);
@@ -51,11 +51,15 @@ public class TaskApi {
 		}
 		catch(CourseNotFoundException cob)
 		{
-			throw new WebApplicationException(cob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cob.getMyStatus(), cob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(TaskNotFoundException tob)
 		{
-			throw new WebApplicationException(tob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(tob.getMyStatus(), tob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(IndexOutOfBoundsException iob) {			
 			Response rb = Response.status(Status.NOT_FOUND).
@@ -77,12 +81,6 @@ public class TaskApi {
 		try
 		{
 			T_A1 t_a1 = new T_A1(); 
-			if(taReader1.getExternal_task_id().trim().equals(""))
-			{
-				Response rb = Response.status(Status.NOT_FOUND).
-						entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND)).build();
-				throw new TaskNotFoundException(rb);
-			}
 			t_a1.createTask(taReader1.getExternal_task_id(), taReader1.getExternal_course_id(), 1);
 			t_a1.setS_difficulty_level(taReader1.getS_difficulty_level());
 			TaskAnalyzerHandler.save(t_a1);
@@ -91,11 +89,9 @@ public class TaskApi {
 		}
 		catch(CourseNotFoundException cnf)
 		{
-			throw new WebApplicationException(cnf.getResponse());
-		}
-		catch(TaskNotFoundException tnf)
-		{
-			throw new WebApplicationException(tnf.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cnf.getMyStatus(), cnf.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch (ConstraintViolationException cva){			
 			Response rb = Response.status(Status.OK)
@@ -115,7 +111,7 @@ public class TaskApi {
 	{
 		try
 		{
-			T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, taReader1.getExternal_task_id(), taReader1.getExternal_course_id()).get(0);
+			T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, taReader1.getExternal_task_id(), taReader1.getExternal_course_id());
 			if(taReader1.getS_difficulty_level()!=null)
 				{
 					t_a1.setS_difficulty_level(taReader1.getS_difficulty_level());
@@ -127,11 +123,15 @@ public class TaskApi {
 		}
 		catch(CourseNotFoundException cob)
 		{
-			throw new WebApplicationException(cob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cob.getMyStatus(), cob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(TaskNotFoundException tob)
 		{
-			throw new WebApplicationException(tob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(tob.getMyStatus(), tob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(IndexOutOfBoundsException iob) {			 
 			Response rb = Response.status(Status.NOT_FOUND)
@@ -155,18 +155,22 @@ public class TaskApi {
 	{
 		try
 		{
-		T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id).get(0);
+		T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id);
 		TaskAnalyzerHandler.delete(t_a1);
 		return Response.status(Status.OK)
 				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_ANALYZER_DELETED)).build();
 		}
 		catch(CourseNotFoundException cob)
 		{
-			throw new WebApplicationException(cob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cob.getMyStatus(), cob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(TaskNotFoundException tob)
 		{
-			throw new WebApplicationException(tob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(tob.getMyStatus(), tob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(IndexOutOfBoundsException iob) {
 			Response rb = Response.status(Status.NOT_FOUND)
@@ -193,7 +197,7 @@ public class TaskApi {
 		try {
 			// implement this
 			T_A1 t_a1 = (T_A1) TaskAnalyzerHandler.readByExtId
-					(T_A1.class, external_task_id, external_course_id).get(0);
+					(T_A1.class, external_task_id, external_course_id);
 			//delete all other analyzers here			
 			TaskAnalyzerHandler.delete(t_a1);
 			Task task = (Task)TaskHandler.readByExtId(external_task_id, external_course_id);
@@ -203,11 +207,15 @@ public class TaskApi {
 		} 
 		catch(CourseNotFoundException cob)
 		{
-			throw new WebApplicationException(cob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cob.getMyStatus(), cob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(TaskNotFoundException tob)
 		{
-			throw new WebApplicationException(tob.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(tob.getMyStatus(), tob.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(IndexOutOfBoundsException iob) {
 			Response rb = Response.status(Status.NOT_FOUND)

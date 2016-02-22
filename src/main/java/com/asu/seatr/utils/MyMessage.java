@@ -26,7 +26,7 @@ public enum MyMessage {
 	STUDENT_TASK_DELETED("student_task deleted"),
 	STUDENT_TASK_UPDATED("student_task updated"),
 	STUDENT_TASK_ALREADY_PRESENT("student_task already present"),
-	NO_TASK_PRESENT("no tasks present for given course");
+	NO_TASK_PRESENT_FOR_COURSE("no tasks present for given course");
 	
 	public String value;
 	

@@ -56,9 +56,7 @@ public class CourseHandler {
 		List<Course> courseList = (List<Course>)cr.list();
 		if(courseList.size() < 1)
 		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
-			throw new CourseNotFoundException(rb);
+			throw new CourseNotFoundException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
 		Course course = courseList.get(0);
 		session.close();

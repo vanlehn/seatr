@@ -18,8 +18,8 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.asu.seatr.api.StudentAPI;
-import com.asu.seatr.exceptions.CourseNotFoundException1;
-import com.asu.seatr.exceptions.StudentNotFoundException1;
+import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.StudentNotFoundException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
@@ -36,7 +36,7 @@ public class StudentAPIMockTest extends JerseyTest {
     }
 	
 	@Test	
-	public void getStudentTest() throws CourseNotFoundException1, StudentNotFoundException1 {
+	public void getStudentTest() throws CourseNotFoundException, StudentNotFoundException {
 		S_A1 sa1 = new S_A1();
 		sa1.setId(1);
 		sa1.setS_placement_score(34.45);

@@ -66,15 +66,11 @@ public class StudentTaskHandler {
 	{
 		if(student == null)
 		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND)).build();
-			throw new StudentNotFoundException(rb);
+			throw new StudentNotFoundException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
 		}
 		if(task == null)
 		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND)).build();
-			throw new TaskNotFoundException(rb);
+			throw new TaskNotFoundException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);
 		}
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();

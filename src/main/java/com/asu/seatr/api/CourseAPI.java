@@ -50,7 +50,9 @@ public class CourseAPI {
 		}
 		catch(CourseNotFoundException cnf)
 		{
-			throw new WebApplicationException(cnf.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cnf.getMyStatus(), cnf.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
 			Response rb = Response.status(Status.BAD_REQUEST)
@@ -74,7 +76,9 @@ public class CourseAPI {
 		}
 		catch(CourseNotFoundException cnf)
 		{
-			throw new WebApplicationException(cnf.getResponse());
+			Response rb = Response.status(Status.NOT_FOUND).
+					entity(MyResponse.build(cnf.getMyStatus(), cnf.getMyMessage())).build();
+			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
 			Response rb = Response.status(Status.BAD_REQUEST)
@@ -97,5 +101,12 @@ public class CourseAPI {
 		CourseHandler.updateCourseByExternalID(external_id, c);
 	}
 	
+	@Path("/setanalyzer")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	public void setAnalyzer()
+	{
+		
+	}
 	
 }

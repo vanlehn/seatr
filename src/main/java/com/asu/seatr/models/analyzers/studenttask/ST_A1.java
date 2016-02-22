@@ -25,7 +25,7 @@ import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
 
 
 @Entity
-@Table(name = "st_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"student_task_id"}))
+@Table(name = "st_a1")
 public class ST_A1 implements StudentTaskAnalyzerI{
 	@Id
 	@GeneratedValue(generator = "increment")
@@ -33,7 +33,7 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "student_task_id", referencedColumnName = "id")//internal student id
+	@JoinColumn(name = "student_task_id", referencedColumnName = "id", unique = true)//internal student id
 	StudentTask studentTask;
 	
 	@Column(name = "d_status")
