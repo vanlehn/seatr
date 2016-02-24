@@ -5,6 +5,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,7 +17,7 @@ public class Analyzer {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
 	
-	@Column(name = "name")
+	@Column(name = "name", nullable=false)
 	private String name;
 	
 	@Column(name = "description")

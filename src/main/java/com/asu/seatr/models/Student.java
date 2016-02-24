@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -18,12 +19,12 @@ public class Student {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
-	@Column(name = "external_id")
+		
+	@Column(name = "external_id", nullable=false)
 	private String external_id;
-	
+		
 	@ManyToOne(targetEntity = Course.class)
-	@JoinColumn(name = "course_id", referencedColumnName = "id")
+	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
 
 	public int getId() {

@@ -18,6 +18,8 @@ import javax.ws.rs.core.Response.Status;
 import org.hibernate.exception.ConstraintViolationException;
 import org.json.JSONObject;
 
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.models.Student;
@@ -38,8 +40,19 @@ public class StudentAPI {
 			@QueryParam("external_course_id") String external_course_id) {		
 		
 		//handle cases
-		try {
-			S_A1 sa1 = (S_A1)StudentAnalyzerHandler.readByExtId(S_A1.class, external_student_id, external_course_id).get(0);
+		
+			S_A1 sa1 = null;
+			try {
+				sa1 = (S_A1)StudentAnalyzerHandler.readByExtId(S_A1.class, external_student_id, external_course_id).get(0);
+			} catch (CourseException e) {
+				Response rb = Response.status(Status.NOT_FOUND)
+						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+				throw new WebApplicationException(rb);
+			} catch (StudentException e) {
+				Response rb = Response.status(Status.NOT_FOUND)
+						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+				throw new WebApplicationException(rb);
+			}
 			
 			SAReader1 result  = new SAReader1();
 			result.setExternal_course_id(external_course_id);
@@ -48,15 +61,7 @@ public class StudentAPI {
 			result.setS_year(sa1.getS_year());		
 			
 			return result;
-		} catch(IndexOutOfBoundsException iob) {			
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND)).build();
-			throw new WebApplicationException(rb);
-		} catch(Exception e){
-			Response rb = Response.status(Status.BAD_REQUEST)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-			throw new WebApplicationException(rb);
-		}
+		
 				
 	}
 	
@@ -70,25 +75,31 @@ public class StudentAPI {
 		//input external student id, courseid ,properties
 		//populate student table
 		//retrieve the analyzer name using courseid, like a1,a2,or a3...
+		
+		S_A1 s_a1 = new S_A1();
+		
 		try {
-			S_A1 s_a1 = new S_A1();
-			
-			s_a1.createStudent(sa.getExternal_student_id(), sa.getExternal_course_id(), 1);
+			s_a1.createStudent(sa.getExternal_student_id(), sa.getExternal_course_id(), 1);		
 			s_a1.setS_placement_score(sa.getS_placement_score());
 			s_a1.setS_year(sa.getS_year());			
 			StudentAnalyzerHandler.save(s_a1);			
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_CREATED)).build();
-		} catch (ConstraintViolationException cva){			
+		
+		} catch (CourseException e) {
 			Response rb = Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_ALREADY_PRESENT)).build();			
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch (StudentException e) {
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
+			System.out.println(e.getMessage());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
-		
 		
 	}
 	
@@ -108,16 +119,17 @@ public class StudentAPI {
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_UPDATED))
 					.build();
-		} catch(IndexOutOfBoundsException iob) {			 
+		} catch (CourseException e) {
 			Response rb = Response.status(Status.NOT_FOUND)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND))
-					.build();
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
-		}		
-		catch(Exception e){			
+		} catch (StudentException e) {
 			Response rb = Response.status(Status.NOT_FOUND)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST))
-					.build();
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch(Exception e){
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
 		
@@ -130,33 +142,35 @@ public class StudentAPI {
 	public Response deleteStudent(
 			@QueryParam("external_student_id") String external_student_id, 
 			@QueryParam("external_course_id") String external_course_id){
-		try {
-			// implement this
+		
+		
+			S_A1 s_a1;
 			try {
-				S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
-						(S_A1.class, external_student_id, external_course_id).get(0);
+				s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
+						(S_A1.class, external_student_id, external_course_id).get(0);			
 				//delete all other analyzers here			
 				StudentAnalyzerHandler.delete(s_a1);
-			} catch (IndexOutOfBoundsException iob) {
-				//possibly only the student record exists, so try to delete that 
-			} 
 			
-			Student student = (Student)StudentHandler
-					.getByExternalId(external_student_id, external_course_id);
-			StudentHandler.delete(student);
-			return Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
-		} catch(IndexOutOfBoundsException iob) {
-			Response rb = Response.status(Status.NOT_FOUND)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND))
-					.build();
-			throw new WebApplicationException(rb);
-		}
-		catch(Exception e){
-			Response rb = Response.status(Status.BAD_REQUEST)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-			throw new WebApplicationException(rb);
-		}
+				
+				Student student = (Student)StudentHandler
+						.getByExternalId(external_student_id, external_course_id);
+				StudentHandler.delete(student);
+				return Response.status(Status.OK)
+						.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
+			} catch (CourseException e) {
+				Response rb = Response.status(Status.NOT_FOUND)
+						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+				throw new WebApplicationException(rb);
+			} catch (StudentException e) {
+				Response rb = Response.status(Status.NOT_FOUND)
+						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+				throw new WebApplicationException(rb);
+			} catch(Exception e){
+				Response rb = Response.status(Status.BAD_REQUEST)
+						.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+				throw new WebApplicationException(rb);
+			}
+		
 		
 		
 	}
@@ -169,24 +183,28 @@ public class StudentAPI {
 	public Response deleteStudent1Analyzer(
 			@QueryParam("external_student_id") String external_student_id, 
 			@QueryParam("external_course_id") String external_course_id){	
-		try {
-			S_A1 s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
-					(S_A1.class, external_student_id, external_course_id).get(0);
-			StudentAnalyzerHandler.delete(s_a1);
-			return Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_ANALYZER_DELETED))
-					.build();
-		} catch(IndexOutOfBoundsException iob) {
-			Response rb = Response.status(Status.NOT_FOUND)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND))
-					.build();
-			throw new WebApplicationException(rb);
-		}
-		catch(Exception e){
-			Response rb = Response.status(Status.BAD_REQUEST)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-			throw new WebApplicationException(rb);
-		}
+		
+			S_A1 s_a1;
+			try {
+				s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
+						(S_A1.class, external_student_id, external_course_id).get(0);			
+				StudentAnalyzerHandler.delete(s_a1);
+				return Response.status(Status.OK)
+						.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_ANALYZER_DELETED))
+						.build();
+			} catch (CourseException e) {
+				Response rb = Response.status(Status.NOT_FOUND)
+						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+				throw new WebApplicationException(rb);
+			} catch (StudentException e) {
+				Response rb = Response.status(Status.NOT_FOUND)
+						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+				throw new WebApplicationException(rb);
+			} catch(Exception e){
+				Response rb = Response.status(Status.BAD_REQUEST)
+						.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+				throw new WebApplicationException(rb);
+			}
 	}
 
 

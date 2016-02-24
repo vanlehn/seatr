@@ -11,9 +11,9 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
-import com.asu.seatr.exceptions.CourseNotFoundException;
-import com.asu.seatr.exceptions.StudentNotFoundException;
-import com.asu.seatr.exceptions.TaskNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
+import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
@@ -62,19 +62,16 @@ public class StudentTaskHandler {
 		List<StudentTask> studentTaskList= cr.list();
 		return studentTaskList;
 	}
-	public static List<StudentTask> readByStudent_Task(Student student, Task task) throws StudentNotFoundException, TaskNotFoundException
+	public static List<StudentTask> readByStudent_Task(Student student, Task task) throws StudentException, TaskException
 	{
 		if(student == null)
 		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND)).build();
-			throw new StudentNotFoundException(rb);
+			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
 		}
 		if(task == null)
 		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND)).build();
-			throw new TaskNotFoundException(rb);
+			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);
+			
 		}
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -85,7 +82,7 @@ public class StudentTaskHandler {
 		return studentTaskList;
 		
 	}
-	public static List<StudentTask> readByExtId(String external_student_id, String external_course_id, String external_task_id) throws CourseNotFoundException, TaskNotFoundException
+	public static List<StudentTask> readByExtId(String external_student_id, String external_course_id, String external_task_id) throws CourseException, TaskException
 	{
 		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);

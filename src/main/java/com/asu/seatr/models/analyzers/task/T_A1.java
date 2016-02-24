@@ -11,12 +11,14 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.ConstraintViolationException;
+import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Course;
@@ -36,11 +38,11 @@ public class T_A1 implements TaskAnalyzerI{
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "task_id", referencedColumnName = "id")
+	@JoinColumn(name = "task_id", referencedColumnName = "id", nullable=false)
 	private Task task;
 	
 	@ManyToOne
-	@JoinColumn(name = "course_id", referencedColumnName = "id")
+	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
 	
 	public Course getCourse() {
@@ -85,19 +87,20 @@ public class T_A1 implements TaskAnalyzerI{
 	}
 
 	@Override
-	public void createTask(String task_ext_id, String external_course_id, int analyzer_id) throws CourseNotFoundException {
+	public void createTask(String task_ext_id, String external_course_id, int analyzer_id) throws CourseException, TaskException {
 		// TODO Auto-generated method stub
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		if(course == null)
-		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND)).build();
-			throw new CourseNotFoundException(rb);
+		if(course == null) {
+			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
 		Task task = new Task();
 		task.setExternal_id(task_ext_id);
 		task.setCourse(course);
-		task = TaskHandler.save(task);
+		try {
+			task = TaskHandler.save(task);
+		} catch(ConstraintViolationException e) {
+			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ALREADY_PRESENT);
+		}
 		this.task = task;
 		this.course = course;
 		

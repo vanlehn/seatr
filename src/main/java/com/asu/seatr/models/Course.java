@@ -7,6 +7,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,7 +21,7 @@ public class Course {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
 	
-	@Column(name="external_id")
+	@Column(name="external_id", nullable=false)
 	private String external_id;
 	
 	@Column(name="description")

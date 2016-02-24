@@ -11,7 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
-import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.persistence.HibernateUtil;
@@ -50,7 +50,7 @@ public class CourseAnalyzerMapHandler {
 		session.close();
 		return records;
 	}
-	public static List<CourseAnalyzerMap> getAnalyzerIdFromExtCourseId(String external_course_id) throws CourseNotFoundException
+	public static List<CourseAnalyzerMap> getAnalyzerIdFromExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -60,7 +60,7 @@ public class CourseAnalyzerMapHandler {
 		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
 		return courseAnalyzerMapList;
 	}
-	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(String external_course_id) throws CourseNotFoundException
+	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();

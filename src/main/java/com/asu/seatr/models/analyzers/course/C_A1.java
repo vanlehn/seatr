@@ -10,13 +10,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
-import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.handlers.AnalyzerHandler;
 import com.asu.seatr.handlers.CourseHandler;
 
@@ -30,7 +31,7 @@ public class C_A1{
 	private int id;
 	
 	@OneToOne
-	@JoinColumn(name="course_id", referencedColumnName="id", unique = true) //id of a course
+	@JoinColumn(name="course_id", referencedColumnName="id", unique = true, nullable=false) //id of a course
 	Course course;
 	
 	//Properties
@@ -49,7 +50,7 @@ public class C_A1{
 		
 	}
 
-	public void setCourseByExt_id(String course_ext_id) throws CourseNotFoundException {
+	public void setCourseByExt_id(String course_ext_id) throws CourseException {
 		Course course=CourseHandler.getByExternalId(course_ext_id);
 		this.course=course;
 		

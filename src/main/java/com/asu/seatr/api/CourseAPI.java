@@ -15,7 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
-import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.utils.MyMessage;
@@ -42,45 +42,33 @@ public class CourseAPI {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Course getCourse(@QueryParam("external_id") String external_idStr){
-		try{
 		Course course=null;
 		if(external_idStr!=null)
-			course=CourseHandler.getByExternalId(external_idStr);
-		return course;
-		}
-		catch(CourseNotFoundException cnf)
-		{
-			throw new WebApplicationException(cnf.getResponse());
-		}
-		catch(Exception e){
-			Response rb = Response.status(Status.BAD_REQUEST)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-			throw new WebApplicationException(rb);
-		}
-		
-		
+			try {
+				course=CourseHandler.getByExternalId(external_idStr);
+			} catch (CourseException e) {
+				Response rb = Response.status(Status.NOT_FOUND)
+						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+				throw new WebApplicationException(rb);
+			}
+		return course;		
 	}
 	
 	@Path("/delete")
 	@GET
 	public void delCourse(@QueryParam("id") String idStr,@QueryParam("external_id") String external_idStr){
-		try
-		{
-		if(idStr!=null)
-			CourseHandler.delete(CourseHandler.readById(Integer.valueOf(idStr)));
-		else if(external_idStr!=null)
-			CourseHandler.delete(CourseHandler.getByExternalId(external_idStr));
-		//Course course = CourseHandler.delete(course);
-		}
-		catch(CourseNotFoundException cnf)
-		{
-			throw new WebApplicationException(cnf.getResponse());
-		}
-		catch(Exception e){
-			Response rb = Response.status(Status.BAD_REQUEST)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+		try {
+			if(idStr!=null)
+				CourseHandler.delete(CourseHandler.readById(Integer.valueOf(idStr)));
+			else if(external_idStr!=null)
+				CourseHandler.delete(CourseHandler.getByExternalId(external_idStr));
+		} catch(CourseException e) {
+			Response rb = Response.status(Status.NOT_FOUND)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		}
+			
+		
 	}
 	
 	@Path("/add")

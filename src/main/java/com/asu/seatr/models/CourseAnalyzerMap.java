@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -21,14 +22,14 @@ public class CourseAnalyzerMap {
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "course_id", referencedColumnName = "id")
+	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
 	
 	@ManyToOne
-	@JoinColumn(name = "analyzer_id", referencedColumnName = "id")
+	@JoinColumn(name = "analyzer_id", referencedColumnName = "id", nullable=false)
 	private Analyzer analyzer;
 	
-	@Column(name = "active")
+	@Column(name = "active", nullable=false)
 	private boolean active;
 	
 	public int getId() {
