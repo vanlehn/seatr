@@ -31,7 +31,12 @@ public enum MyMessage {
 	NO_TASK_PRESENT("no tasks present for given course"), 
 	STUDENT_ANALYZER_NOT_FOUND("student analyzer not found for the given data"), 
 	STUDENT_PROPERTY_NULL("student property is null"), 
-	COURSE_PROPERTY_NULL("course property is null");
+	COURSE_PROPERTY_NULL("course property is null"),
+	NO_ANALYZER_FOR_KC("no analyzer record found for given kc"),
+	KC_NOT_FOUND_FOR_TASK("no knowledge componenent found for given task"),
+	KC_PROPERTY_NULL("kc property is null"),
+	KC_CREATED("kc created"),
+	KC_TASK_CREATED("KC task map created");
 	
 	public String value;
 	

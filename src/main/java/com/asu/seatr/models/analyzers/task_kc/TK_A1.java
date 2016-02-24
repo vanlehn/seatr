@@ -1,5 +1,6 @@
 package com.asu.seatr.models.analyzers.task_kc;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -31,6 +32,9 @@ public class TK_A1 implements Task_KCAnalyzerI{
 	@JoinColumn(name = "kc_id", referencedColumnName = "id")
 	private KnowledgeComponent kc;
 	
+	@Column(name = "min_mastery_level")
+	private int s_min_mastery_level;
+	
 
 	@Override
 	public int getId() {
@@ -58,6 +62,14 @@ public class TK_A1 implements Task_KCAnalyzerI{
 
 	public void setKc(KnowledgeComponent kc) {
 		this.kc = kc;
+	}
+	
+	public int getS_min_mastery_level() {
+		return s_min_mastery_level;
+	}
+
+	public void setS_min_mastery_level(int s_min_mastery_level) {
+		this.s_min_mastery_level = s_min_mastery_level;
 	}
 
 

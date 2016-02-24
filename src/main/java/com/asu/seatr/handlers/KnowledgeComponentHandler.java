@@ -30,12 +30,16 @@ public class KnowledgeComponentHandler {
 	    return kc;
 	}
 	
-	public static KnowledgeComponent getByInternalId(int id)
+	public static KnowledgeComponent getByInternalId(int id) throws KCNotFoundException
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		KnowledgeComponent kc = (KnowledgeComponent)session.get(KnowledgeComponent.class, id);
 		session.close();
+		if(kc == null)
+		{
+			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
+		}
 		return kc;
 	}
 	
@@ -97,12 +101,12 @@ public class KnowledgeComponentHandler {
 		cr.add(Restrictions.eq("external_id", external_kc_id));
 		cr.add(Restrictions.eq("course", course));
 		List<KnowledgeComponent> kcList = (List<KnowledgeComponent>) cr.list();
+		session.close();
 		if(kcList.size() < 1)
 		{
 			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
 		KnowledgeComponent kc = kcList.get(0);
-		session.close();
 		return kc;
 	}
 	

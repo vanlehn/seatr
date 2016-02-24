@@ -48,6 +48,7 @@ public class RecommenderApi {
 		List<String> resultTaskSet = new ArrayList<String>();
 		try
 		{
+			Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
 			CourseAnalyzerMap  courseAnalyzerMap = CourseAnalyzerMapHandler.getPrimaryAnalyzerIdFromExtCourseId(external_course_id);
 			if(courseAnalyzerMap == null)
 			{
