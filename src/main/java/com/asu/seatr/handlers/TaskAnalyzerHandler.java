@@ -10,8 +10,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
-import com.asu.seatr.exceptions.CourseNotFoundException;
-import com.asu.seatr.exceptions.TaskNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
@@ -49,7 +49,8 @@ public class TaskAnalyzerHandler {
 		return taskAnalyzer;
 	}
 	@SuppressWarnings("unchecked")
-	public static TaskAnalyzerI readByExtId(Class typeParameterClass, String external_task_id, String external_course_id) throws CourseNotFoundException, TaskNotFoundException
+
+	public static List<TaskAnalyzerI> readByExtId(Class typeParameterClass, String external_task_id, String external_course_id) throws CourseException, TaskException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		Task task = TaskHandler.readByExtTaskId_Course(external_task_id, course);
@@ -59,21 +60,19 @@ public class TaskAnalyzerHandler {
 		cr.add(Restrictions.eq("task", task));
 		cr.add(Restrictions.eq("course", course));
 		List<TaskAnalyzerI> result = cr.list();
-		if(result.size() < 1)
-		{
-			//task not present for given coursse
-			throw new TaskNotFoundException(MyStatus.ERROR, MyMessage.NO_TASK_PRESENT_FOR_COURSE);
+
+		if (result.size() == 0) {
+			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);
 		}
-		TaskAnalyzerI taskAnalyzer = result.get(0);
 		session.close();
-		return taskAnalyzer;
+		return result;
 		
 	}
-	public static List<TaskAnalyzerI> readByCourse(Class typeParameterClass, Course course) throws CourseNotFoundException
+	public static List<TaskAnalyzerI> readByCourse(Class typeParameterClass, Course course) throws CourseException
 	{
 		if(course == null)
 		{
-			throw new CourseNotFoundException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();

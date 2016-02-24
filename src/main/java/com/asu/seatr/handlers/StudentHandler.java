@@ -11,8 +11,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
-import com.asu.seatr.exceptions.CourseNotFoundException;
-import com.asu.seatr.exceptions.StudentNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.persistence.HibernateUtil;
@@ -34,28 +33,6 @@ public class StudentHandler {
 		cr.add(Restrictions.eq("external_id", external_student_id));
 		cr.add(Restrictions.eq("course", course));
 		Student student = (Student) cr.list().get(0);
-		return student;
-	}
-	public static Student getByExternalStudentId_Course(String external_student_id, Course course) throws CourseNotFoundException, StudentNotFoundException
-	{
-		if(course == null)
-		{
-			throw new CourseNotFoundException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
-		}
-		SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    Criteria cr = session.createCriteria(Student.class);
-		cr.add(Restrictions.eq("external_id", external_student_id));
-		cr.add(Restrictions.eq("course", course));
-		
-		List<Student> studentList = (List<Student>) cr.list();
-		if(studentList.size() < 1)
-		{
-			throw new StudentNotFoundException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
-		}
-		Student student = studentList.get(0);
-		
 		return student;
 	}
 	

@@ -15,8 +15,8 @@ import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.exception.ConstraintViolationException;
 
-import com.asu.seatr.exceptions.CourseNotFoundException;
-import com.asu.seatr.exceptions.TaskNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
 import com.asu.seatr.handlers.StudentTaskHandler;
@@ -75,8 +75,7 @@ public class StudentTaskAPI {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createStudentTask(STAReader1 sta){
 		
-		try
-		{
+		try {
 			ST_A1 sta1 = new ST_A1();
 			sta1.createStudentTask(sta.getExternal_student_id(),sta.getExternal_course_id(),sta.getExternal_task_id(), 1);
 			sta1.setD_status(sta.getD_status());
@@ -85,23 +84,18 @@ public class StudentTaskAPI {
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_TASK_CREATED)).build();
 		}
-		catch(CourseNotFoundException cob)
-		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(cob.getMyStatus(), cob.getMyMessage())).build();
+
+		catch(CourseException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
-		catch(TaskNotFoundException tob)
-		{			
-			Response rb = Response.status(Status.NOT_FOUND).
-		entity(MyResponse.build(tob.getMyStatus(), tob.getMyMessage())).build();
+		catch(TaskException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
-		catch (ConstraintViolationException cva){			
-			Response rb = Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_TASK_ALREADY_PRESENT)).build();			
-			throw new WebApplicationException(rb);
-		} catch(Exception e){
+		catch(Exception e){
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);

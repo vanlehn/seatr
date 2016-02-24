@@ -8,9 +8,8 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
-import com.asu.seatr.exceptions.CourseNotFoundException;
-import com.asu.seatr.exceptions.StudentNotFoundException;
-import com.asu.seatr.exceptions.TaskNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;

@@ -14,8 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.asu.seatr.exceptions.CourseNotFoundException;
-import com.asu.seatr.exceptions.TaskNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
@@ -85,25 +85,23 @@ public class RecommenderApi {
 				}
 				
 			}
+		
+		
+		Collections.shuffle(resultTaskSet);
+		return resultTaskSet.subList(0, (resultTaskSet.size()>number_of_tasks)?number_of_tasks:resultTaskSet.size());
+		
 		}
-		catch(CourseNotFoundException cnf)
-		{
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(cnf.getMyStatus(), cnf.getMyMessage())).build();
-			throw new WebApplicationException(rb);
+
+		catch(CourseException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);			
 		}
 		
-		catch(WebApplicationException e)
-		{
-			throw e;
-		}
 		catch(Exception e){
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
-		
-		Collections.shuffle(resultTaskSet);
-		return resultTaskSet.subList(0, (resultTaskSet.size()>number_of_tasks)?number_of_tasks:resultTaskSet.size());
 	}
 }

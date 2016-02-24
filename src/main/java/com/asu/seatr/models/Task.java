@@ -8,6 +8,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -19,11 +20,11 @@ public class Task {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
 	
-	@Column(name = "external_id")
+	@Column(name = "external_id", nullable=false)
 	private String external_id;
 	
 	@ManyToOne
-	@JoinColumn(name = "course_id", referencedColumnName = "id")
+	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
 	
 	public final static String p_id = "id";

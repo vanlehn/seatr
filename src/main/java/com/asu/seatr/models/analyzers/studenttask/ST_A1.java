@@ -10,11 +10,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.exceptions.CourseNotFoundException;
-import com.asu.seatr.exceptions.TaskNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.StudentTaskHandler;
 import com.asu.seatr.handlers.TaskHandler;
@@ -33,7 +34,8 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "student_task_id", referencedColumnName = "id", unique = true)//internal student id
+
+	@JoinColumn(name = "student_task_id", referencedColumnName = "id", unique=true, nullable=false)//internal student id
 	StudentTask studentTask;
 	
 	@Column(name = "d_status")
@@ -78,7 +80,7 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 
 	@Override
 	public void createStudentTask(String external_student_id, String external_course_id, String external_task_id,
-			int analyzer_id) throws CourseNotFoundException, TaskNotFoundException {
+			int analyzer_id) throws CourseException, TaskException {
 		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
 		StudentTask studentTask = new StudentTask();

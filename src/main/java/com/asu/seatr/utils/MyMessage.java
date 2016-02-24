@@ -27,7 +27,11 @@ public enum MyMessage {
 	STUDENT_TASK_UPDATED("student_task updated"),
 	STUDENT_TASK_ALREADY_PRESENT("student_task already present"),
 	NO_TASK_PRESENT_FOR_COURSE("no tasks present for given course"),
-	KC_NOT_FOUND("knowledge component not found");
+	KC_NOT_FOUND("knowledge component not found"),
+	NO_TASK_PRESENT("no tasks present for given course"), 
+	STUDENT_ANALYZER_NOT_FOUND("student analyzer not found for the given data"), 
+	STUDENT_PROPERTY_NULL("student property is null"), 
+	COURSE_PROPERTY_NULL("course property is null");
 	
 	public String value;
 	

@@ -7,6 +7,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
+import javax.validation.constraints.NotNull;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -20,11 +21,11 @@ public class StudentTask {
 	private int id;
 	
 	@ManyToOne
-	@JoinColumn(name = "student_id", referencedColumnName = "id")//internal student id
+	@JoinColumn(name = "student_id", referencedColumnName = "id", nullable=false)//internal student id
 	private Student student;
 	
 	@ManyToOne
-	@JoinColumn(name = "task_id", referencedColumnName = "id")
+	@JoinColumn(name = "task_id", referencedColumnName = "id", nullable=false)
 	private Task task;	
 	
 	public int getId() {

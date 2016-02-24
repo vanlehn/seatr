@@ -11,7 +11,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
-import com.asu.seatr.exceptions.CourseNotFoundException;
+import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
@@ -48,15 +48,16 @@ public class CourseHandler {
 		session.close();
 	}
 	
-	public static Course getByExternalId(String external_course_id) throws CourseNotFoundException{
+	public static Course getByExternalId(String external_course_id) throws CourseException{
+		
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
 		Criteria cr = session.createCriteria(Course.class);
 		cr.add(Restrictions.eq("external_id", external_course_id));
 		List<Course> courseList = (List<Course>)cr.list();
-		if(courseList.size() < 1)
-		{
-			throw new CourseNotFoundException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+
+		if(courseList.size() == 0){
+			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
 		Course course = courseList.get(0);
 		session.close();
