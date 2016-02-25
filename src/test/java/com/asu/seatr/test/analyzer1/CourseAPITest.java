@@ -16,7 +16,7 @@ import org.glassfish.jersey.test.JerseyTest;
 import org.junit.Test;
 
 import com.asu.seatr.api.CourseAPI;
-import com.asu.seatr.api.analyzer.Analyzer1API;
+import com.asu.seatr.api.CourseAPI1;
 import com.asu.seatr.models.analyzers.course.C_A1;
 import com.asu.seatr.rest.models.CAReader1;
 import com.asu.seatr.utils.MyMessage;
@@ -26,7 +26,7 @@ import com.asu.seatr.utils.MyStatus;
 
 public class CourseAPITest extends JerseyTest{
 	protected Application configure(){
-		return new ResourceConfig(Analyzer1API.class);
+		return new ResourceConfig(CourseAPI.class);
 	}
 	
 	private String ext_course_id="23";

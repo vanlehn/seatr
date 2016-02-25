@@ -9,6 +9,7 @@ public enum MyMessage {
 	STUDENT_UPDATED("student updated"), 
 	STUDENT_ALREADY_PRESENT("student already present"),
 	COURSE_NOT_FOUND("course not found"),
+	COURSE_ANALYZER_NOT_FOUND("course analyzer is not found"),
 	COURSE_CREATED("course created"),
 	COURSE_ANALYZER_DELETED("course analyzer record deleted"),
 	COURSE_DELETED("courese deleted"),
@@ -36,7 +37,10 @@ public enum MyMessage {
 	KC_NOT_FOUND_FOR_TASK("no knowledge componenent found for given task"),
 	KC_PROPERTY_NULL("kc property is null"),
 	KC_CREATED("kc created"),
-	KC_TASK_CREATED("KC task map created");
+	KC_TASK_CREATED("KC task map created"), 
+	COURSE_ANALYZER_ALREADY_PRESENT("course analyzer already present"),
+	STUDENT_ANALYZER_ALREADY_PRESENT("student analyzer already present"); 
+	
 	
 	public String value;
 	

@@ -3,7 +3,7 @@ package com.asu.seatr.rest.models;
 public class CAReader1 {
 	private String external_course_id;
 	private String description;
-	private double threshold;
+	private Double threshold;
 	private String teaching_unit;
 	
 	public String getExternal_course_id() {
@@ -12,10 +12,10 @@ public class CAReader1 {
 	public void setExternal_course_id(String external_course_id) {
 		this.external_course_id = external_course_id;
 	}
-	public double getThreshold() {
+	public Double getThreshold() {
 		return threshold;
 	}
-	public void setThreshold(double threshold) {
+	public void setThreshold(Double threshold) {
 		this.threshold = threshold;
 	}
 	public String getTeaching_unit() {
