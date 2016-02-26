@@ -12,6 +12,7 @@ import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
+import org.hibernate.PropertyValueException;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.asu.seatr.exceptions.CourseException;
@@ -23,6 +24,8 @@ import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyStatus;
 
 
 @Entity
@@ -34,7 +37,6 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 	private int id;
 	
 	@ManyToOne
-
 	@JoinColumn(name = "student_task_id", referencedColumnName = "id", unique=true, nullable=false)//internal student id
 	StudentTask studentTask;
 	
@@ -86,7 +88,14 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 		StudentTask studentTask = new StudentTask();
 		studentTask.setStudent(student);
 		studentTask.setTask(task);
-		StudentTaskHandler.save(studentTask);
+	
+		try
+		{
+			StudentTaskHandler.save(studentTask);
+		}
+		catch(PropertyValueException pve) {
+			throw new TaskException(MyStatus.ERROR, MyMessage.STUDENT_TASK_PROPERTY_NULL);
+		}
 		this.studentTask = studentTask;
 		
 		

@@ -45,7 +45,7 @@ public class TaskAPIMockTest extends JerseyTest{
 		List<TaskAnalyzerI> listta1 = new ArrayList<TaskAnalyzerI>();
 		listta1.add(ta1);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
-		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenReturn(listta1);
+		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenReturn(ta1);
 		final TAReader1 resp = target("tasks/1").queryParam("external_task_id", "1")
         		.queryParam("external_course_id", "35").request().get(TAReader1.class);
         assertEquals(resp.getExternal_task_id(), new String("1"));

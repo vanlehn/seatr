@@ -7,6 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -16,7 +17,7 @@ import com.asu.seatr.models.interfaces.Task_KCAnalyzerI;
 
 
 @Entity
-@Table(name = "tk_a1")
+@Table(name = "tk_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id","kc_id"}))
 public class TK_A1 implements Task_KCAnalyzerI{
 
 	@Id
@@ -71,6 +72,7 @@ public class TK_A1 implements Task_KCAnalyzerI{
 	public void setS_min_mastery_level(int s_min_mastery_level) {
 		this.s_min_mastery_level = s_min_mastery_level;
 	}
+	
 
 
 }

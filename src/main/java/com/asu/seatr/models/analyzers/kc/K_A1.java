@@ -32,7 +32,7 @@ public class K_A1 implements KCAnalyzerI{
 	private int id;
 
 	@ManyToOne
-	@JoinColumn(name = "kc_id", referencedColumnName = "id")
+	@JoinColumn(name = "kc_id", referencedColumnName = "id", unique=true)
 	private KnowledgeComponent kc;
 	
 	//properties that do not change
@@ -72,8 +72,8 @@ public class K_A1 implements KCAnalyzerI{
 		try {
 			kc = KnowledgeComponentHandler.save(kc);
 		} catch(ConstraintViolationException cve) {
-			kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
-			//throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ALREADY_PRESENT);
+			//kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
+			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_ALREADY_PRESENT);
 		} catch(PropertyValueException pve) {
 			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_PROPERTY_NULL);
 		}

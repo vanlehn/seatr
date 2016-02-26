@@ -9,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCNotFoundException;
 import com.asu.seatr.exceptions.TaskException;
@@ -93,6 +95,7 @@ public class KCAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		}
+		
 		  catch(KCNotFoundException e)
 		{
 				// TODO Auto-generated catch block
@@ -100,6 +103,12 @@ public class KCAPI {
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			}
+		catch(ConstraintViolationException cve) {
+			//kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.KC_TASK_MAP_ALREADY_PRESENT)).build();
+			throw new WebApplicationException(rb);
+		} 
 		catch(Exception e){
 			System.out.println(e.getMessage());
 			Response rb = Response.status(Status.BAD_REQUEST)

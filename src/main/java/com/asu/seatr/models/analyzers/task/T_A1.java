@@ -15,9 +15,11 @@ import javax.validation.constraints.NotNull;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.hibernate.PropertyValueException;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.TaskHandler;
@@ -87,7 +89,7 @@ public class T_A1 implements TaskAnalyzerI{
 	}
 
 	@Override
-	public void createTask(String task_ext_id, String external_course_id, int analyzer_id) throws CourseException, TaskException {
+	public void createTask(String external_task_id, String external_course_id, int analyzer_id) throws CourseException, TaskException {
 		// TODO Auto-generated method stub
 		Course course = CourseHandler.getByExternalId(external_course_id);
 
@@ -95,12 +97,16 @@ public class T_A1 implements TaskAnalyzerI{
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
 		Task task = new Task();
-		task.setExternal_id(task_ext_id);
+		task.setExternal_id(external_task_id);
 		task.setCourse(course);
 		try {
 			task = TaskHandler.save(task);
 		} catch(ConstraintViolationException e) {
-			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ALREADY_PRESENT);
+			task = TaskHandler.readByExtTaskId_Course(external_task_id, course);
+			//throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ALREADY_PRESENT);
+		}
+		catch(PropertyValueException pve) {
+			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_PROPERTY_NULL);
 		}
 		this.task = task;
 		this.course = course;

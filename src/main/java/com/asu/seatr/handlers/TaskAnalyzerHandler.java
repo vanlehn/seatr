@@ -50,7 +50,7 @@ public class TaskAnalyzerHandler {
 	}
 	@SuppressWarnings("unchecked")
 
-	public static List<TaskAnalyzerI> readByExtId(Class typeParameterClass, String external_task_id, String external_course_id) throws CourseException, TaskException
+	public static TaskAnalyzerI readByExtId(Class typeParameterClass, String external_task_id, String external_course_id) throws CourseException, TaskException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		Task task = TaskHandler.readByExtTaskId_Course(external_task_id, course);
@@ -65,7 +65,8 @@ public class TaskAnalyzerHandler {
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);
 		}
 		session.close();
-		return result;
+		TaskAnalyzerI taskAnalyzer = result.get(0);
+		return taskAnalyzer;
 		
 	}
 	public static List<TaskAnalyzerI> readByCourse(Class typeParameterClass, Course course) throws CourseException

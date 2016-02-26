@@ -42,7 +42,7 @@ public class TaskApi {
 			)
 	{
 		try{
-			T_A1 tal = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id).get(0);
+			T_A1 tal = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id);
 			TAReader1 result = new TAReader1();
 			result.setExternal_task_id(external_task_id);
 			result.setExternal_course_id(external_course_id);
@@ -150,7 +150,7 @@ public class TaskApi {
 	{
 
 		try {
-			T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id).get(0);
+			T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id);
 			TaskAnalyzerHandler.delete(t_a1);
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_ANALYZER_DELETED)).build();
