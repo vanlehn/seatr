@@ -14,7 +14,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.KCNotFoundException;
+import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.utils.MyMessage;

@@ -12,7 +12,7 @@ import javax.ws.rs.core.Response.Status;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.KCNotFoundException;
+import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
@@ -51,7 +51,7 @@ public class KCAPI {
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
-		} catch (KCNotFoundException e) {
+		} catch (KCException e) {
 			// TODO Auto-generated catch block
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
@@ -96,7 +96,7 @@ public class KCAPI {
 			throw new WebApplicationException(rb);
 		}
 		
-		  catch(KCNotFoundException e)
+		  catch(KCException e)
 		{
 				// TODO Auto-generated catch block
 				Response rb = Response.status(Status.OK)

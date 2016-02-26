@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.KCNotFoundException;
+import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.interfaces.KCAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
@@ -67,7 +67,7 @@ public class KCAnalyzerHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	public static KCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id) throws CourseException, KCNotFoundException
+	public static KCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id) throws CourseException, KCException
 	{
 		KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -77,11 +77,11 @@ public class KCAnalyzerHandler {
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
 		if(kcAnalyzerList.size() < 1 )
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
+			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
 		}
 		return kcAnalyzerList.get(0);
 	}
-	public static KCAnalyzerI readByInternalKCId(Class typeParameterClass, int kc_id) throws KCNotFoundException
+	public static KCAnalyzerI readByInternalKCId(Class typeParameterClass, int kc_id) throws KCException
 	{
 		KnowledgeComponent kc = KnowledgeComponentHandler.getByInternalId(kc_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -91,15 +91,15 @@ public class KCAnalyzerHandler {
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
 		if(kcAnalyzerList.size() < 1 )
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
+			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
 		}
 		return kcAnalyzerList.get(0);
 	}
-	public static KCAnalyzerI readByKC(Class typeParameterClass, KnowledgeComponent kc) throws KCNotFoundException
+	public static KCAnalyzerI readByKC(Class typeParameterClass, KnowledgeComponent kc) throws KCException
 	{
 		if(kc == null)
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -108,7 +108,7 @@ public class KCAnalyzerHandler {
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
 		if(kcAnalyzerList.size() < 1 )
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
+			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
 		}
 		return kcAnalyzerList.get(0);
 	}

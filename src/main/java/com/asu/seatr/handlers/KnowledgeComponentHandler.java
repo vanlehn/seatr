@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.KCNotFoundException;
+import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.persistence.HibernateUtil;
@@ -30,7 +30,7 @@ public class KnowledgeComponentHandler {
 	    return kc;
 	}
 	
-	public static KnowledgeComponent getByInternalId(int id) throws KCNotFoundException
+	public static KnowledgeComponent getByInternalId(int id) throws KCException
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -38,7 +38,7 @@ public class KnowledgeComponentHandler {
 		session.close();
 		if(kc == null)
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
 		return kc;
 	}
@@ -70,7 +70,7 @@ public class KnowledgeComponentHandler {
 		return kcList;
 	}
 	
-	public static KnowledgeComponent getByExtKCId_Course(String external_kc_id, Course course) throws CourseException, KCNotFoundException
+	public static KnowledgeComponent getByExtKCId_Course(String external_kc_id, Course course) throws CourseException, KCException
 	{
 		if(course == null)
 		{
@@ -84,7 +84,7 @@ public class KnowledgeComponentHandler {
 		List<KnowledgeComponent> kcList = (List<KnowledgeComponent>) cr.list();
 		if(kcList.size() < 1)
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
 		KnowledgeComponent kc = kcList.get(0);
 		session.close();
@@ -92,7 +92,7 @@ public class KnowledgeComponentHandler {
 	}
 	
 	
-	public static KnowledgeComponent readByExtId(String external_kc_id, String external_course_id) throws CourseException, KCNotFoundException
+	public static KnowledgeComponent readByExtId(String external_kc_id, String external_course_id) throws CourseException, KCException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -104,7 +104,7 @@ public class KnowledgeComponentHandler {
 		session.close();
 		if(kcList.size() < 1)
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
 		KnowledgeComponent kc = kcList.get(0);
 		return kc;

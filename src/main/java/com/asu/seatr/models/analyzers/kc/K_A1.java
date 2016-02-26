@@ -13,7 +13,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.KCNotFoundException;
+import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.models.Course;
@@ -63,7 +63,7 @@ public class K_A1 implements KCAnalyzerI{
 		this.s_unit = s_unit;
 	}
 	
-	public void createKC(String external_kc_id, String external_course_id) throws CourseException, KCNotFoundException{
+	public void createKC(String external_kc_id, String external_course_id) throws CourseException, KCException{
 		
 		Course course = CourseHandler.getByExternalId(external_course_id);		
 		KnowledgeComponent kc = new KnowledgeComponent();
@@ -73,9 +73,9 @@ public class K_A1 implements KCAnalyzerI{
 			kc = KnowledgeComponentHandler.save(kc);
 		} catch(ConstraintViolationException cve) {
 			//kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_ALREADY_PRESENT);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_ALREADY_PRESENT);
 		} catch(PropertyValueException pve) {
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_PROPERTY_NULL);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_PROPERTY_NULL);
 		}
 		
 		this.kc = kc;

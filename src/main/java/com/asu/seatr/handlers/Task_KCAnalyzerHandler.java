@@ -8,7 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.KCNotFoundException;
+import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
@@ -70,7 +70,7 @@ public class Task_KCAnalyzerHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	public static Task_KCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id, String external_task_id) throws CourseException, TaskException, KCNotFoundException
+	public static Task_KCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id, String external_task_id) throws CourseException, TaskException, KCException
 	{
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
 		KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
@@ -83,12 +83,12 @@ public class Task_KCAnalyzerHandler {
 		session.close();
 		if(t_kcAnalyzerList.size() < 1)
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND_FOR_TASK);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND_FOR_TASK);
 		}
 		Task_KCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
 		return t_kc;
 	}
-	public static Task_KCAnalyzerI readByKC_Task(Class typeParameterClass, KnowledgeComponent kc, Task task) throws TaskException, KCNotFoundException
+	public static Task_KCAnalyzerI readByKC_Task(Class typeParameterClass, KnowledgeComponent kc, Task task) throws TaskException, KCException
 	{
 		if(task == null)
 		{
@@ -96,7 +96,7 @@ public class Task_KCAnalyzerHandler {
 		}
 		if(kc == null)
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -107,7 +107,7 @@ public class Task_KCAnalyzerHandler {
 		session.close();
 		if(t_kcAnalyzerList.size() < 1)
 		{
-			throw new KCNotFoundException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND_FOR_TASK);
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND_FOR_TASK);
 		}
 		Task_KCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
 		return t_kc;
