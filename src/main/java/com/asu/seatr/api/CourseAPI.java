@@ -18,8 +18,10 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.handlers.C_A1_Handler;
 import com.asu.seatr.handlers.CourseAnalyzerHandler;
+import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.models.Course;
+import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.analyzers.course.C_A1;
 import com.asu.seatr.rest.models.CAReader1;
 import com.asu.seatr.utils.MyMessage;
@@ -28,6 +30,38 @@ import com.asu.seatr.utils.MyStatus;
 
 @Path("/courses")
 public class CourseAPI {
+	
+	@Path("/setanalyzer")
+	@GET
+	public Response setAnalyzer(@QueryParam("external_course_id") String ext_c_id, @QueryParam("analyzer_id") String a_id, @QueryParam("active") Boolean active){
+		try{
+			CourseAnalyzerMap ca_map=CourseAnalyzerMapHandler.getByCourseAndAnalyzer(ext_c_id, a_id);
+			if(ca_map!=null){
+				if(active){
+					CourseAnalyzerMapHandler.deactiveAllAnalyzers(ext_c_id);
+					ca_map.setActive(true);
+					CourseAnalyzerMapHandler.update(ca_map);
+				}
+				else{
+					ca_map.setActive(false);
+					CourseAnalyzerMapHandler.update(ca_map);
+				}	
+			}
+			else{ //no mapping existed
+				//to-do
+			}
+			return Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_ANALYZER_UPDATED)).build();
+		}
+		 catch (CourseException e) {
+				Response rb = Response.status(Status.OK)
+						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+				throw new WebApplicationException(rb);
+			} 
+	}
+	{
+		
+	}
 	
 	@Path("/1")
 	@GET
@@ -168,5 +202,7 @@ public class CourseAPI {
 			throw new WebApplicationException(rb);
 		}
 	}
+	
+	
 		
 }

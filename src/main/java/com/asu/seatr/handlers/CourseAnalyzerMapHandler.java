@@ -6,6 +6,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -75,6 +76,33 @@ public class CourseAnalyzerMapHandler {
 		}
 		CourseAnalyzerMap  courseAnalyzerMap = courseAnalyzerMapList.get(0);
 		return courseAnalyzerMap;
+	}
+	
+	public static CourseAnalyzerMap getByCourseAndAnalyzer(String external_course_id, String analyzer_id) throws CourseException {
+		Course course=CourseHandler.getByExternalId(external_course_id);
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Query q=session.createQuery("from CourseAnalyzerMap where course_id=:c_id and analyzer_id=:a_id");
+		q.setParameter("c_id", course.getId());
+		q.setParameter("a_id", Integer.valueOf(analyzer_id));
+		List<CourseAnalyzerMap> ca_l=q.list();
+		if(ca_l.size()<1)
+			return null;
+		else
+			return ca_l.get(0);
+		
+	}
+	
+	public static void deactiveAllAnalyzers(String external_course_id) throws CourseException{
+		Course course=CourseHandler.getByExternalId(external_course_id);
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		Query q=session.createQuery("update CourseAnalyzerMap set active=false where course_id=:c_id");
+		q.setParameter("c_id", course.getId());
+		q.executeUpdate();
+		session.getTransaction().commit();
+		session.close();
 	}
 	
 	public static CourseAnalyzerMap update(CourseAnalyzerMap courseAnalyzer)
