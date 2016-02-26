@@ -15,6 +15,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.StudentHandler;
@@ -93,6 +94,12 @@ public class RecommenderApi {
 		
 		}
 
+		catch(StudentException e)
+		{
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);	
+		}
 		catch(CourseException e) {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();

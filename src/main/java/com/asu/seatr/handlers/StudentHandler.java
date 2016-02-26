@@ -12,6 +12,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.persistence.HibernateUtil;
@@ -22,17 +23,21 @@ import com.asu.seatr.utils.MyStatus;
 public class StudentHandler {
 
 
-	public static Student getByExternalId(String external_student_id, String external_course_id){
+	public static Student getByExternalId(String external_student_id, String external_course_id) throws StudentException, CourseException{
+		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    Criteria cr = session.createCriteria(Course.class);
-		cr.add(Restrictions.eq("external_id", external_course_id));
-		Course course = (Course) cr.list().get(0);
-		cr = session.createCriteria(Student.class);
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(Student.class);
 		cr.add(Restrictions.eq("external_id", external_student_id));
 		cr.add(Restrictions.eq("course", course));
-		Student student = (Student) cr.list().get(0);
+		
+		List<Student> studentList = (List<Student>)cr.list();
+		if(studentList.size() == 0)
+		{
+			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
+		}
+		session.close();
+		Student student = studentList.get(0);
 		return student;
 	}
 	
@@ -57,19 +62,24 @@ public class StudentHandler {
 		return student;
 	}
 	
-	public static Student readByExtStudentId_and_ExtCourseId(String external_student_id, Integer external_course_id)
+	/*
+	public static Student readByExtStudentId_and_ExtCourseId(String external_student_id, String external_course_id) throws CourseException, StudentException
 	{
+		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria cr = session.createCriteria(Course.class);
-		cr.add(Restrictions.eq("external_id", external_course_id));
-		Course course = (Course)cr.list().get(0);
-		cr = session.createCriteria(Student.class);
+		Criteria cr = session.createCriteria(Student.class);
 		cr.add(Restrictions.eq("external_id", external_student_id));
 		cr.add(Restrictions.eq("course", course));
-		Student student = (Student)cr.list().get(0);
+		List<Student> studentList = (List<Student>)cr.list();
+		if(studentList.size() == 0)
+		{
+			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
+		}
+		Student student = studentList.get(0);
 		return student;
 	}
+	*/
 	public static List<Student> readAll()
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();

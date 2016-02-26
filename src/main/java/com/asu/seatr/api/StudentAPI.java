@@ -99,7 +99,13 @@ public class StudentAPI {
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
-		} catch(Exception e){
+		} 
+		catch(ConstraintViolationException cve) {
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_ALREADY_PRESENT)).build();
+			throw new WebApplicationException(rb);
+		}
+		catch(Exception e){
 			System.out.println(e.getMessage());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
