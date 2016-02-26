@@ -10,6 +10,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.CourseException;
@@ -71,13 +72,16 @@ public class StudentAnalyzerHandler {
 	}
 	
 
-	public static StudentAnalyzerI save(StudentAnalyzerI studentAnalyzer) {
+	public static StudentAnalyzerI save(StudentAnalyzerI studentAnalyzer) throws StudentException {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
-	    
-	    int id = (int)session.save(studentAnalyzer);
-	    studentAnalyzer.setId(id);
+	    try {
+		    int id = (int)session.save(studentAnalyzer);
+		    studentAnalyzer.setId(id);
+	    } catch (ConstraintViolationException cve) {
+	    	throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_ALREADY_PRESENT);
+	    }
 	    session.getTransaction().commit();
 	    session.close();
 	    return studentAnalyzer;

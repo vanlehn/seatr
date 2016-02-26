@@ -52,6 +52,11 @@ public class StudentAPI {
 				Response rb = Response.status(Status.NOT_FOUND)
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
+			} catch(Exception e){
+				System.out.println(e.getMessage());
+				Response rb = Response.status(Status.BAD_REQUEST)
+						.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+				throw new WebApplicationException(rb);
 			}
 			
 			SAReader1 result  = new SAReader1();

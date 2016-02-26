@@ -1,97 +1,166 @@
 package com.asu.seatr.api;
 
-
-
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.core.Response.Status;
 
+import org.hibernate.exception.ConstraintViolationException;
+
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.handlers.C_A1_Handler;
+import com.asu.seatr.handlers.CourseAnalyzerHandler;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.models.Course;
+import com.asu.seatr.models.analyzers.course.C_A1;
+import com.asu.seatr.rest.models.CAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-//Sets the path to base URL + /hello
-@Path("/course")
+@Path("/courses")
 public class CourseAPI {
-	@Context UriInfo uriInfo;
-	String container;
 	
-	@Path("/test")
+	@Path("/1")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Course test(){
-		Course course = new Course();
-		course.setDescription("test course");
-		CourseHandler.save(course);
-		return course;
-	}
-	
-	@Path("/find")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Course getCourse(@QueryParam("external_id") String external_idStr){
-		Course course=null;
-		if(external_idStr!=null)
-			try {
-				course=CourseHandler.getByExternalId(external_idStr);
-			} catch (CourseException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
-						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
-				throw new WebApplicationException(rb);
-			}
-		return course;		
-	}
-	
-	@Path("/delete")
-	@GET
-	public void delCourse(@QueryParam("id") String idStr,@QueryParam("external_id") String external_idStr){
-
+	public CAReader1 getCourse(@QueryParam("external_course_id") String external_course_id){
+		C_A1 ca1 = null;
 		try {
-			if(idStr!=null)
-				CourseHandler.delete(CourseHandler.readById(Integer.valueOf(idStr)));
-			else if(external_idStr!=null)
-				CourseHandler.delete(CourseHandler.getByExternalId(external_idStr));
-		} catch(CourseException e) {
+			ca1 = (C_A1)CourseAnalyzerHandler.readByExtId(C_A1.class, external_course_id).get(0);
+		} catch (CourseException e) {
 			Response rb = Response.status(Status.NOT_FOUND)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
 		}
+		
+			CAReader1 reader=new CAReader1();
+			reader.setDescription(ca1.getCourseDesc());
+			reader.setExternal_course_id(ca1.getCourseExtId());
+			reader.setTeaching_unit(ca1.getTeaching_unit());
+			reader.setThreshold(ca1.getThreshold());
+			return reader;
+		
+	}
+	
+	//create
+	@Path("/1")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response addCourse(CAReader1 reader){
+		
+		C_A1 ca1 = new C_A1();
+		
+		try{
+			ca1.createCourse(reader.getExternal_course_id(), reader.getDescription());
+			ca1.setTeaching_unit(reader.getTeaching_unit());
+			ca1.setThreshold(reader.getThreshold());
+			CourseAnalyzerHandler.save(ca1);
+			return Response.status(Status.CREATED)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_CREATED)).build();
+		
+		} catch (CourseException e) {
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch(Exception e){
+			System.out.println(e.getMessage());
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}						
 			
+	}
+	
+	@Path("/1")
+	@PUT
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response updateCourse(CAReader1 reader){
+		try{
+			
+			C_A1 ca1 = (C_A1) CourseAnalyzerHandler.readByExtId(C_A1.class, reader.getExternal_course_id()).get(0);
+			
+			ca1.setTeaching_unit(reader.getTeaching_unit());
+			ca1.setThreshold(reader.getThreshold());
+			CourseAnalyzerHandler.update(ca1);
+			return Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_UPDATED))
+					.build();
+		} catch (CourseException e) {
+			Response rb = Response.status(Status.NOT_FOUND)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch(Exception e){
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
+	}
+	
+	@Path("/")
+	@DELETE
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response delCourse(@QueryParam("external_course_id") String external_course_id){
+		C_A1 c_a1;
+		// delete all course analyzers and then delete the course record
+		try {
+			c_a1 = (C_A1)CourseAnalyzerHandler.readByExtId(C_A1.class, external_course_id).get(0);
+			CourseAnalyzerHandler.delete(c_a1);
+			//delete all analyzers here
+			
+			Course course =(Course)CourseHandler.getByExternalId(external_course_id);
+			CourseHandler.delete(course);
+			return Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_DELETED)).build();
+		} catch (CourseException e) {
+			Response rb = Response.status(Status.NOT_FOUND)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch(Exception e){
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
+	}
+	
+	@Path("/1")
+	@DELETE
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response deleteCourseAnalyzer1(@QueryParam("external_course_id") String external_course_id) {
 		
+		C_A1 c_a1;
+		// delete all course analyzers and then delete the course record
+		try {
+			c_a1 = (C_A1)CourseAnalyzerHandler.readByExtId(C_A1.class, external_course_id).get(0);
+			CourseAnalyzerHandler.delete(c_a1);
+			return Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_ANALYZER_DELETED)).build();
+		} catch (CourseException e) {
+			Response rb = Response.status(Status.NOT_FOUND)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch(Exception e){
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
 	}
-	
-	@Path("/add")
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void addCourse(Course c){
-		CourseHandler.save(c);
-	}
-	
-	@Path("/update")
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void updateCourse(@QueryParam("external_id") String external_id,Course c ){
-		CourseHandler.updateCourseByExternalID(external_id, c);
-	}
-	
-	@Path("/setanalyzer")
-	@PUT
-	@Consumes(MediaType.APPLICATION_JSON)
-	public void setAnalyzer()
-	{
 		
-	}
-	
 }
