@@ -34,7 +34,8 @@
 - The tests can either be run using the JMeter GUI or on Command Line.
 
   <b>JMeter GUI</b>
-- In apache-jmeter-2.13\bin\ folder open JMeter.bat to access the JMeter GUI. 
+- Windows: In apache-jmeter-2.13\bin\ folder open JMeter.bat to access the JMeter GUI. 
+- Linux: Browse to apache-jmeter-2.13\bin\ folder using terminal then type <b>"sh jmeter"</b> to open the JMeter GUI.
 - Click on the file button(top left corner of Menu bar) and then click on open and browse the test case.
 - Now run the test using the Run button(centre of Menu bar) and then click on start.
 
