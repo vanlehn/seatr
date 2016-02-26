@@ -37,17 +37,14 @@ public enum MyMessage {
 	KC_NOT_FOUND_FOR_TASK("no knowledge componenent found for given task"),
 	KC_PROPERTY_NULL("kc property is null"),
 	KC_CREATED("kc created"),
-<<<<<<< HEAD
 	TASK_PROPERTY_NULL("Task property is null"),
 	STUDENT_TASK_PROPERTY_NULL("Student Task property is null"),
 	KC_ALREADY_PRESENT("Knowledge Component already present"),
 	KC_TASK_MAP_ALREADY_PRESENT("kc task map already present"),
-=======
 	KC_TASK_CREATED("KC task map created"), 
 	COURSE_ANALYZER_ALREADY_PRESENT("course analyzer already present"),
 	STUDENT_ANALYZER_ALREADY_PRESENT("student analyzer already present"); 
 	
->>>>>>> 98df1a9c9ba9e692675a05d4e71f980be82049ff
 	
 	public String value;
 	
