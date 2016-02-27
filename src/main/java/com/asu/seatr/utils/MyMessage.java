@@ -20,7 +20,7 @@ public enum MyMessage {
 	TASK_ANALYZER_DELETED("task analyzer record deleted"),
 	TASK_DELETED("task deleted"),
 	TASK_UPDATED("task updated"),
-	TASK_ALREADY_PRESENT("student_task already present"),
+	TASK_ALREADY_PRESENT("task already present"),
 	STUDENT_TASK_NOT_FOUND("student_task not found"),
 	STUDENT_TASK_CREATED("student_task created"),
 	STUDENT_TASK_ANALYZER_DELETED("student_task analyzer record deleted"),
