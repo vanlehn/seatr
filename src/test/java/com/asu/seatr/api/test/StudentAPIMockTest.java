@@ -3,9 +3,14 @@ package com.asu.seatr.api.test;
 import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
@@ -24,11 +29,14 @@ import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
 import com.asu.seatr.rest.models.SAReader1;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyResponse;
+import com.asu.seatr.utils.MyStatus;
 
-@PrepareForTest({StudentAnalyzerHandler.class})
+@PrepareForTest({S_A1.class, StudentAnalyzerHandler.class, StudentAPI.class})
 @RunWith(PowerMockRunner.class)
 public class StudentAPIMockTest extends JerseyTest {
-	
+		
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
@@ -53,5 +61,30 @@ public class StudentAPIMockTest extends JerseyTest {
         assertEquals(new Double(34.45), resp.getS_placement_score());
         assertEquals(new String("freshman"), resp.getS_year());          
 		
+	}
+	
+	@Test
+	public void createStudentTest() throws Exception {
+		
+		S_A1 s_a1 = PowerMockito.mock(S_A1.class);						
+		PowerMockito.whenNew(S_A1.class).withNoArguments().thenReturn(s_a1);
+		Mockito.stubVoid(s_a1).toReturn().on().createStudent(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
+		PowerMockito.mockStatic(StudentAnalyzerHandler.class);				
+		PowerMockito.when(StudentAnalyzerHandler.save((StudentAnalyzerI)Mockito.anyObject())).thenReturn(s_a1);			
+		
+		Map<String, String> data = new HashMap<String, String>();
+		data.put("external_student_id","23");
+		data.put("external_course_id", "35");
+		data.put("s_placement_score", "34.45");
+		data.put("s_year", "freshman");
+		
+		final Response resp  = target("students/1")
+								.request().post(Entity.json(data), Response.class);
+		
+		
+		PowerMockito.verifyNew(S_A1.class).withNoArguments();
+		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
+		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_CREATED), 
+				resp.readEntity(String.class));
 	}
 }
