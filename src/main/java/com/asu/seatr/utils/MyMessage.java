@@ -44,7 +44,8 @@ public enum MyMessage {
 	KC_TASK_CREATED("KC task map created"), 
 	COURSE_ANALYZER_ALREADY_PRESENT("course analyzer already present"),
 	STUDENT_ANALYZER_ALREADY_PRESENT("student analyzer already present"),
-	COURSE_ANALYZER_UPDATED("course analyzer mapping is updated."); 
+	COURSE_ANALYZER_UPDATED("course analyzer mapping is updated."),
+	ANALYZER_NOT_FOUND("The specified analyzer is not found."); 
 	
 	public String value;
 	
