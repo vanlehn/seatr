@@ -76,12 +76,6 @@ public class TaskApi {
 		try
 		{
 			T_A1 t_a1 = new T_A1(); 
-
-			// Handle this better..
-			if(taReader1.getExternal_task_id().trim().equals(""))
-			{
-				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);
-			}
 			t_a1.createTask(taReader1.getExternal_task_id(), taReader1.getExternal_course_id(), 1);
 			t_a1.setS_difficulty_level(taReader1.getS_difficulty_level());
 			TaskAnalyzerHandler.save(t_a1);

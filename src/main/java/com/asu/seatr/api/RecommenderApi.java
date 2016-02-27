@@ -72,7 +72,7 @@ public class RecommenderApi {
 			{
 				//select tasks based on analyzer
 				Course course = courseAnalyzerMap.getCourse();
-				List<TaskAnalyzerI> taskAnalyzerList = TaskAnalyzerHandler.readByCourse(Class.forName("t_" + courseAnalyzerMap.getAnalyzer().toString()), course);
+				List<TaskAnalyzerI> taskAnalyzerList = TaskAnalyzerHandler.readByCourse(Class.forName("com.asu.seatr.models.analyzers.task.T_" + courseAnalyzerMap.getAnalyzer().toString()), course);
 				
 				if(taskAnalyzerList.isEmpty())
 				{
@@ -87,7 +87,7 @@ public class RecommenderApi {
 				}
 				
 			}
-		
+			
 		
 		Collections.shuffle(resultTaskSet);
 		return resultTaskSet.subList(0, (resultTaskSet.size()>number_of_tasks)?number_of_tasks:resultTaskSet.size());
@@ -104,6 +104,10 @@ public class RecommenderApi {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);			
+		}
+		catch(WebApplicationException e)
+		{
+			throw new WebApplicationException(e.getResponse());
 		}
 		
 		catch(Exception e){
