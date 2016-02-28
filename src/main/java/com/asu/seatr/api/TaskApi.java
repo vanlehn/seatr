@@ -83,18 +83,18 @@ public class TaskApi {
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_CREATED)).build();
 		}
 		catch(CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND).
+			Response rb = Response.status(Status.OK).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
 		catch(TaskException e) {
-			Response rb = Response.status(Status.NOT_FOUND).
+			Response rb = Response.status(Status.OK).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
 		catch(ConstraintViolationException cve) {
 			Response rb = Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ALREADY_PRESENT)).build();
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT)).build();
 			throw new WebApplicationException(rb);
 		}
 	    catch(Exception e){
@@ -123,12 +123,12 @@ public class TaskApi {
 		}
 
 		catch(CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND).
+			Response rb = Response.status(Status.OK).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
 		catch(TaskException e) {
-			Response rb = Response.status(Status.NOT_FOUND).
+			Response rb = Response.status(Status.OK).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
@@ -156,12 +156,12 @@ public class TaskApi {
 		}
 
 		catch(CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND).
+			Response rb = Response.status(Status.OK).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
 		catch(TaskException e) {
-			Response rb = Response.status(Status.NOT_FOUND).
+			Response rb = Response.status(Status.OK).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}		
