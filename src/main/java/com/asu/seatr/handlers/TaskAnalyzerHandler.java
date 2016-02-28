@@ -9,8 +9,10 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Task;
@@ -24,12 +26,17 @@ public class TaskAnalyzerHandler {
 
 
 
-	public static TaskAnalyzerI save(TaskAnalyzerI taskAnalyzer) {
+	public static TaskAnalyzerI save(TaskAnalyzerI taskAnalyzer) throws TaskException {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();	    
-	    int id = (int)session.save(taskAnalyzer);
-	    taskAnalyzer.setId(id);
+	    session.beginTransaction();	
+	    try{
+	    	int id = (int)session.save(taskAnalyzer);
+	    	taskAnalyzer.setId(id);
+	    }
+	    catch (ConstraintViolationException cve) {
+	    	throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT);
+	    }
 	    session.getTransaction().commit();
 	    session.close();
 	    return taskAnalyzer;
@@ -62,7 +69,7 @@ public class TaskAnalyzerHandler {
 		List<TaskAnalyzerI> result = cr.list();
 
 		if (result.size() == 0) {
-			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);
+			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND);
 		}
 		session.close();
 		TaskAnalyzerI taskAnalyzer = result.get(0);

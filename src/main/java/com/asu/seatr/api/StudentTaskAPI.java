@@ -16,6 +16,7 @@ import javax.ws.rs.core.Response.Status;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
@@ -86,12 +87,17 @@ public class StudentTaskAPI {
 		}
 
 		catch(CourseException e) {
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
 		catch(TaskException e) {
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);
+		}
+		catch(StudentException e) {
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}

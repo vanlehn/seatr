@@ -23,7 +23,7 @@ import com.asu.seatr.utils.MyStatus;
 public class TaskHandler {
 
 
-	public static Task save(Task task) {
+	public static Task save(Task task){
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
