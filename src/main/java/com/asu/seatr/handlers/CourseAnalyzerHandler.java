@@ -51,11 +51,13 @@ public class CourseAnalyzerHandler {
 	    try {
 	    int id = (int)session.save(courseAnalyzer);
 	    courseAnalyzer.setId(id);
+	    session.getTransaction().commit();
 	    } catch(ConstraintViolationException cve) {
 	    	throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_ALREADY_PRESENT);
-	    }
-	    session.getTransaction().commit();
-	    session.close();
+	    } finally {
+	    	session.close();
+	    }	    
+	    
 	    return courseAnalyzer;
 	}
 	

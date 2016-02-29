@@ -79,11 +79,12 @@ public class StudentAnalyzerHandler {
 	    try {
 		    int id = (int)session.save(studentAnalyzer);
 		    studentAnalyzer.setId(id);
+		    session.getTransaction().commit();
 	    } catch (ConstraintViolationException cve) {
 	    	throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_ALREADY_PRESENT);
+	    } finally {	    
+	    	session.close();
 	    }
-	    session.getTransaction().commit();
-	    session.close();
 	    return studentAnalyzer;
 	}
 	
