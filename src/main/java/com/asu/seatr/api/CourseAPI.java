@@ -31,6 +31,7 @@ import com.asu.seatr.utils.MyStatus;
 @Path("/courses")
 public class CourseAPI {
 	
+	//set shouldn't be get..
 	@Path("/setanalyzer")
 	@GET
 	public Response setAnalyzer(@QueryParam("external_course_id") String ext_c_id, @QueryParam("analyzer_id") String a_id, @QueryParam("active") Boolean active){

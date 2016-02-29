@@ -45,13 +45,19 @@ public class C_A1 implements CourseAnalyzerI{
 	private String teaching_unit;
 	
 	public int getId() {
-		// TODO Auto-generated method stub
-		return 0;
+		return id;
 	}
 
 	public void setId(int id) {
-		// TODO Auto-generated method stub
-		
+		this.id = id;		
+	}
+	
+	public Course getCourse() {
+		return course;
+	}
+
+	public void setCourse(Course course) {
+		this.course = course;
 	}
 
 	public void setCourseByExt_id(String course_ext_id) throws CourseException {
