@@ -70,6 +70,7 @@ public class TaskApi {
 	//create
 	@Path("/1")
 	@POST
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createTask(TAReader1 taReader1)
 	{
@@ -109,6 +110,7 @@ public class TaskApi {
 	//update
 	@Path("/1")
 	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateTask(TAReader1 taReader1)
 	{
@@ -145,6 +147,8 @@ public class TaskApi {
 	}
 	@Path("/1")
 	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
 	public Response deleteTask1Analyzer(
 			@QueryParam("external_course_id") String external_course_id,
 			@QueryParam("external_task_id") String external_task_id
@@ -185,11 +189,25 @@ public class TaskApi {
 	{
 
 		try {
-			// implement this
-			T_A1 t_a1 = (T_A1) TaskAnalyzerHandler.readByExtId
-					(T_A1.class, external_task_id, external_course_id);
-			//delete all other analyzers here			
-			TaskAnalyzerHandler.delete(t_a1);
+			try
+			{
+				
+				T_A1 t_a1 = (T_A1) TaskAnalyzerHandler.readByExtId
+						(T_A1.class, external_task_id, external_course_id);
+				//delete all other analyzers here			
+				TaskAnalyzerHandler.delete(t_a1);
+			}
+			catch(TaskException e)
+			{
+				if((e.getMyStatus() == MyStatus.ERROR)&&(e.getMyMessage() == MyMessage.TASK_ANALYZER_NOT_FOUND))
+				{
+					//do nothing
+				}
+				else
+				{
+					throw new TaskException(e.getMyStatus(),e.getMyMessage());
+				}
+			}
 			Task task = (Task)TaskHandler.readByExtId(external_task_id, external_course_id);
 			TaskHandler.delete(task);
 			return Response.status(Status.OK)
