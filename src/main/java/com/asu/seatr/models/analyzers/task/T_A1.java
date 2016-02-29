@@ -22,6 +22,7 @@ import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseHandler;
+import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Task;
@@ -101,9 +102,10 @@ public class T_A1 implements TaskAnalyzerI{
 		task.setCourse(course);
 		try {
 			task = TaskHandler.save(task);
-		} catch(ConstraintViolationException e) {
+		}catch(ConstraintViolationException cve) {
 			task = TaskHandler.readByExtTaskId_Course(external_task_id, course);
 			//throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ALREADY_PRESENT);
+
 		}
 		catch(PropertyValueException pve) {
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_PROPERTY_NULL);

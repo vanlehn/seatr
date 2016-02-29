@@ -73,9 +73,12 @@ public class TaskApi {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createTask(TAReader1 taReader1)
 	{
-		try
-		{
+		
 			T_A1 t_a1 = new T_A1(); 
+
+		try
+			{
+			// Handle this better..
 			t_a1.createTask(taReader1.getExternal_task_id(), taReader1.getExternal_course_id(), 1);
 			t_a1.setS_difficulty_level(taReader1.getS_difficulty_level());
 			TaskAnalyzerHandler.save(t_a1);

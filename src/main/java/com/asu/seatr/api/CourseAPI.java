@@ -15,11 +15,14 @@ import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.asu.seatr.exceptions.AnalyzerException;
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.handlers.AnalyzerHandler;
 import com.asu.seatr.handlers.C_A1_Handler;
 import com.asu.seatr.handlers.CourseAnalyzerHandler;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.CourseHandler;
+import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.analyzers.course.C_A1;
@@ -49,16 +52,29 @@ public class CourseAPI {
 				}	
 			}
 			else{ //no mapping existed
-				//to-do
+				int id=Integer.valueOf(a_id);
+				Analyzer analyzer=AnalyzerHandler.getById(id);
+				Course c=CourseHandler.getByExternalId(ext_c_id);
+				ca_map=new CourseAnalyzerMap();
+				ca_map.setCourse(c);
+				ca_map.setAnalyzer(analyzer);
+				ca_map.setActive(active);
+				CourseAnalyzerMapHandler.save(ca_map);
+				
 			}
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_ANALYZER_UPDATED)).build();
 		}
-		 catch (CourseException e) {
+		catch (CourseException e) {
 				Response rb = Response.status(Status.OK)
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			} 
+		catch (AnalyzerException e) {
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} 
 	}
 	{
 		
@@ -112,12 +128,7 @@ public class CourseAPI {
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
-		} 
-		catch(ConstraintViolationException cve) {
-			Response rb = Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_ALREADY_PRESENT)).build();
-			throw new WebApplicationException(rb);
-		}
+		} 		
 		catch(Exception e){
 			System.out.println(e.getMessage());
 			Response rb = Response.status(Status.BAD_REQUEST)
