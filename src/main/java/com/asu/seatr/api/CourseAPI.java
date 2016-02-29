@@ -129,12 +129,7 @@ public class CourseAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} 		
-		catch(Exception e){
-			System.out.println(e.getMessage());
-			Response rb = Response.status(Status.BAD_REQUEST)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-			throw new WebApplicationException(rb);
-		}						
+								
 			
 	}
 	

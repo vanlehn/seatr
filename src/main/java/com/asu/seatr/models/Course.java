@@ -21,7 +21,7 @@ public class Course {
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
 	
-	@Column(name="external_id", nullable=false)
+	@Column(name="external_id", nullable=false, unique=true)
 	private String external_id;
 	
 	@Column(name="description")

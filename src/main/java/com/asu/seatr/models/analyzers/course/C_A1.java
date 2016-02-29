@@ -97,11 +97,16 @@ public class C_A1 implements CourseAnalyzerI{
 		course.setDescription(description);
 		try {
 			CourseHandler.save(course);
-		} catch (ConstraintViolationException cve) {
+		} 
+		
+		catch (ConstraintViolationException cve) {
 			course = CourseHandler.getByExternalId(external_course_id);
-		} catch (PropertyValueException pve) {
+			this.course = course;
+		} 
+		
+		catch (PropertyValueException pve) {
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_PROPERTY_NULL);
-		}
+		} 
 		this.course = course;
 		
 	}
