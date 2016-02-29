@@ -39,9 +39,6 @@ import com.asu.seatr.utils.MyStatus;
 @RunWith(PowerMockRunner.class)
 public class StudentAPIMockTest extends JerseyTest {
 	
-	@Rule
-	public final ExpectedException exception = ExpectedException.none();
-	
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
