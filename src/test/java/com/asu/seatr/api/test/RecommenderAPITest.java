@@ -4,7 +4,6 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.ListIterator;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.Application;
@@ -20,7 +19,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.RecommenderApi;
+import com.asu.seatr.api.RecommenderAPI;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
@@ -45,7 +44,7 @@ public class RecommenderApiTest extends JerseyTest{
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(RecommenderApi.class);
+        return new ResourceConfig(RecommenderAPI.class);
     }
 	@Test
 	public void getRecommendedTasks1Test() throws StudentException, CourseException

@@ -1,7 +1,5 @@
 package com.asu.seatr.models.analyzers.course;
 
-import java.util.HashMap;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,21 +7,17 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
 
 import org.hibernate.PropertyValueException;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.exception.ConstraintViolationException;
 
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
-import com.asu.seatr.models.interfaces.StudentAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
-import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.handlers.AnalyzerHandler;
-import com.asu.seatr.handlers.CourseHandler;
 
 
 @Entity

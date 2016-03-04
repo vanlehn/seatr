@@ -8,11 +8,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 
-import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.models.Course;
-import com.asu.seatr.models.Student;
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;

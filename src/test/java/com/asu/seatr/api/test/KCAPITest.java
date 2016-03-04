@@ -21,26 +21,25 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.asu.seatr.api.KCAPI;
-import com.asu.seatr.api.StudentAPI;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.TaskHandler;
-import com.asu.seatr.handlers.Task_KCAnalyzerHandler;
+import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.kc.K_A1;
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 import com.asu.seatr.models.interfaces.KCAnalyzerI;
-import com.asu.seatr.models.interfaces.Task_KCAnalyzerI;
+import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;;
 
 @PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI.class
-	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, Task_KCAnalyzerHandler.class})
+	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class})
 @RunWith(PowerMockRunner.class)
 public class KCAPITest extends JerseyTest {
 
@@ -158,8 +157,8 @@ public class KCAPITest extends JerseyTest {
 		Task task = Mockito.mock(Task.class);
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
-		PowerMockito.mockStatic(Task_KCAnalyzerHandler.class);
-		PowerMockito.when(Task_KCAnalyzerHandler.save((Task_KCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
+		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
+		PowerMockito.when(TaskKCAnalyzerHandler.save((TaskKCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
 		
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("external_kc_id", "10");
@@ -191,8 +190,8 @@ public class KCAPITest extends JerseyTest {
 		Task task = Mockito.mock(Task.class);
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
-		PowerMockito.mockStatic(Task_KCAnalyzerHandler.class);
-		PowerMockito.when(Task_KCAnalyzerHandler.save((Task_KCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
+		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
+		PowerMockito.when(TaskKCAnalyzerHandler.save((TaskKCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
 		
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("external_kc_id", "10");
@@ -224,8 +223,8 @@ public class KCAPITest extends JerseyTest {
 		Task task = Mockito.mock(Task.class);
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
-		PowerMockito.mockStatic(Task_KCAnalyzerHandler.class);
-		PowerMockito.when(Task_KCAnalyzerHandler.save((Task_KCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
+		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
+		PowerMockito.when(TaskKCAnalyzerHandler.save((TaskKCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
 		
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("external_kc_id", "10");
@@ -257,8 +256,8 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString()))
 			.thenThrow(new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND));
 		
-		PowerMockito.mockStatic(Task_KCAnalyzerHandler.class);
-		PowerMockito.when(Task_KCAnalyzerHandler.save((Task_KCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
+		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
+		PowerMockito.when(TaskKCAnalyzerHandler.save((TaskKCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
 		
 		Map<String, String> data = new HashMap<String, String>();
 		data.put("external_kc_id", "10");

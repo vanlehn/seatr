@@ -17,7 +17,7 @@ import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.TaskHandler;
-import com.asu.seatr.handlers.Task_KCAnalyzerHandler;
+import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.kc.K_A1;
@@ -81,7 +81,7 @@ public class KCAPI {
 		tk1.setKc(kc);
 		tk1.setTask(task);
 		tk1.setS_min_mastery_level(tkReader1.getMin_mastery_level());
-		Task_KCAnalyzerHandler.save(tk1);
+		TaskKCAnalyzerHandler.save(tk1);
 		return Response.status(Status.CREATED)
 				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED)).build();
 		} catch (CourseException e) {

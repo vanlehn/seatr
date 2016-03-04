@@ -1,7 +1,5 @@
 package com.asu.seatr.models.analyzers.task;
 
-import java.util.HashMap;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -10,25 +8,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
-import javax.validation.constraints.NotNull;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.PropertyValueException;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseHandler;
-import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
-import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 @Entity

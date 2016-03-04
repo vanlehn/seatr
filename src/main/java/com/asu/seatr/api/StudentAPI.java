@@ -1,7 +1,5 @@
 package com.asu.seatr.api;
 
-import java.lang.annotation.Annotation;
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -16,23 +14,19 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.hibernate.exception.ConstraintViolationException;
-import org.json.JSONObject;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
-import com.asu.seatr.handlers.StudentHandler;
-import com.asu.seatr.models.Student;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.rest.models.SAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-@Path("/students")
+@Path("analyzer/1/students")
 public class StudentAPI {
-	// /students/{analyzer_id}
-	@Path("/1")
+
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public SAReader1 getStudent(
@@ -70,8 +64,6 @@ public class StudentAPI {
 				
 	}
 	
-	//create
-	@Path("/1")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -114,8 +106,6 @@ public class StudentAPI {
 		
 	}
 	
-	//update	
-	@Path("/1")
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -146,48 +136,7 @@ public class StudentAPI {
 		
 	}
 	
-	@Path("/")
-	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteStudent(
-			@QueryParam("external_student_id") String external_student_id, 
-			@QueryParam("external_course_id") String external_course_id){
-		
-		
-			S_A1 s_a1;
-			try {
-				s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId
-						(S_A1.class, external_student_id, external_course_id).get(0);			
-				//delete all other analyzers here			
-				StudentAnalyzerHandler.delete(s_a1);
-			
-				
-				Student student = (Student)StudentHandler
-						.getByExternalId(external_student_id, external_course_id);
-				StudentHandler.delete(student);
-				return Response.status(Status.OK)
-						.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
-			} catch (CourseException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
-						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
-				throw new WebApplicationException(rb);
-			} catch (StudentException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
-						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
-				throw new WebApplicationException(rb);
-			} catch(Exception e){
-				Response rb = Response.status(Status.BAD_REQUEST)
-						.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-				throw new WebApplicationException(rb);
-			}
-		
-		
-		
-	}
-	
-	//delete
-	@Path("/1")
+
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

@@ -8,7 +8,6 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.exceptions.AnalyzerException;
-import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;

@@ -3,9 +3,6 @@ package com.asu.seatr.handlers;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -13,15 +10,12 @@ import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
-import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
-import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 public class StudentAnalyzerHandler {

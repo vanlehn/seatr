@@ -9,16 +9,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import org.hibernate.PropertyValueException;
 import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.exception.ConstraintViolationException;
-
-import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.KCException;
-import com.asu.seatr.handlers.CourseHandler;
-import com.asu.seatr.handlers.KnowledgeComponentHandler;
-import com.asu.seatr.utils.MyMessage;
-import com.asu.seatr.utils.MyStatus;
 
 @Entity
 @Table(name = "kc", uniqueConstraints = @UniqueConstraint(columnNames = {"external_id","course_id"}))

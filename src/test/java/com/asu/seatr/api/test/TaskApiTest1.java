@@ -18,9 +18,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import com.asu.seatr.api.StudentAPI;
-import com.asu.seatr.api.TaskApi;
-import com.asu.seatr.rest.models.SAReader1;
+import com.asu.seatr.api.TaskAPI;
 import com.asu.seatr.rest.models.TAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
@@ -31,7 +29,7 @@ public class TaskApiTest1 extends JerseyTest {
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(TaskApi.class);
+        return new ResourceConfig(TaskAPI.class);
     }
 	
 	@Test

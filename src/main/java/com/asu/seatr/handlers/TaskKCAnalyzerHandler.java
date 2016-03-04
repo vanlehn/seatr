@@ -12,16 +12,15 @@ import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.interfaces.KCAnalyzerI;
-import com.asu.seatr.models.interfaces.Task_KCAnalyzerI;
+import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
 
-public class Task_KCAnalyzerHandler {
+public class TaskKCAnalyzerHandler {
 	
 	
-	public static Task_KCAnalyzerI save(Task_KCAnalyzerI tkc) {
+	public static TaskKCAnalyzerI save(TaskKCAnalyzerI tkc) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
@@ -32,26 +31,26 @@ public class Task_KCAnalyzerHandler {
 	    session.close();
 	    return tkc;
 	}
-	public static Task_KCAnalyzerI readById(int id)
+	public static TaskKCAnalyzerI readById(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Task_KCAnalyzerI t_kcAnalyzer = (Task_KCAnalyzerI)session.get(Task_KCAnalyzerI.class, id);
+		TaskKCAnalyzerI t_kcAnalyzer = (TaskKCAnalyzerI)session.get(TaskKCAnalyzerI.class, id);
 		session.close();
 		return t_kcAnalyzer;
 	}
 	@SuppressWarnings("unchecked")
-	public static List<Task_KCAnalyzerI> readAll(Class typeParameterClass)
+	public static List<TaskKCAnalyzerI> readAll(Class typeParameterClass)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
-		List<Task_KCAnalyzerI> t_kcAnalyzerList = (List<Task_KCAnalyzerI>)cr.list();
+		List<TaskKCAnalyzerI> t_kcAnalyzerList = (List<TaskKCAnalyzerI>)cr.list();
 		session.close();
 		return t_kcAnalyzerList;
 	}
 	
-	public static Task_KCAnalyzerI update(Task_KCAnalyzerI t_kcAnalyzer)
+	public static TaskKCAnalyzerI update(TaskKCAnalyzerI t_kcAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -61,7 +60,7 @@ public class Task_KCAnalyzerHandler {
 		session.close();
 		return t_kcAnalyzer;
 	}
-	public static void delete(Task_KCAnalyzerI kcAnalyzer)
+	public static void delete(TaskKCAnalyzerI kcAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
@@ -70,7 +69,7 @@ public class Task_KCAnalyzerHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	public static Task_KCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id, String external_task_id) throws CourseException, TaskException, KCException
+	public static TaskKCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id, String external_task_id) throws CourseException, TaskException, KCException
 	{
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
 		KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
@@ -79,16 +78,16 @@ public class Task_KCAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("task_id", task));
 		cr.add(Restrictions.eq("kc_id", kc));
-		List<Task_KCAnalyzerI> t_kcAnalyzerList = (List<Task_KCAnalyzerI>)cr.list();
+		List<TaskKCAnalyzerI> t_kcAnalyzerList = (List<TaskKCAnalyzerI>)cr.list();
 		session.close();
 		if(t_kcAnalyzerList.size() < 1)
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND_FOR_TASK);
 		}
-		Task_KCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
+		TaskKCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
 		return t_kc;
 	}
-	public static Task_KCAnalyzerI readByKC_Task(Class typeParameterClass, KnowledgeComponent kc, Task task) throws TaskException, KCException
+	public static TaskKCAnalyzerI readByKC_Task(Class typeParameterClass, KnowledgeComponent kc, Task task) throws TaskException, KCException
 	{
 		if(task == null)
 		{
@@ -103,13 +102,13 @@ public class Task_KCAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("task_id", task));
 		cr.add(Restrictions.eq("kc_id", kc));
-		List<Task_KCAnalyzerI> t_kcAnalyzerList = (List<Task_KCAnalyzerI>)cr.list();
+		List<TaskKCAnalyzerI> t_kcAnalyzerList = (List<TaskKCAnalyzerI>)cr.list();
 		session.close();
 		if(t_kcAnalyzerList.size() < 1)
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND_FOR_TASK);
 		}
-		Task_KCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
+		TaskKCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
 		return t_kc;
 		
 	}

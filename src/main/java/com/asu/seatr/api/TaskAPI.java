@@ -31,7 +31,7 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 @Path("/tasks")
-public class TaskApi {
+public class TaskAPI {
 	
 	@Path("/1")
 	@GET
@@ -178,57 +178,5 @@ public class TaskApi {
 			throw new WebApplicationException(rb);
 		}
 	}
-	@Path("/")
-	@DELETE
-	@Consumes(MediaType.APPLICATION_JSON)
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response deleteTask(
-			@QueryParam("external_course_id") String external_course_id,
-			@QueryParam("external_task_id") String external_task_id
-			)
-	{
-
-		try {
-			try
-			{
-				
-				T_A1 t_a1 = (T_A1) TaskAnalyzerHandler.readByExtId
-						(T_A1.class, external_task_id, external_course_id);
-				//delete all other analyzers here			
-				TaskAnalyzerHandler.delete(t_a1);
-			}
-			catch(TaskException e)
-			{
-				if((e.getMyStatus() == MyStatus.ERROR)&&(e.getMyMessage() == MyMessage.TASK_ANALYZER_NOT_FOUND))
-				{
-					//do nothing
-				}
-				else
-				{
-					throw new TaskException(e.getMyStatus(),e.getMyMessage());
-				}
-			}
-			Task task = (Task)TaskHandler.readByExtId(external_task_id, external_course_id);
-			TaskHandler.delete(task);
-			return Response.status(Status.OK)
-					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_DELETED)).build();
-		} 
-
-		catch(CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
-			throw new WebApplicationException(rb);
-		}
-		catch(TaskException e) {
-			Response rb = Response.status(Status.NOT_FOUND).
-					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
-			throw new WebApplicationException(rb);
-		}
-		
-		catch(Exception e){
-			Response rb = Response.status(Status.BAD_REQUEST)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-			throw new WebApplicationException(rb);
-		}
-	}
+	
 }

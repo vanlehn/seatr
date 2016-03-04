@@ -1,7 +1,5 @@
 package com.asu.seatr.models.interfaces;
 
-import java.util.HashMap;
-
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;

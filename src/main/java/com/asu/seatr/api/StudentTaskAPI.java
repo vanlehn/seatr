@@ -1,34 +1,19 @@
 package com.asu.seatr.api;
 
 import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.hibernate.exception.ConstraintViolationException;
-
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
-import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
-import com.asu.seatr.handlers.StudentTaskHandler;
-import com.asu.seatr.handlers.TaskAnalyzerHandler;
-import com.asu.seatr.handlers.TaskHandler;
-import com.asu.seatr.models.StudentTask;
-import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.studenttask.ST_A1;
-import com.asu.seatr.models.analyzers.task.T_A1;
 import com.asu.seatr.rest.models.STAReader1;
-import com.asu.seatr.rest.models.TAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;

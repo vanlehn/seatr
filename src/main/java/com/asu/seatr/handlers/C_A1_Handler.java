@@ -1,8 +1,6 @@
 package com.asu.seatr.handlers;
 
 
-import java.util.List;
-
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
@@ -11,10 +9,7 @@ import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Course;
-import com.asu.seatr.models.Student;
 import com.asu.seatr.models.analyzers.course.C_A1;
-import com.asu.seatr.models.interfaces.CourseAnalyzerI;
-import com.asu.seatr.models.interfaces.StudentAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 
 public class C_A1_Handler {

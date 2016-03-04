@@ -20,14 +20,12 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-
-import com.asu.seatr.api.TaskApi;
+import com.asu.seatr.api.TaskAPI;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.models.analyzers.task.T_A1;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.rest.models.TAReader1;
@@ -36,7 +34,7 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 
-@PrepareForTest({TaskAnalyzerHandler.class,T_A1.class,TaskApi.class,TaskHandler.class})
+@PrepareForTest({TaskAnalyzerHandler.class,T_A1.class,TaskAPI.class,TaskHandler.class})
 @RunWith(PowerMockRunner.class)
 public class TaskAPITest extends JerseyTest
 {
@@ -44,7 +42,7 @@ public class TaskAPITest extends JerseyTest
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(TaskApi.class);
+        return new ResourceConfig(TaskAPI.class);
     }
 
 	@Test

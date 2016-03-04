@@ -13,12 +13,12 @@ import org.hibernate.annotations.GenericGenerator;
 
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.interfaces.Task_KCAnalyzerI;
+import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 
 
 @Entity
 @Table(name = "tk_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id","kc_id"}))
-public class TK_A1 implements Task_KCAnalyzerI{
+public class TK_A1 implements TaskKCAnalyzerI{
 
 	@Id
 	@GeneratedValue(generator = "increment")

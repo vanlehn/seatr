@@ -16,26 +16,21 @@ import javax.ws.rs.core.Response.Status;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
-import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.StudentHandler;
-import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
-import com.asu.seatr.handlers.StudentTaskHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
-import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 @Path("/gettasks")
-public class RecommenderApi {
+public class RecommenderAPI {
 
 	@Path("/")
 	@GET
