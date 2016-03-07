@@ -39,7 +39,7 @@ import com.asu.seatr.utils.MyStatus;
 
 @PrepareForTest({StudentHandler.class,CourseAnalyzerMapHandler.class,TaskHandler.class,TaskAnalyzerHandler.class})
 @RunWith(PowerMockRunner.class)
-public class RecommenderApiTest extends JerseyTest{
+public class RecommenderAPITest extends JerseyTest{
 
 	@Override
     protected Application configure() {
