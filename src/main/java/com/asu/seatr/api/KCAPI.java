@@ -28,11 +28,11 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-@Path("/kc")
+@Path("analyzer/1/kc")
 public class KCAPI {
 
 	
-	@Path("/createkc/1")
+	@Path("/createkc")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -65,7 +65,7 @@ public class KCAPI {
 		}
 	}
 	
-	@Path("/mapkctask/1")
+	@Path("/mapkctask")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

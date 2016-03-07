@@ -29,8 +29,6 @@
 		
 		<property name="hbm2ddl.auto">update</property>
 		
-		<mapping resource="com/asu/seatr/common/Demo.hbm.xml"/>
-		<mapping class="com.asu.seatr.common.Try"/>
 		<mapping class="com.asu.seatr.models.Course"/>
 		<mapping class="com.asu.seatr.models.Analyzer"/>
 		<mapping class="com.asu.seatr.models.CourseAnalyzerMap"/>

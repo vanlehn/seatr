@@ -30,10 +30,9 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-@Path("/tasks")
+@Path("analyzer/1/tasks")
 public class TaskAPI {
 	
-	@Path("/1")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public TAReader1 getTask(
@@ -68,7 +67,6 @@ public class TaskAPI {
 		}
 	}
 	//create
-	@Path("/1")
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -108,7 +106,6 @@ public class TaskAPI {
 		}
 	}
 	//update
-	@Path("/1")
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -145,7 +142,7 @@ public class TaskAPI {
 			throw new WebApplicationException(rb);
 		}
 	}
-	@Path("/1")
+	
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)

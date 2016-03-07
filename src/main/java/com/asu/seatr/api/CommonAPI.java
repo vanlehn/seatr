@@ -35,7 +35,7 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-
+@Path("/")
 public class CommonAPI {
 //set shouldn't be get..
 	@Path("/courses/setanalyzer")
