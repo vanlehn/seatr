@@ -31,6 +31,26 @@ public class TaskKCAnalyzerHandler {
 	    session.close();
 	    return tkc;
 	}
+	/**
+	 * used to save multiple task_kc maps in database
+	 * @param tkcArray array of task_kc objects that need to be stored
+	 * @return task_kc objects stored in databases updated with their id
+	 */
+	public static TaskKCAnalyzerI[] batchSave(TaskKCAnalyzerI tkcArray[])
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+	    Session session = sf.openSession();
+	    session.beginTransaction();
+	    for(int i = 0; i < tkcArray.length; i++)
+	    {
+	    	TaskKCAnalyzerI tkc = tkcArray[i];
+	    	int id = (int)session.save(tkc);
+	    	tkc.setId(id);
+	    }
+	    session.getTransaction().commit();
+	    session.close();
+	    return tkcArray;
+	}
 	public static TaskKCAnalyzerI readById(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();

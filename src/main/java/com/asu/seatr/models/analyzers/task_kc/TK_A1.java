@@ -20,6 +20,12 @@ import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 @Table(name = "tk_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id","kc_id"}))
 public class TK_A1 implements TaskKCAnalyzerI{
 
+	public static final String TABLE_NAME = "tk_a1";
+	public static final String ID = "id";
+	public static final String TASK_ID = "task_id";
+	public static final String KC_ID = "kc_id";
+	public static final String MIN_MASTERY_LEVEL = "min_mastery_level";
+	
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")

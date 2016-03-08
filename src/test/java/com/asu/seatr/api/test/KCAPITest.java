@@ -24,6 +24,7 @@ import com.asu.seatr.api.KCAPI;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
+import com.asu.seatr.handlers.Handler;
 import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.TaskHandler;
@@ -39,7 +40,7 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;;
 
 @PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI.class
-	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class})
+	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, Handler.class})
 @RunWith(PowerMockRunner.class)
 public class KCAPITest extends JerseyTest {
 
@@ -62,7 +63,7 @@ public class KCAPITest extends JerseyTest {
 		data.put("external_course_id", "35");
 		data.put("s_unit", "45");
 		
-		final Response resp  = target("kc/createkc/1")
+		final Response resp  = target("analyzer/1/kc/createkc/")
 				.request().post(Entity.json(data), Response.class);
 		
 		PowerMockito.verifyNew(K_A1.class).withNoArguments();
@@ -86,7 +87,7 @@ public class KCAPITest extends JerseyTest {
 		data.put("external_course_id", "35");
 		data.put("s_unit", "45");
 		
-		final Response resp  = target("kc/createkc/1")
+		final Response resp  = target("analyzer/1/kc/createkc/")
 				.request().post(Entity.json(data), Response.class);
 		
 		PowerMockito.verifyNew(K_A1.class).withNoArguments();
@@ -110,7 +111,7 @@ public class KCAPITest extends JerseyTest {
 		data.put("external_course_id", "35");
 		data.put("s_unit", "45");
 		
-		final Response resp  = target("kc/createkc/1")
+		final Response resp  = target("analyzer/1/kc/createkc/")
 				.request().post(Entity.json(data), Response.class);
 		
 		PowerMockito.verifyNew(K_A1.class).withNoArguments();
@@ -134,7 +135,7 @@ public class KCAPITest extends JerseyTest {
 		data.put("external_course_id", "35");
 		data.put("s_unit", "45");
 		
-		final Response resp  = target("kc/createkc/1")
+		final Response resp  = target("analyzer/1/kc/createkc/")
 				.request().post(Entity.json(data), Response.class);
 		
 		PowerMockito.verifyNew(K_A1.class).withNoArguments();
@@ -145,9 +146,13 @@ public class KCAPITest extends JerseyTest {
 	}
 	
 	@Test
-	public void mapKcTaskTest_Success() throws Exception {
+	public void mapKcTaskTest_with_Replace_true_Success() throws Exception {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
+		
+		Integer affectedRows = new Integer(2);
+		PowerMockito.mockStatic(Handler.class);
+		PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
 		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
@@ -158,18 +163,73 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.save((TaskKCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
 		
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("external_kc_id", "10");
-		data.put("external_course_id", "35");
-		data.put("external_task_id", "25");
-		data.put("min_mastery_level", "10");
+		Map<String, Object> requestMessage = new HashMap<String, Object>();
+		requestMessage.put("replace", "true");
+		Map<String,String> data1 = new HashMap<String,String>();
+		data1.put("external_kc_id", "211");
+		data1.put("external_course_id", "36");
+		data1.put("external_task_id", "45");
+		data1.put("min_mastery_level", "10");
+		Map<String,String> data2 = new HashMap<String,String>();
+		data2.put("external_kc_id", "211");
+		data2.put("external_course_id", "36");
+		data2.put("external_task_id", "45");
+		data2.put("min_mastery_level", "10");
+		Map dataArray[] = new Map[2];
+		dataArray[0] = data1;
+		dataArray[1]= data2;
+		requestMessage.put("tkaReader", dataArray);
+
+		final Response resp  = target("analyzer/1/kc/mapkctask")
+				.request().post(Entity.json(requestMessage), Response.class);
 		
-		final Response resp  = target("kc/mapkctask/1")
-				.request().post(Entity.json(data), Response.class);
+		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
+		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
+		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED), 
+				resp.readEntity(String.class));
 		
-		PowerMockito.verifyNew(TK_A1.class).withNoArguments();
+	}
+	@Test
+	public void mapKcTaskTest_with_Replace_false_Success() throws Exception {
+		TK_A1 tka1 = Mockito.mock(TK_A1.class);
+		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
+		
+
+		
+		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
+		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
+		PowerMockito.when(KnowledgeComponentHandler.readByExtId(Mockito.anyString(), Mockito.anyString())).thenReturn(kc);
+		
+		PowerMockito.mockStatic(TaskHandler.class);
+		Task task = Mockito.mock(Task.class);
+		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
+		
+		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
+		
+		Map<String, Object> requestMessage = new HashMap<String, Object>();
+		requestMessage.put("replace", "false");
+		Map<String,String> data1 = new HashMap<String,String>();
+		data1.put("external_kc_id", "211");
+		data1.put("external_course_id", "36");
+		data1.put("external_task_id", "45");
+		data1.put("min_mastery_level", "10");
+		Map<String,String> data2 = new HashMap<String,String>();
+		data2.put("external_kc_id", "211");
+		data2.put("external_course_id", "36");
+		data2.put("external_task_id", "45");
+		data2.put("min_mastery_level", "10");
+		Map dataArray[] = new Map[2];
+		dataArray[0] = data1;
+		dataArray[1]= data2;
+		requestMessage.put("tkaReader", dataArray);
+
+		final Response resp  = target("analyzer/1/kc/mapkctask")
+				.request().post(Entity.json(requestMessage), Response.class);
+		
+		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
 		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED), 
 				resp.readEntity(String.class));
@@ -181,6 +241,10 @@ public class KCAPITest extends JerseyTest {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
 		
+		Integer affectedRows = new Integer(2);
+		PowerMockito.mockStatic(Handler.class);
+		PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
 		PowerMockito.when(KnowledgeComponentHandler.readByExtId(Mockito.anyString(), Mockito.anyString()))
@@ -191,18 +255,29 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.save((TaskKCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
 		
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("external_kc_id", "10");
-		data.put("external_course_id", "35");
-		data.put("external_task_id", "25");
-		data.put("min_mastery_level", "10");
+		Map<String, Object> requestMessage = new HashMap<String, Object>();
+		requestMessage.put("replace", "true");
+		Map<String,String> data1 = new HashMap<String,String>();
+		data1.put("external_kc_id", "211");
+		data1.put("external_course_id", "36");
+		data1.put("external_task_id", "45");
+		data1.put("min_mastery_level", "10");
+		Map<String,String> data2 = new HashMap<String,String>();
+		data2.put("external_kc_id", "211");
+		data2.put("external_course_id", "36");
+		data2.put("external_task_id", "45");
+		data2.put("min_mastery_level", "10");
+		Map dataArray[] = new Map[2];
+		dataArray[0] = data1;
+		dataArray[1]= data2;
+		requestMessage.put("tkaReader", dataArray);
+
+		final Response resp  = target("analyzer/1/kc/mapkctask")
+				.request().post(Entity.json(requestMessage), Response.class);
 		
-		final Response resp  = target("kc/mapkctask/1")
-				.request().post(Entity.json(data), Response.class);
-		
-		PowerMockito.verifyNew(TK_A1.class).withNoArguments();
+		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -214,6 +289,10 @@ public class KCAPITest extends JerseyTest {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
 		
+		Integer affectedRows = new Integer(2);
+		PowerMockito.mockStatic(Handler.class);
+		PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
 		PowerMockito.when(KnowledgeComponentHandler.readByExtId(Mockito.anyString(), Mockito.anyString()))
@@ -224,18 +303,29 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.save((TaskKCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
 		
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("external_kc_id", "10");
-		data.put("external_course_id", "35");
-		data.put("external_task_id", "25");
-		data.put("min_mastery_level", "10");
+		Map<String, Object> requestMessage = new HashMap<String, Object>();
+		requestMessage.put("replace", "true");
+		Map<String,String> data1 = new HashMap<String,String>();
+		data1.put("external_kc_id", "211");
+		data1.put("external_course_id", "36");
+		data1.put("external_task_id", "45");
+		data1.put("min_mastery_level", "10");
+		Map<String,String> data2 = new HashMap<String,String>();
+		data2.put("external_kc_id", "211");
+		data2.put("external_course_id", "36");
+		data2.put("external_task_id", "45");
+		data2.put("min_mastery_level", "10");
+		Map dataArray[] = new Map[2];
+		dataArray[0] = data1;
+		dataArray[1]= data2;
+		requestMessage.put("tkaReader", dataArray);
+
+		final Response resp  = target("analyzer/1/kc/mapkctask")
+				.request().post(Entity.json(requestMessage), Response.class);
 		
-		final Response resp  = target("kc/mapkctask/1")
-				.request().post(Entity.json(data), Response.class);
-		
-		PowerMockito.verifyNew(TK_A1.class).withNoArguments();
+		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.KC_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -247,6 +337,10 @@ public class KCAPITest extends JerseyTest {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
 		
+		Integer affectedRows = new Integer(2);
+		PowerMockito.mockStatic(Handler.class);
+		PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
 		PowerMockito.when(KnowledgeComponentHandler.readByExtId(Mockito.anyString(), Mockito.anyString())).thenReturn(kc);
@@ -257,18 +351,29 @@ public class KCAPITest extends JerseyTest {
 			.thenThrow(new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND));
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.save((TaskKCAnalyzerI)Mockito.anyObject())).thenReturn(tka1);
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
 		
-		Map<String, String> data = new HashMap<String, String>();
-		data.put("external_kc_id", "10");
-		data.put("external_course_id", "35");
-		data.put("external_task_id", "25");
-		data.put("min_mastery_level", "10");
+		Map<String, Object> requestMessage = new HashMap<String, Object>();
+		requestMessage.put("replace", "true");
+		Map<String,String> data1 = new HashMap<String,String>();
+		data1.put("external_kc_id", "211");
+		data1.put("external_course_id", "36");
+		data1.put("external_task_id", "45");
+		data1.put("min_mastery_level", "10");
+		Map<String,String> data2 = new HashMap<String,String>();
+		data2.put("external_kc_id", "211");
+		data2.put("external_course_id", "36");
+		data2.put("external_task_id", "45");
+		data2.put("min_mastery_level", "10");
+		Map dataArray[] = new Map[2];
+		dataArray[0] = data1;
+		dataArray[1]= data2;
+		requestMessage.put("tkaReader", dataArray);
+
+		final Response resp  = target("analyzer/1/kc/mapkctask")
+				.request().post(Entity.json(requestMessage), Response.class);
 		
-		final Response resp  = target("kc/mapkctask/1")
-				.request().post(Entity.json(data), Response.class);
-		
-		PowerMockito.verifyNew(TK_A1.class).withNoArguments();
+		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND), 
 				resp.readEntity(String.class));
