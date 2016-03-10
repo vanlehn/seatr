@@ -25,7 +25,7 @@ import com.asu.seatr.models.analyzers.kc.K_A1;
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 import com.asu.seatr.rest.models.KAReader1;
 import com.asu.seatr.rest.models.TKAReader1;
-import com.asu.seatr.rest.models.TKReader;
+import com.asu.seatr.rest.models.TKReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -78,7 +78,7 @@ public class KCAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response mapKcToTask(TKReader tkReader)
+	public Response mapKcToTask(TKReader1 tkReader)
 	{
 		try {
 			boolean replace = tkReader.getReplace();
