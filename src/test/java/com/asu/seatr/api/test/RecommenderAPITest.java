@@ -41,6 +41,8 @@ import com.asu.seatr.utils.MyStatus;
 @RunWith(PowerMockRunner.class)
 public class RecommenderAPITest extends JerseyTest{
 
+	private static String GETTASKS_URL="gettasks/";
+	
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
@@ -61,7 +63,7 @@ public class RecommenderAPITest extends JerseyTest{
 		PowerMockito.when(CourseAnalyzerMapHandler.getPrimaryAnalyzerIdFromExtCourseId(Mockito.anyString())).thenReturn(null);
 		PowerMockito.mockStatic(TaskHandler.class);	
 		PowerMockito.when(TaskHandler.readByExtCourseId(Mockito.anyString())).thenReturn(taskList);
-		final List<String> resList = target("gettasks/").queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
+		final List<String> resList = target(GETTASKS_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
 		assertEquals("10",resList.get(0));
 	}
 	@Test
@@ -78,7 +80,7 @@ public class RecommenderAPITest extends JerseyTest{
 		PowerMockito.when(TaskHandler.readByExtCourseId(Mockito.anyString())).thenReturn(taskList);
 		try
 		{
-		final List<String> resp = target("gettasks/").queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
+		final List<String> resp = target(GETTASKS_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
 		}
 		catch(WebApplicationException rb)
 		{
@@ -114,7 +116,7 @@ public class RecommenderAPITest extends JerseyTest{
 		ta1.setTask(task);
 		taskAnalyzerList.add(ta1);
 		PowerMockito.when(TaskAnalyzerHandler.readByCourse(Mockito.any(Class.class),(Course)Mockito.anyObject())).thenReturn(taskAnalyzerList);
-		final List<String> resList = target("gettasks/").queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
+		final List<String> resList = target(GETTASKS_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
 		assertEquals("10",resList.get(0));
 	}
 	@Test
@@ -140,7 +142,7 @@ public class RecommenderAPITest extends JerseyTest{
 		PowerMockito.when(TaskAnalyzerHandler.readByCourse(Mockito.any(Class.class),(Course)Mockito.anyObject())).thenReturn(taskAnalyzerList);
 		try
 		{
-		final List<String> resp = target("gettasks/").queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
+		final List<String> resp = target(GETTASKS_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
 		}
 		catch(WebApplicationException rb)
 		{

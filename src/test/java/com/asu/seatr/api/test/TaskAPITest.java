@@ -39,6 +39,8 @@ import com.asu.seatr.utils.MyStatus;
 public class TaskAPITest extends JerseyTest
 {
 	
+	private static String ANALYZER1_URL="analyzer/1/tasks";
+	
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
@@ -53,7 +55,7 @@ public class TaskAPITest extends JerseyTest
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenReturn(ta1);
-		final TAReader1 tareader = target("tasks/1").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(TAReader1.class);
+		final TAReader1 tareader = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(TAReader1.class);
 		assertEquals(new String("20"),tareader.getExternal_course_id());
 		assertEquals(new String("10"), tareader.getExternal_task_id());
 		assertEquals(new Integer(10), tareader.getS_difficulty_level());
@@ -66,7 +68,7 @@ public class TaskAPITest extends JerseyTest
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenThrow(new CourseException(MyStatus.ERROR,MyMessage.COURSE_NOT_FOUND));
-		Response resp = target("tasks/1").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(Response.class);
+		Response resp = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(Response.class);
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -80,7 +82,7 @@ public class TaskAPITest extends JerseyTest
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenThrow(new TaskException(MyStatus.ERROR,MyMessage.TASK_NOT_FOUND));
-		Response resp = target("tasks/1").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(Response.class);
+		Response resp = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(Response.class);
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -93,7 +95,7 @@ public class TaskAPITest extends JerseyTest
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenThrow(new TaskException(MyStatus.ERROR,MyMessage.TASK_ANALYZER_NOT_FOUND));
-		Response resp = target("tasks/1").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(Response.class);
+		Response resp = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(Response.class);
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -112,7 +114,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("external_task_id","10");
 		data.put("external_course_id", "35");
 		data.put("s_difficulty_level", "10");
-		final Response resp  = target("tasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(T_A1.class).withNoArguments();
 		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
@@ -132,7 +134,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("external_task_id","10");
 		data.put("external_course_id", "35");
 		data.put("s_difficulty_level", "10");
-		final Response resp  = target("tasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(T_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
@@ -152,7 +154,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("external_task_id","10");
 		data.put("external_course_id", "35");
 		data.put("s_difficulty_level", "10");
-		final Response resp  = target("tasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(T_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
@@ -172,7 +174,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("external_task_id","10");
 		data.put("external_course_id", "35");
 		data.put("s_difficulty_level", "10");
-		final Response resp  = target("tasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(T_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
@@ -193,7 +195,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("external_task_id","10");
 		data.put("external_course_id", "35");
 		data.put("s_difficulty_level", "10");
-		final Response resp = target("tasks/1").request().put(Entity.json(data),Response.class);
+		final Response resp = target(ANALYZER1_URL).request().put(Entity.json(data),Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_UPDATED),resp.readEntity(String.class));	
 	}
@@ -211,7 +213,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("external_task_id","10");
 		data.put("external_course_id", "35");
 		data.put("s_difficulty_level", "10");
-		final Response resp = target("tasks/1").request().put(Entity.json(data),Response.class);
+		final Response resp = target(ANALYZER1_URL).request().put(Entity.json(data),Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND),resp.readEntity(String.class));	
 	}
@@ -228,7 +230,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("external_task_id","10");
 		data.put("external_course_id", "35");
 		data.put("s_difficulty_level", "10");
-		final Response resp = target("tasks/1").request().put(Entity.json(data),Response.class);
+		final Response resp = target(ANALYZER1_URL).request().put(Entity.json(data),Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND),resp.readEntity(String.class));	
 	}
@@ -245,7 +247,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("external_task_id","10");
 		data.put("external_course_id", "35");
 		data.put("s_difficulty_level", "10");
-		final Response resp = target("tasks/1").request().put(Entity.json(data),Response.class);
+		final Response resp = target(ANALYZER1_URL).request().put(Entity.json(data),Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND),resp.readEntity(String.class));	
 	}
@@ -260,7 +262,7 @@ public class TaskAPITest extends JerseyTest
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenReturn(ta1);
 		//PowerMockito.when(TaskAnalyzerHandler.delete((TaskAnalyzerI)Mockito.anyObject()));
 		PowerMockito.doNothing().when(TaskAnalyzerHandler.class,"delete",(TaskAnalyzerI)Mockito.anyObject());
-		final Response resp = target("tasks/1").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
+		final Response resp = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_ANALYZER_DELETED),resp.readEntity(String.class));
 	}
@@ -274,7 +276,7 @@ public class TaskAPITest extends JerseyTest
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenThrow(new CourseException(MyStatus.ERROR,MyMessage.COURSE_NOT_FOUND));
 		//PowerMockito.when(TaskAnalyzerHandler.delete((TaskAnalyzerI)Mockito.anyObject()));
 		PowerMockito.doNothing().when(TaskAnalyzerHandler.class,"delete",(TaskAnalyzerI)Mockito.anyObject());
-		final Response resp = target("tasks/1").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
+		final Response resp = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND),resp.readEntity(String.class));
 	}
@@ -288,7 +290,7 @@ public class TaskAPITest extends JerseyTest
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenThrow(new TaskException(MyStatus.ERROR,MyMessage.TASK_NOT_FOUND));
 		//PowerMockito.when(TaskAnalyzerHandler.delete((TaskAnalyzerI)Mockito.anyObject()));
 		PowerMockito.doNothing().when(TaskAnalyzerHandler.class,"delete",(TaskAnalyzerI)Mockito.anyObject());
-		final Response resp = target("tasks/1").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
+		final Response resp = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND),resp.readEntity(String.class));
 	}
@@ -302,7 +304,7 @@ public class TaskAPITest extends JerseyTest
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenThrow(new TaskException(MyStatus.ERROR,MyMessage.TASK_ANALYZER_NOT_FOUND));
 		//PowerMockito.when(TaskAnalyzerHandler.delete((TaskAnalyzerI)Mockito.anyObject()));
 		PowerMockito.doNothing().when(TaskAnalyzerHandler.class,"delete",(TaskAnalyzerI)Mockito.anyObject());
-		final Response resp = target("tasks/1").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
+		final Response resp = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND),resp.readEntity(String.class));
 	}

@@ -37,6 +37,8 @@ import com.asu.seatr.utils.MyStatus;
 @RunWith(PowerMockRunner.class)
 public class StudentAPIMockTest extends JerseyTest {
 	
+	private static String ANALYZER1_URL="analyzer/1/students";
+	
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
@@ -54,7 +56,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		PowerMockito.mockStatic(StudentAnalyzerHandler.class);
 		PowerMockito.when(StudentAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenReturn(sa1List);
 		
-		final SAReader1 resp = target("students/1").queryParam("external_student_id", "23")
+		final SAReader1 resp = target(ANALYZER1_URL).queryParam("external_student_id", "23")
         		.queryParam("external_course_id", "35").request().get(SAReader1.class);
         assertEquals(new String("23"), resp.getExternal_student_id());
         assertEquals(new String("35"), resp.getExternal_course_id());        
@@ -75,7 +77,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		PowerMockito.when(StudentAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString()))
 			.thenThrow(new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND));
 		
-		final Response resp = target("students/1").queryParam("external_student_id", "23")
+		final Response resp = target(ANALYZER1_URL).queryParam("external_student_id", "23")
         		.queryParam("external_course_id", "35").request().get(Response.class);
         
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
@@ -96,7 +98,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		PowerMockito.when(StudentAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString()))
 			.thenThrow(new CourseException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND));
 		
-		final Response resp = target("students/1").queryParam("external_student_id", "23")
+		final Response resp = target(ANALYZER1_URL).queryParam("external_student_id", "23")
         		.queryParam("external_course_id", "35").request().get(Response.class);
         
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
@@ -117,7 +119,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		PowerMockito.when(StudentAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString()))
 			.thenThrow(new CourseException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_NOT_FOUND));
 		
-		final Response resp = target("students/1").queryParam("external_student_id", "23")
+		final Response resp = target(ANALYZER1_URL).queryParam("external_student_id", "23")
         		.queryParam("external_course_id", "35").request().get(Response.class);
         
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
@@ -141,7 +143,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		data.put("s_placement_score", "34.45");
 		data.put("s_year", "freshman");
 		
-		final Response resp  = target("students/1")
+		final Response resp  = target(ANALYZER1_URL)
 								.request().post(Entity.json(data), Response.class);
 		
 		
@@ -167,7 +169,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		data.put("s_placement_score", "34.45");
 		data.put("s_year", "freshman");
 		
-		final Response resp  = target("students/1")
+		final Response resp  = target(ANALYZER1_URL)
 								.request().post(Entity.json(data), Response.class);
 		
 		
@@ -193,7 +195,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		data.put("s_placement_score", "34.45");
 		data.put("s_year", "freshman");
 		
-		final Response resp  = target("students/1")
+		final Response resp  = target(ANALYZER1_URL)
 								.request().post(Entity.json(data), Response.class);
 		
 		
@@ -219,7 +221,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		data.put("s_placement_score", "34.45");
 		data.put("s_year", "freshman");
 		
-		final Response resp  = target("students/1")
+		final Response resp  = target(ANALYZER1_URL)
 								.request().post(Entity.json(data), Response.class);
 		
 		
@@ -249,7 +251,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		data.put("s_placement_score", "34.78");
 		data.put("s_year", "sophomore");
 		
-		final Response resp  = target("students/1")
+		final Response resp  = target(ANALYZER1_URL)
 								.request().put(Entity.json(data), Response.class);
 		
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
@@ -278,7 +280,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		data.put("s_placement_score", "34.78");
 		data.put("s_year", "sophomore");
 		
-		final Response resp  = target("students/1")
+		final Response resp  = target(ANALYZER1_URL)
 								.request().put(Entity.json(data), Response.class);
 		
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
@@ -307,7 +309,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		data.put("s_placement_score", "34.78");
 		data.put("s_year", "sophomore");
 		
-		final Response resp  = target("students/1")
+		final Response resp  = target(ANALYZER1_URL)
 								.request().put(Entity.json(data), Response.class);
 		
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
@@ -335,7 +337,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		data.put("s_placement_score", "34.78");
 		data.put("s_year", "sophomore");
 		
-		final Response resp  = target("students/1")
+		final Response resp  = target(ANALYZER1_URL)
 								.request().put(Entity.json(data), Response.class);
 		
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
@@ -355,7 +357,7 @@ public class StudentAPIMockTest extends JerseyTest {
 		PowerMockito.when(StudentAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenReturn(sa1List);
 		PowerMockito.doNothing().when(StudentAnalyzerHandler.class, "delete", (StudentAnalyzerI)Mockito.anyObject());
 		
-		final Response resp = target("students/1").queryParam("external_student_id", "23")
+		final Response resp = target(ANALYZER1_URL).queryParam("external_student_id", "23")
         		.queryParam("external_course_id", "35").request().delete(Response.class);
 		
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
@@ -376,7 +378,7 @@ public class StudentAPIMockTest extends JerseyTest {
 			.thenThrow(new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND));
 		PowerMockito.doNothing().when(StudentAnalyzerHandler.class, "delete", (StudentAnalyzerI)Mockito.anyObject());
 		
-		final Response resp = target("students/1").queryParam("external_student_id", "23")
+		final Response resp = target(ANALYZER1_URL).queryParam("external_student_id", "23")
         		.queryParam("external_course_id", "35").request().delete(Response.class);
 		
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
@@ -397,7 +399,7 @@ public class StudentAPIMockTest extends JerseyTest {
 			.thenThrow(new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND));
 		PowerMockito.doNothing().when(StudentAnalyzerHandler.class, "delete", (StudentAnalyzerI)Mockito.anyObject());
 		
-		final Response resp = target("students/1").queryParam("external_student_id", "23")
+		final Response resp = target(ANALYZER1_URL).queryParam("external_student_id", "23")
         		.queryParam("external_course_id", "35").request().delete(Response.class);
 		
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
@@ -418,7 +420,7 @@ public class StudentAPIMockTest extends JerseyTest {
 			.thenThrow(new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_NOT_FOUND));
 		PowerMockito.doNothing().when(StudentAnalyzerHandler.class, "delete", (StudentAnalyzerI)Mockito.anyObject());
 		
-		final Response resp = target("students/1").queryParam("external_student_id", "23")
+		final Response resp = target(ANALYZER1_URL).queryParam("external_student_id", "23")
         		.queryParam("external_course_id", "35").request().delete(Response.class);
 		
 		assertEquals(Status.NOT_FOUND.getStatusCode(), resp.getStatus());		
