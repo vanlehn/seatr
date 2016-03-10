@@ -21,6 +21,7 @@ import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentHandler;
+import com.asu.seatr.handlers.StudentTaskHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Analyzer;
@@ -139,6 +140,7 @@ public class CommonAPI {
 				
 				Student student = (Student)StudentHandler
 						.getByExternalId(external_student_id, external_course_id);
+				//StudentTaskHandler.hqlDeleteByStudent(student);
 				StudentHandler.delete(student);
 				return Response.status(Status.OK)
 						.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
@@ -189,6 +191,7 @@ public class CommonAPI {
 				}
 			}
 			Task task = (Task)TaskHandler.readByExtId(external_task_id, external_course_id);
+			//StudentTaskHandler.hqlDeleteByTask(task);
 			TaskHandler.delete(task);
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_DELETED)).build();

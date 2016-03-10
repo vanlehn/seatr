@@ -1,13 +1,19 @@
 package com.asu.seatr.models;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
+
+import com.asu.seatr.models.analyzers.studenttask.ST_A1;
 
 @Entity
 @Table(name = "student_task")
@@ -26,6 +32,10 @@ public class StudentTask {
 	@JoinColumn(name = "task_id", referencedColumnName = "id", nullable=false)
 	private Task task;	
 	
+	@OneToMany(mappedBy = "studentTask", cascade=CascadeType.ALL)
+	private List<ST_A1> ST_A1;
+
+
 	public int getId() {
 		return id;
 	}
@@ -44,4 +54,11 @@ public class StudentTask {
 	public void setTask(Task task) {
 		this.task = task;
 	}
+	public List<ST_A1> getST_A1() {
+		return ST_A1;
+	}
+	public void setST_A1(List<ST_A1> sT_A1) {
+		ST_A1 = sT_A1;
+	}
+
 }

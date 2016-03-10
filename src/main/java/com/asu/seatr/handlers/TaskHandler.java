@@ -1,6 +1,8 @@
 package com.asu.seatr.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -9,7 +11,10 @@ import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.TaskException;
+import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
+import com.asu.seatr.models.CourseAnalyzerMap;
+import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
@@ -116,6 +121,18 @@ public class TaskHandler {
 		session.delete(task);
 		session.getTransaction().commit();
 		session.close();
+	}
+	public static List<Analyzer> getAnalyzerList(Task task) throws CourseException
+	{
+		List<CourseAnalyzerMap> courseAnalyzerMapList = CourseAnalyzerMapHandler.getAnalyzerIdFromCourse(task.getCourse());
+		ListIterator<CourseAnalyzerMap> li = courseAnalyzerMapList.listIterator();
+		List<Analyzer> analyzerList = new ArrayList<Analyzer>();
+		while(li.hasNext())
+		{
+			analyzerList.add(li.next().getAnalyzer());
+		}
+		return analyzerList;
+		
 	}
 	
 
