@@ -36,6 +36,7 @@ import com.asu.seatr.utils.MyStatus;
 @RunWith(PowerMockRunner.class)
 public class StudentTaskAPITest extends JerseyTest
 {
+	private static String ANALYZER1_URL="analyzer/1/studenttasks";
 	
 	@Override
     protected Application configure() {
@@ -57,7 +58,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("external_course_id", "35");
 		data.put("d_status", "10");
 		data.put("d_time_lastattempt", "83681");
-		final Response resp  = target("studenttasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
 		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
@@ -78,7 +79,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("external_course_id", "35");
 		data.put("d_status", "10");
 		data.put("d_time_lastattempt", "83681");
-		final Response resp  = target("studenttasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
@@ -99,7 +100,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("external_course_id", "35");
 		data.put("d_status", "10");
 		data.put("d_time_lastattempt", "83681");
-		final Response resp  = target("studenttasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
@@ -120,7 +121,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("external_course_id", "35");
 		data.put("d_status", "10");
 		data.put("d_time_lastattempt", "83681");
-		final Response resp  = target("studenttasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
@@ -141,7 +142,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("external_course_id", "35");
 		data.put("d_status", "10");
 		data.put("d_time_lastattempt", "83681");
-		final Response resp  = target("studenttasks/1")
+		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
 		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		

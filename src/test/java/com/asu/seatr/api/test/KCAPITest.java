@@ -44,6 +44,9 @@ import com.asu.seatr.utils.MyStatus;;
 @RunWith(PowerMockRunner.class)
 public class KCAPITest extends JerseyTest {
 
+	private static String ANALYZER1_CREATEKC_URL="analyzer/1/kc/createkc/";
+	private static String ANALYZER1_MAPKC_URL="analyzer/1/kc/mapkctask";
+	
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
@@ -63,7 +66,7 @@ public class KCAPITest extends JerseyTest {
 		data.put("external_course_id", "35");
 		data.put("s_unit", "45");
 		
-		final Response resp  = target("analyzer/1/kc/createkc/")
+		final Response resp  = target(ANALYZER1_CREATEKC_URL)
 				.request().post(Entity.json(data), Response.class);
 		
 		PowerMockito.verifyNew(K_A1.class).withNoArguments();
@@ -87,7 +90,7 @@ public class KCAPITest extends JerseyTest {
 		data.put("external_course_id", "35");
 		data.put("s_unit", "45");
 		
-		final Response resp  = target("analyzer/1/kc/createkc/")
+		final Response resp  = target(ANALYZER1_CREATEKC_URL)
 				.request().post(Entity.json(data), Response.class);
 		
 		PowerMockito.verifyNew(K_A1.class).withNoArguments();
@@ -111,7 +114,7 @@ public class KCAPITest extends JerseyTest {
 		data.put("external_course_id", "35");
 		data.put("s_unit", "45");
 		
-		final Response resp  = target("analyzer/1/kc/createkc/")
+		final Response resp  = target(ANALYZER1_CREATEKC_URL)
 				.request().post(Entity.json(data), Response.class);
 		
 		PowerMockito.verifyNew(K_A1.class).withNoArguments();
@@ -135,7 +138,7 @@ public class KCAPITest extends JerseyTest {
 		data.put("external_course_id", "35");
 		data.put("s_unit", "45");
 		
-		final Response resp  = target("analyzer/1/kc/createkc/")
+		final Response resp  = target(ANALYZER1_CREATEKC_URL)
 				.request().post(Entity.json(data), Response.class);
 		
 		PowerMockito.verifyNew(K_A1.class).withNoArguments();
@@ -182,7 +185,7 @@ public class KCAPITest extends JerseyTest {
 		dataArray[1]= data2;
 		requestMessage.put("tkaReader", dataArray);
 
-		final Response resp  = target("analyzer/1/kc/mapkctask")
+		final Response resp  = target(ANALYZER1_MAPKC_URL)
 				.request().post(Entity.json(requestMessage), Response.class);
 		
 		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
@@ -226,7 +229,7 @@ public class KCAPITest extends JerseyTest {
 		dataArray[1]= data2;
 		requestMessage.put("tkaReader", dataArray);
 
-		final Response resp  = target("analyzer/1/kc/mapkctask")
+		final Response resp  = target(ANALYZER1_MAPKC_URL)
 				.request().post(Entity.json(requestMessage), Response.class);
 		
 		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
@@ -274,7 +277,7 @@ public class KCAPITest extends JerseyTest {
 		dataArray[1]= data2;
 		requestMessage.put("tkaReader", dataArray);
 
-		final Response resp  = target("analyzer/1/kc/mapkctask")
+		final Response resp  = target(ANALYZER1_MAPKC_URL)
 				.request().post(Entity.json(requestMessage), Response.class);
 		
 		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
@@ -322,7 +325,7 @@ public class KCAPITest extends JerseyTest {
 		dataArray[1]= data2;
 		requestMessage.put("tkaReader", dataArray);
 
-		final Response resp  = target("analyzer/1/kc/mapkctask")
+		final Response resp  = target(ANALYZER1_MAPKC_URL)
 				.request().post(Entity.json(requestMessage), Response.class);
 		
 		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
@@ -370,7 +373,7 @@ public class KCAPITest extends JerseyTest {
 		dataArray[1]= data2;
 		requestMessage.put("tkaReader", dataArray);
 
-		final Response resp  = target("analyzer/1/kc/mapkctask")
+		final Response resp  = target(ANALYZER1_MAPKC_URL)
 				.request().post(Entity.json(requestMessage), Response.class);
 		
 		//PowerMockito.verifyNew(TK_A1.class).withNoArguments();
