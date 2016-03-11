@@ -121,47 +121,4 @@ public class StudentTaskHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	/*
-	public static void hqlDeleteByTask(Task task) throws CourseException
-	{
-		List<StudentTask> studentTaskList = StudentTaskHandler.readByTask(task);
-		if(studentTaskList.isEmpty()){return;}
-		List<Analyzer> analyzerList = TaskHandler.getAnalyzerList(task);
-		ListIterator<Analyzer> analyzerListIterator = analyzerList.listIterator();
-		while(analyzerListIterator.hasNext())
-		{
-			StudentTaskAnalyzerHandler.hqlBatchDelete(analyzerListIterator.next().getName(),studentTaskList);
-		}
-		SessionFactory sf = HibernateUtil.getSessionFactory();
-		Session session = sf.openSession();
-		session.beginTransaction();
-		String hql = "delete from StudentTask where task_id= :task_Id";
-		session.createQuery(hql).setInteger("task_Id", task.getId()).executeUpdate();
-		session.getTransaction().commit();
-		session.close();
-		
-	}
-	public static void hqlDeleteByStudent(Student student) throws CourseException
-	{
-		List<StudentTask> studentTaskList = StudentTaskHandler.readByStudent(student);
-		if(studentTaskList.isEmpty()){return;}
-		List<Analyzer> analyzerList = StudentHandler.getAnalyzerList(student);
-		ListIterator<Analyzer> analyzerListIterator = analyzerList.listIterator();
-		while(analyzerListIterator.hasNext())
-		{
-			StudentTaskAnalyzerHandler.hqlBatchDelete(analyzerListIterator.next().getName(),studentTaskList);
-		}
-		SessionFactory sf = HibernateUtil.getSessionFactory();
-		Session session = sf.openSession();
-		session.beginTransaction();
-		String hql = "delete from StudentTask where student_id= :student_Id";
-		session.createQuery(hql).setInteger("student_Id", student.getId()).executeUpdate();
-		session.getTransaction().commit();
-		session.close();
-	}
-	*/
-	
-
-
-
 }
