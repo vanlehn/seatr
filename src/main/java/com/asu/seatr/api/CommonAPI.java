@@ -272,7 +272,8 @@ public class CommonAPI {
 						tka.setTask(taskKC.getTask());
 						taskKCToList.add(tka);
 					}
-					break;				
+					break;						
+					
 			}
 			TaskKCAnalyzerHandler.batchSaveOrUpdate(taskKCToList);
 			return Response.status(Status.CREATED)
