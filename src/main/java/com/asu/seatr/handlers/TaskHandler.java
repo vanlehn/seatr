@@ -10,12 +10,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
+import com.asu.seatr.models.interfaces.RecommTaskI;
+import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
@@ -100,6 +103,25 @@ public class TaskHandler {
 		Criteria cr = session.createCriteria(Task.class);
 		List<Task> taskList = (List<Task>)cr.list();
 		session.close();
+		return taskList;
+	}
+	
+	public static List<RecommTaskI> getRecommTasks(Class typeParameterClass, Student stu, Course course) throws CourseException, StudentException
+	{
+		if(stu == null)
+		{
+			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
+		}
+		if(course == null)
+		{
+			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+		}
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(typeParameterClass);
+		cr.add(Restrictions.eq("course", course));
+		cr.add(Restrictions.eq("student", stu));
+		List<RecommTaskI> taskList = (List<RecommTaskI>)cr.list();
 		return taskList;
 	}
 	

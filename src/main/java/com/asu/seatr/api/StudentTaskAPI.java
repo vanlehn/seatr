@@ -12,7 +12,14 @@ import javax.ws.rs.core.Response.Status;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
+import com.asu.seatr.handlers.CourseHandler;
+import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
+import com.asu.seatr.handlers.TaskHandler;
+import com.asu.seatr.handlers.analyzer1.RecommTaskHandler;
+import com.asu.seatr.models.Course;
+import com.asu.seatr.models.Student;
+import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.studenttask.ST_A1;
 import com.asu.seatr.rest.models.STAReader1;
 import com.asu.seatr.utils.MyMessage;
@@ -68,6 +75,13 @@ public class StudentTaskAPI {
 			sta1.setD_status(sta.getD_status());
 			sta1.setD_time_lastattempt(sta.getD_time_lastattempt());
 			StudentTaskAnalyzerHandler.save(sta1);
+			
+			Student student = StudentHandler.getByExternalId(sta.getExternal_student_id(), sta.getExternal_course_id());
+			Task task = TaskHandler.readByExtId(sta.getExternal_task_id(), sta.getExternal_course_id());
+			Course course=CourseHandler.getByExternalId(sta.getExternal_course_id());
+			if(sta.getD_status().equals("done"))
+				RecommTaskHandler.completeATask(student, course,task);
+			
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_TASK_CREATED)).build();
 		}
