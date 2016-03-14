@@ -24,7 +24,7 @@ public class RecommTaskHandler {
 	private static void fillRecommTask(Student stu,Course course, int numToFilled){
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
-		String sql="select task.id from task where task.id not in "
+		String sql="select task.id from task where course_id="+course.getId()+" and task.id not in "
 				+ "(select task_id from student_task, st_a1 "
 				+ "where student_task.student_id="+stu.getId()+" and student_task.id=st_a1.student_task_id and st_a1.d_status='done' "
 						+ "union "
