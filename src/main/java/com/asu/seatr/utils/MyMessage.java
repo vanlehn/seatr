@@ -47,7 +47,10 @@ public enum MyMessage {
 	COURSE_ANALYZER_UPDATED("course analyzer mapping is updated."),
 	TASK_ANALYZER_NOT_FOUND("task analyzer not found"),
 	TASK_ANALYZER_ALREADY_PRESENT("task analyzer already present"),
-	ANALYZER_NOT_FOUND("The specified analyzer is not found."); 
+	ANALYZER_NOT_FOUND("The specified analyzer is not found."), 
+	COURSE_ANALYZER_MAP_NOT_FOUND("course analyzer mapping not found"), 
+	KC_NOT_FOUND_FOR_COURSE("no knowledge component found for the given course"), 
+	KC_TASK_MAP_COPIED("knowledge component - task mapping copied"); 
 	
 	public String value;
 	
