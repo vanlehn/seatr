@@ -134,7 +134,6 @@ public class KCAPI {
 			// TODO Auto-generated catch block
 				if(session != null)
 				{
-					session.flush();
 					session.getTransaction().rollback();
 					session.close();
 				}
@@ -146,7 +145,6 @@ public class KCAPI {
 			// TODO Auto-generated catch block
 			if(session != null)
 			{
-				session.flush();
 				session.getTransaction().rollback();
 				session.close();
 			}
@@ -160,7 +158,6 @@ public class KCAPI {
 				// TODO Auto-generated catch block
 				if(session != null)
 				{
-					session.flush();
 					session.getTransaction().rollback();
 					session.close();
 				}
@@ -172,7 +169,6 @@ public class KCAPI {
 			//kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
 			if(session != null)
 			{
-				session.flush();
 				session.getTransaction().rollback();
 				session.close();
 			}
@@ -183,7 +179,6 @@ public class KCAPI {
 		catch(Exception e){
 			if(session != null)
 			{
-				session.flush();
 				session.getTransaction().rollback();
 				session.close();
 			}
