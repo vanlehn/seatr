@@ -1,8 +1,12 @@
 package com.asu.seatr.api;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
@@ -12,7 +16,9 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import com.asu.seatr.exceptions.AnalyzerException;
+import com.asu.seatr.exceptions.CourseAnalyzerMapException;
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.AnalyzerHandler;
@@ -23,6 +29,7 @@ import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
+import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
 import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
@@ -31,9 +38,14 @@ import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.course.C_A1;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.models.analyzers.task.T_A1;
+import com.asu.seatr.models.analyzers.task_kc.TK_A1;
+import com.asu.seatr.models.analyzers.task_kc.TK_A2;
+import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
+import com.asu.seatr.rest.models.TKCAReader;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.Utilities;
 
 @Path("/")
 public class CommonAPI {
@@ -210,6 +222,74 @@ public class CommonAPI {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+	}
+	
+	@Path("/copykcmap")
+	@POST
+	@Consumes(MediaType.APPLICATION_JSON)
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response copyKCMap(TKCAReader reader)  
+	{		
+		
+		try {
+			
+			// this call will fail when there's no course analyzer mapping found
+			CourseAnalyzerMapHandler
+					.getAnalyzerIdFromExtCourseIdAnalyzerId(reader.getExternal_course_id(), reader.getFrom_analyzer_id());
+			CourseAnalyzerMapHandler
+					.getAnalyzerIdFromExtCourseIdAnalyzerId(reader.getExternal_course_id(), reader.getTo_analyzer_id());
+
+			// Default behaviour is true
+			boolean replace = (reader.getReplace() != null) ? reader.getReplace() : true;			
+			if(replace) {
+				try {
+					List<TaskKCAnalyzerI> taskKCList = TaskKCAnalyzerHandler.readByExtCourseId
+						(Utilities.getTKClass(reader.getTo_analyzer_id()), reader.getExternal_course_id());
+					TaskKCAnalyzerHandler.batchDelete(taskKCList);
+				} catch (KCException kce) {
+					if (!(kce.getMyStatus() == MyStatus.ERROR && kce.getMyMessage() == MyMessage.KC_NOT_FOUND_FOR_COURSE)) {
+						throw kce;
+					}
+				}
+			}
+			
+			List<TaskKCAnalyzerI> taskKCFromList = TaskKCAnalyzerHandler.readByExtCourseId
+					(Utilities.getTKClass(reader.getFrom_analyzer_id()), reader.getExternal_course_id());
+			List<TaskKCAnalyzerI> taskKCToList = new ArrayList<TaskKCAnalyzerI>();
+			switch(reader.getTo_analyzer_id()) {
+				case 1: 
+					for (TaskKCAnalyzerI taskKC: taskKCFromList) {
+						TK_A1 tka = new TK_A1();
+						tka.setKc(taskKC.getKc());
+						tka.setTask(taskKC.getTask());
+						taskKCToList.add(tka);
+					}
+					break;
+				case 2: 
+					for (TaskKCAnalyzerI taskKC: taskKCFromList) {
+						TK_A2 tka = new TK_A2();
+						tka.setKc(taskKC.getKc());
+						tka.setTask(taskKC.getTask());
+						taskKCToList.add(tka);
+					}
+					break;						
+					
+			}
+			TaskKCAnalyzerHandler.batchSaveOrUpdate(taskKCToList);
+			return Response.status(Status.CREATED)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_MAP_COPIED)).build();			
+		
+		} catch (CourseException | AnalyzerException | CourseAnalyzerMapException | TaskException | KCException e) {
+			Response rb = Response.status(Status.OK).
+					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);
+			
+		} catch (Exception e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}		
+		
 	}
 	
 	

@@ -9,10 +9,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
+import com.asu.seatr.exceptions.AnalyzerException;
+import com.asu.seatr.exceptions.CourseAnalyzerMapException;
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.persistence.HibernateUtil;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyStatus;
 
 public class CourseAnalyzerMapHandler {
 
@@ -55,6 +60,23 @@ public class CourseAnalyzerMapHandler {
 		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
 		return courseAnalyzerMapList;
 	}
+	
+	public static CourseAnalyzerMap getAnalyzerIdFromExtCourseIdAnalyzerId(String external_course_id, Integer analyzer_id) throws CourseException, AnalyzerException, CourseAnalyzerMapException
+	{
+		Course course = CourseHandler.getByExternalId(external_course_id);
+		Analyzer analyzer = AnalyzerHandler.getById(analyzer_id);
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
+		criteria.add(Restrictions.eq("course", course));
+		criteria.add(Restrictions.eq("analyzer", analyzer));
+		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
+		if(courseAnalyzerMapList.size() == 0) {
+			throw new CourseAnalyzerMapException(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_MAP_NOT_FOUND);
+		}
+		return courseAnalyzerMapList.get(0);
+	}
+	
 	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);

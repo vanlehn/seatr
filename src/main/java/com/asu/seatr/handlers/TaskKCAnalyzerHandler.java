@@ -1,11 +1,13 @@
 package com.asu.seatr.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
@@ -51,6 +53,30 @@ public class TaskKCAnalyzerHandler {
 	    session.close();
 	    return tkcArray;
 	}
+	
+	public static void batchSaveOrUpdate(List<TaskKCAnalyzerI> tkcArray)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+	    
+	    
+	    for(TaskKCAnalyzerI tkc: tkcArray)
+	    {	Session session = null;
+	    	try {
+	    		session = sf.openSession();
+	    		session.beginTransaction();
+	    		session.save(tkc);
+	    		session.getTransaction().commit();
+	    		
+	    		
+	    	} catch(ConstraintViolationException cve) {
+	    		// entry already present so do nothing
+	    	} finally {
+	    		session.close();
+	    	}
+	    }
+	    
+	    	    
+	}
 	public static TaskKCAnalyzerI readById(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -89,6 +115,20 @@ public class TaskKCAnalyzerHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
+	
+	public static void batchDelete(List<TaskKCAnalyzerI> kcAnalyzerList)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		for(TaskKCAnalyzerI kcAnalyzer: kcAnalyzerList) {
+			session.delete(kcAnalyzer);
+		}
+		session.getTransaction().commit();
+		session.close();
+	}
+	
+	
 	public static TaskKCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id, String external_task_id) throws CourseException, TaskException, KCException
 	{
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
@@ -107,6 +147,30 @@ public class TaskKCAnalyzerHandler {
 		TaskKCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
 		return t_kc;
 	}
+	
+	public static List<TaskKCAnalyzerI> readByExtCourseId(Class typeParameterClass, String external_course_id) throws CourseException, TaskException, KCException
+	{
+		
+		List<KnowledgeComponent> kcList = KnowledgeComponentHandler.getByExtCourseId(external_course_id);
+		List<TaskKCAnalyzerI> t_kcAnalyzerList = new ArrayList<TaskKCAnalyzerI>();
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		for(KnowledgeComponent kc: kcList) {
+			Criteria cr = session.createCriteria(typeParameterClass);		
+			cr.add(Restrictions.eq("kc", kc));
+			t_kcAnalyzerList.addAll((List<TaskKCAnalyzerI>)cr.list());
+		}
+		 
+		session.close();
+		if(t_kcAnalyzerList.size() == 0)
+		{
+			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND_FOR_COURSE);
+		}
+		//TaskKCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
+		//return t_kc;
+		return t_kcAnalyzerList;
+	}
+	
 	public static TaskKCAnalyzerI readByKC_Task(Class typeParameterClass, KnowledgeComponent kc, Task task) throws TaskException, KCException
 	{
 		if(task == null)
