@@ -17,10 +17,10 @@ import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 
 
 @Entity
-@Table(name = "tk_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id","kc_id"}))
-public class TK_A1 implements TaskKCAnalyzerI{
+@Table(name = "tk_a2", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id","kc_id"}))
+public class TK_A2 implements TaskKCAnalyzerI{
 
-	public static final String TABLE_NAME = "tk_a1";
+	public static final String TABLE_NAME = "tk_a2";
 	public static final String ID = "id";
 	public static final String TASK_ID = "task_id";
 	public static final String KC_ID = "kc_id";

@@ -1,8 +1,10 @@
 package com.asu.seatr.api;
 
+
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -16,26 +18,34 @@ import javax.ws.rs.core.Response.Status;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
+
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseHandler;
-import com.asu.seatr.handlers.Handler;
+
+
 import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
 import com.asu.seatr.models.Course;
+
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.kc.K_A1;
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
+
 import com.asu.seatr.rest.models.KAReader1;
 import com.asu.seatr.rest.models.TKAReader1;
+
 import com.asu.seatr.rest.models.TKReader1;
+
+		
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
+
 
 @Path("analyzer/1/kc")
 public class KCAPI {
@@ -177,6 +187,7 @@ public class KCAPI {
 			throw new WebApplicationException(rb);
 		} 
 		catch(Exception e){
+
 			if(session != null)
 			{
 				session.getTransaction().rollback();
@@ -190,5 +201,8 @@ public class KCAPI {
 		}
 		
 	}
+
+	
+	
 
 }
