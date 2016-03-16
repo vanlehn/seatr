@@ -46,3 +46,6 @@
 ## MongoDB
 - Location of the configuration file: /etc/mongo.conf   
    bindIp is comment out to allow any computers to connect to the server.
+
+## Apache Log4j
+- Log files can be found in tomcat/logs/seatr.log
