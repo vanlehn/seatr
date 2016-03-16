@@ -15,6 +15,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -50,6 +51,7 @@ import com.asu.seatr.utils.MyStatus;
 @Path("analyzer/1/kc")
 public class KCAPI {
 
+	static Logger logger = Logger.getLogger(KCAPI.class);
 	
 	@Path("/createkc")
 	@POST
@@ -77,6 +79,7 @@ public class KCAPI {
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
+			logger.error(e.getStackTrace());
 			System.out.println(e.getMessage());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
@@ -187,14 +190,14 @@ public class KCAPI {
 			throw new WebApplicationException(rb);
 		} 
 		catch(Exception e){
-
+			
 			if(session != null)
 			{
 				session.getTransaction().rollback();
 				session.close();
 			}
 			System.out.println(e.getMessage());
-			
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);

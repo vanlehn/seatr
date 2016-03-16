@@ -1,5 +1,6 @@
 package com.asu.seatr.api;
 
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -13,6 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.BasicConfigurator;
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
@@ -27,6 +30,9 @@ import com.asu.seatr.utils.MyStatus;
 @Path("analyzer/1/students")
 public class StudentAPI {
 
+	static Logger logger = Logger.getLogger(StudentAPI.class);
+	
+	
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public SAReader1 getStudent(
@@ -34,6 +40,8 @@ public class StudentAPI {
 			@QueryParam("external_course_id") String external_course_id) {		
 		
 		//handle cases
+		
+		logger.info("studentapi called");
 		
 			S_A1 sa1 = null;
 			try {
@@ -47,6 +55,7 @@ public class StudentAPI {
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			} catch(Exception e){
+				logger.error(e.getStackTrace());
 				System.out.println(e.getMessage());
 				Response rb = Response.status(Status.BAD_REQUEST)
 						.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
@@ -98,6 +107,7 @@ public class StudentAPI {
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
+			logger.error(e.getStackTrace());
 			System.out.println(e.getMessage());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
@@ -129,6 +139,7 @@ public class StudentAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -161,6 +172,7 @@ public class StudentAPI {
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			} catch(Exception e){
+				logger.error(e.getStackTrace());
 				Response rb = Response.status(Status.BAD_REQUEST)
 						.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 				throw new WebApplicationException(rb);

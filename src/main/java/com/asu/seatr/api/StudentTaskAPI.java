@@ -9,6 +9,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
+
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
@@ -28,6 +30,7 @@ import com.asu.seatr.utils.MyStatus;
 
 @Path("analyzer/1/studenttasks")
 public class StudentTaskAPI {
+	static Logger logger = Logger.getLogger(StudentTaskAPI.class);
 	/*get,update and delete operations have been disabled because a single student can have multiple records of
 	the same task associated with it.
 	*/
@@ -102,6 +105,7 @@ public class StudentTaskAPI {
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);

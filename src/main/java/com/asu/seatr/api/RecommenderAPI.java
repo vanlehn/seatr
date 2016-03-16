@@ -14,6 +14,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
+
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
@@ -33,6 +35,7 @@ import com.asu.seatr.utils.MyStatus;
 @Path("/gettasks")
 public class RecommenderAPI {
 
+	static Logger logger = Logger.getLogger(RecommenderAPI.class);
 	@Path("/")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -121,6 +124,7 @@ public class RecommenderAPI {
 		}
 		
 		catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
