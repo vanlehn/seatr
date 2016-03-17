@@ -1,11 +1,16 @@
 package com.asu.seatr.api.test.jmeter;
 
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.LinkedList;
+import java.util.List;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.jmeter.config.Argument;
 import org.apache.jmeter.config.Arguments;
@@ -28,7 +33,7 @@ import org.apache.jorphan.collections.HashTree;
 import org.json.*;
 
 public class LoadTest {
-	private String jmeterHome="C:\\apache-jmeter-2.11\\";
+	/*private String jmeterHome="C:\\apache-jmeter-2.11\\";
 	private String jmeterProperty="C:\\apache-jmeter-2.11\\bin\\jmeter.properties";
 	
 	// JMeter Engine
@@ -76,7 +81,7 @@ public class LoadTest {
 	
 	private void savePlan() throws FileNotFoundException, IOException{
 		// save generated test plan to JMeter's .jmx file format
-        SaveService.saveTree(testPlanTree, new FileOutputStream(".\\jmeter\\jmeter_api_sample.jmx"));
+        SaveService.saveTree(testPlanTree, new FileOutputStream("C:\\apache-jmeter-2.11\\jmeter_api_sample.jmx"));
 	}
 	
 	public void runTest(){
@@ -102,7 +107,7 @@ public class LoadTest {
         // Run Test Plan
         jmeter.configure(testPlanTree);
         jmeter.run();
-	}
+	}*/
 
 	
 	public void readRequestFrom(String path) throws IOException{
@@ -111,11 +116,9 @@ public class LoadTest {
 		String jsonTxt=IOUtils.toString(is);
 		JSONArray jsonArray=new JSONArray(jsonTxt);
 		
-		this.initJmeterPlan();
-        
-        
-        
-        
+		String outpath="C:\\apache-jmeter-2.11\\stu_task.txt";
+		BufferedWriter fout=new BufferedWriter(new FileWriter(outpath));
+		
 		int e_course_id=37;
 		System.out.println(jsonArray.length());
 		for(int i=0;i<jsonArray.length();i++){
@@ -128,26 +131,11 @@ public class LoadTest {
 			body.put("d_status","done");
 			body.put("d_time_lastattempt", -1);
 			
-			// HTTP Sampler
-	        HTTPSamplerProxy httpSampler = new HTTPSamplerProxy ();
-	        httpSampler.setDomain("ec2-52-35-118-9.us-west-2.compute.amazonaws.com");
-	        httpSampler.setPort(8080);
-	        httpSampler.setPath("/seatr/rest/analyzer/1/students?external_student_id=22&external_course_id=37");
-	        httpSampler.setMethod("POST");
-	        httpSampler.addArgument("", body.toString());
-	        httpSampler.setName("Test "+i);
-	        httpSampler.setProperty(TestElement.TEST_CLASS, HTTPSamplerProxy.class.getName());
-	        httpSampler.setProperty(TestElement.GUI_CLASS, HttpTestSampleGui.class.getName());
-	        threadGroupHashTree.add(httpSampler);
-	       
-	        if(i>1000)
-	        	break;
+			fout.write(body.toString()+"\r\n");
 		}
-		System.out.println("Saving test plan...");
-		this.savePlan();
-		System.out.println("Test plan is save.");
+		is.close();
+		fout.close();
 		
-		//runTest();
 	}
 	
 	public static void main(String[] args) throws IOException{
