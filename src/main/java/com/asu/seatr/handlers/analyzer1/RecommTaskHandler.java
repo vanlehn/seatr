@@ -11,6 +11,8 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.IntegerType;
 
+import com.asu.seatr.handlers.CourseHandler;
+import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
@@ -45,6 +47,22 @@ public class RecommTaskHandler {
 		}
 		session.getTransaction().commit();
 		session.close();
+	}
+	
+	public static void initRecommTasks(int num){
+		SessionFactory sf=HibernateUtil.getSessionFactory();
+		Session session=sf.openSession();
+		session.beginTransaction();
+		Query q=session.createQuery("delete from RecommTask_A1");
+		q.executeUpdate();
+		session.getTransaction().commit();
+		
+		List<Student> stu_list=StudentHandler.readAll();
+		
+		numOfRecomm=num;
+		for(Student stu: stu_list){
+				fillRecommTask(stu,stu.getCourse(),numOfRecomm);
+		}
 	}
 	
 	public static void completeATask(Student stu, Course course, Task task){

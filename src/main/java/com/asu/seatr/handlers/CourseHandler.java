@@ -10,8 +10,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.hql.internal.ast.QuerySyntaxException;
 
+import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Course;
+import com.asu.seatr.models.Student;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
@@ -25,6 +27,15 @@ public class CourseHandler {
 	    session.save(course);
 	    session.getTransaction().commit();
 	    session.close();
+	}
+	
+	public static List<Course> readAll()
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		List<Course> records = session.createQuery("from " + DatabaseConstants.COURSE_TABLE_NAME).list();
+		session.close();
+		return records;
 	}
 	
 	public static Course readById(int id)
