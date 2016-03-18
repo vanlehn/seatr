@@ -20,13 +20,23 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 			HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			String authCredentials = httpServletRequest
 					.getHeader(AUTHENTICATION_HEADER);
-
+			
+			String external_course_id = request.getParameter("external_course_id");
+			
 			// better injected
 			AuthenticationService authenticationService = new AuthenticationService();
 
+			
 			boolean authenticationStatus = authenticationService
 					.authenticate(authCredentials);
-
+			
+			if (authenticationStatus && external_course_id.equals("37")) {
+				authenticationStatus = true;
+			} else {
+				authenticationStatus = false;
+			}
+			
+			
 			if (authenticationStatus) {
 				filter.doFilter(request, response);
 			} else {
