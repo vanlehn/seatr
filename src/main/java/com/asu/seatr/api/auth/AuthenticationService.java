@@ -21,9 +21,12 @@ import javax.crypto.spec.PBEParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
 
+import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.UserException;
+import com.asu.seatr.handlers.UserCourseHandler;
 import com.asu.seatr.handlers.UserHandler;
 import com.asu.seatr.models.User;
+import com.asu.seatr.models.UserCourse;
 
 public class AuthenticationService {
 	
@@ -64,7 +67,8 @@ public class AuthenticationService {
 
 
 
-	public boolean authenticate(String authCredentials) {
+	public boolean authenticate(String authCredentials, String external_course_id) throws UserException, CourseException, 
+					UnsupportedEncodingException, GeneralSecurityException{
 
 		if (null == authCredentials)
 			return false;
@@ -84,37 +88,18 @@ public class AuthenticationService {
 				usernameAndPassword, ":");
 		final String username = tokenizer.nextToken();
 		final String password = tokenizer.nextToken();
-		String encryptedPassword = "";
-		try {
-			encryptedPassword = encrypt(password);
-		} catch (UnsupportedEncodingException | GeneralSecurityException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-		// we have fixed the userid and password as admin
-		// call some UserService/LDAP here
+		
 		boolean authenticationStatus = false;
-		try {
-			User user = UserHandler.read(username);
-			authenticationStatus = user.getPassword().equals(encryptedPassword);			
-			
-		} catch (UserException e) {
-			//e.printStackTrace();
-			authenticationStatus = false;
-		}		
+		
+		User user = UserHandler.read(username);
+		authenticationStatus = user.getPassword().equals(encrypt(password));
+		
+		if(authenticationStatus) {
+			UserCourseHandler.read(username, external_course_id);										
+		}
+		
 		
 		return authenticationStatus;
 	}
-
-	public static void main(String[] args) {
-		System.out.println("hi...\n");
-		try {
-			System.out.println(encrypt("hello"));
-			String encrypted = encrypt("hello");
-			System.out.println(decrypt(encrypted));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
+	
 }
