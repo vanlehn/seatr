@@ -60,7 +60,17 @@ public class CourseAnalyzerMapHandler {
 		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
 		return courseAnalyzerMapList;
 	}
-	
+
+	public static List<CourseAnalyzerMap> getAnalyzerIdFromCourse(Course course) throws CourseException
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
+		criteria.add(Restrictions.eq("course", course));
+		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
+		return courseAnalyzerMapList;
+	}
+
 	public static CourseAnalyzerMap getAnalyzerIdFromExtCourseIdAnalyzerId(String external_course_id, Integer analyzer_id) throws CourseException, AnalyzerException, CourseAnalyzerMapException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
@@ -77,6 +87,7 @@ public class CourseAnalyzerMapHandler {
 		return courseAnalyzerMapList.get(0);
 	}
 	
+
 	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);

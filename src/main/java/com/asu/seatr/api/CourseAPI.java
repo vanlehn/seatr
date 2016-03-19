@@ -13,6 +13,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
+
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.handlers.CourseAnalyzerHandler;
 import com.asu.seatr.models.analyzers.course.C_A1;
@@ -23,7 +25,7 @@ import com.asu.seatr.utils.MyStatus;
 
 @Path("/analyzer/1/courses")
 public class CourseAPI {
-			
+	static Logger logger = Logger.getLogger(CourseAPI.class);
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public CAReader1 getCourse(@QueryParam("external_course_id") String external_course_id){
@@ -35,6 +37,7 @@ public class CourseAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
+			logger.error(e.getStackTrace());
 			System.out.println(e.getMessage());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
@@ -70,6 +73,7 @@ public class CourseAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		}  catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -97,6 +101,7 @@ public class CourseAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -121,6 +126,7 @@ public class CourseAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);

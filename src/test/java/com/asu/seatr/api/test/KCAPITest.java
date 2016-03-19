@@ -2,8 +2,11 @@ package com.asu.seatr.api.test;
 
 import static org.junit.Assert.assertEquals;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+
 
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -13,8 +16,11 @@ import javax.ws.rs.core.Response.Status;
 import org.glassfish.jersey.server.ResourceConfig;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Matchers;
 import org.mockito.Mockito;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
@@ -24,11 +30,13 @@ import com.asu.seatr.api.KCAPI;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
+import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.Handler;
 import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
+import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.kc.K_A1;
@@ -40,7 +48,7 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;;
 
 @PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI.class
-	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, Handler.class})
+	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, CourseHandler.class,KCAnalyzerHandler.class,Session.class,Transaction.class})
 @RunWith(PowerMockRunner.class)
 public class KCAPITest extends JerseyTest {
 
@@ -153,9 +161,17 @@ public class KCAPITest extends JerseyTest {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
 		
-		Integer affectedRows = new Integer(2);
-		PowerMockito.mockStatic(Handler.class);
-		PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		//Integer affectedRows = new Integer(2);
+		//PowerMockito.mockStatic(Handler.class);
+		//PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		List<Course> courseList = new ArrayList<Course>();
+		PowerMockito.mockStatic(CourseHandler.class);
+		PowerMockito.when(CourseHandler.getCourseList(Matchers.anySetOf(String.class))).thenReturn(courseList);
+		
+		Session mockedSession = Mockito.mock(Session.class);
+		Transaction mockedTransaction = Mockito.mock(Transaction.class);
+		PowerMockito.mockStatic(KCAnalyzerHandler.class);
+		PowerMockito.when(KCAnalyzerHandler.hqlBatchDeleteByCourse(Mockito.anyString(), Matchers.anyListOf(Course.class), Mockito.anyBoolean())).thenReturn(mockedSession);
 		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
@@ -166,7 +182,14 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class),Mockito.anyBoolean(),Mockito.any(Session.class))).thenReturn(mockedSession);
+		
+		Mockito.when(mockedSession.beginTransaction()).thenReturn(mockedTransaction);
+		Mockito.when(mockedSession.getTransaction()).thenReturn(mockedTransaction);
+		Mockito.doNothing().when(mockedSession).flush();
+		Mockito.doNothing().when(mockedSession).close();
+		Mockito.doNothing().when(mockedTransaction).commit();
+		Mockito.doNothing().when(mockedTransaction).rollback();
 		
 		Map<String, Object> requestMessage = new HashMap<String, Object>();
 		requestMessage.put("replace", "true");
@@ -194,12 +217,14 @@ public class KCAPITest extends JerseyTest {
 				resp.readEntity(String.class));
 		
 	}
+	
 	@Test
 	public void mapKcTaskTest_with_Replace_false_Success() throws Exception {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
 		
-
+		Session mockedSession = Mockito.mock(Session.class);
+		Transaction mockedTransaction = Mockito.mock(Transaction.class);
 		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
@@ -210,7 +235,14 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class),Mockito.anyBoolean(),Mockito.any(Session.class))).thenReturn(mockedSession);
+		
+		Mockito.when(mockedSession.beginTransaction()).thenReturn(mockedTransaction);
+		Mockito.when(mockedSession.getTransaction()).thenReturn(mockedTransaction);
+		Mockito.doNothing().when(mockedSession).flush();
+		Mockito.doNothing().when(mockedSession).close();
+		Mockito.doNothing().when(mockedTransaction).commit();
+		Mockito.doNothing().when(mockedTransaction).rollback();
 		
 		Map<String, Object> requestMessage = new HashMap<String, Object>();
 		requestMessage.put("replace", "false");
@@ -244,9 +276,18 @@ public class KCAPITest extends JerseyTest {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
 		
-		Integer affectedRows = new Integer(2);
-		PowerMockito.mockStatic(Handler.class);
-		PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		//Integer affectedRows = new Integer(2);
+		//PowerMockito.mockStatic(Handler.class);
+		//PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		List<Course> courseList = new ArrayList<Course>();
+		PowerMockito.mockStatic(CourseHandler.class);
+		PowerMockito.when(CourseHandler.getCourseList(Matchers.anySetOf(String.class))).thenReturn(courseList);
+		
+		Session mockedSession = Mockito.mock(Session.class);
+		Transaction mockedTransaction = Mockito.mock(Transaction.class);
+		PowerMockito.mockStatic(KCAnalyzerHandler.class);
+		PowerMockito.when(KCAnalyzerHandler.hqlBatchDeleteByCourse(Mockito.anyString(), Matchers.anyListOf(Course.class), Mockito.anyBoolean())).thenReturn(mockedSession);
+		
 		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
@@ -258,7 +299,14 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class),Mockito.anyBoolean(),Mockito.any(Session.class))).thenReturn(mockedSession);
+		
+		Mockito.when(mockedSession.beginTransaction()).thenReturn(mockedTransaction);
+		Mockito.when(mockedSession.getTransaction()).thenReturn(mockedTransaction);
+		Mockito.doNothing().when(mockedSession).flush();
+		Mockito.doNothing().when(mockedSession).close();
+		Mockito.doNothing().when(mockedTransaction).commit();
+		Mockito.doNothing().when(mockedTransaction).rollback();
 		
 		Map<String, Object> requestMessage = new HashMap<String, Object>();
 		requestMessage.put("replace", "true");
@@ -292,9 +340,18 @@ public class KCAPITest extends JerseyTest {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
 		
-		Integer affectedRows = new Integer(2);
-		PowerMockito.mockStatic(Handler.class);
-		PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		//Integer affectedRows = new Integer(2);
+		//PowerMockito.mockStatic(Handler.class);
+		//PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		List<Course> courseList = new ArrayList<Course>();
+		PowerMockito.mockStatic(CourseHandler.class);
+		PowerMockito.when(CourseHandler.getCourseList(Matchers.anySetOf(String.class))).thenReturn(courseList);
+		
+		Session mockedSession = Mockito.mock(Session.class);
+		Transaction mockedTransaction = Mockito.mock(Transaction.class);
+		PowerMockito.mockStatic(KCAnalyzerHandler.class);
+		PowerMockito.when(KCAnalyzerHandler.hqlBatchDeleteByCourse(Mockito.anyString(), Matchers.anyListOf(Course.class), Mockito.anyBoolean())).thenReturn(mockedSession);
+		
 		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
@@ -306,7 +363,14 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString())).thenReturn(task);
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
+		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class),Mockito.anyBoolean(),Mockito.any(Session.class))).thenReturn(mockedSession);
+		
+		Mockito.when(mockedSession.beginTransaction()).thenReturn(mockedTransaction);
+		Mockito.when(mockedSession.getTransaction()).thenReturn(mockedTransaction);
+		Mockito.doNothing().when(mockedSession).flush();
+		Mockito.doNothing().when(mockedSession).close();
+		Mockito.doNothing().when(mockedTransaction).commit();
+		Mockito.doNothing().when(mockedTransaction).rollback();
 		
 		Map<String, Object> requestMessage = new HashMap<String, Object>();
 		requestMessage.put("replace", "true");
@@ -340,9 +404,18 @@ public class KCAPITest extends JerseyTest {
 		TK_A1 tka1 = Mockito.mock(TK_A1.class);
 		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
 		
-		Integer affectedRows = new Integer(2);
-		PowerMockito.mockStatic(Handler.class);
-		PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		//Integer affectedRows = new Integer(2);
+		//PowerMockito.mockStatic(Handler.class);
+		//PowerMockito.when(Handler.hqlTruncate(Mockito.anyString())).thenReturn(affectedRows);
+		List<Course> courseList = new ArrayList<Course>();
+		PowerMockito.mockStatic(CourseHandler.class);
+		PowerMockito.when(CourseHandler.getCourseList(Matchers.anySetOf(String.class))).thenReturn(courseList);
+		
+		Session mockedSession = Mockito.mock(Session.class);
+		Transaction mockedTransaction = Mockito.mock(Transaction.class);
+		PowerMockito.mockStatic(KCAnalyzerHandler.class);
+		PowerMockito.when(KCAnalyzerHandler.hqlBatchDeleteByCourse(Mockito.anyString(), Matchers.anyListOf(Course.class), Mockito.anyBoolean())).thenReturn(mockedSession);
+		
 		
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
 		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
@@ -354,7 +427,14 @@ public class KCAPITest extends JerseyTest {
 			.thenThrow(new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND));
 		
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
-		PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class))).thenReturn(new TK_A1[]{});
+	PowerMockito.when(TaskKCAnalyzerHandler.batchSave(Mockito.any(TaskKCAnalyzerI[].class),Mockito.anyBoolean(),Mockito.any(Session.class))).thenReturn(mockedSession);
+		
+		Mockito.when(mockedSession.beginTransaction()).thenReturn(mockedTransaction);
+		Mockito.when(mockedSession.getTransaction()).thenReturn(mockedTransaction);
+		Mockito.doNothing().when(mockedSession).flush();
+		Mockito.doNothing().when(mockedSession).close();
+		Mockito.doNothing().when(mockedTransaction).commit();
+		Mockito.doNothing().when(mockedTransaction).rollback();
 		
 		Map<String, Object> requestMessage = new HashMap<String, Object>();
 		requestMessage.put("replace", "true");
@@ -382,5 +462,6 @@ public class KCAPITest extends JerseyTest {
 				resp.readEntity(String.class));
 		
 	}
+	
 	
 }

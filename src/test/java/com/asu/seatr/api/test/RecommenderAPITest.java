@@ -31,7 +31,9 @@ import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
+import com.asu.seatr.models.analyzers.studenttask.RecommTask_A1;
 import com.asu.seatr.models.analyzers.task.T_A1;
+import com.asu.seatr.models.interfaces.RecommTaskI;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
@@ -107,15 +109,15 @@ public class RecommenderAPITest extends JerseyTest{
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenReturn(student);
 		PowerMockito.mockStatic(CourseAnalyzerMapHandler.class);
 		PowerMockito.when(CourseAnalyzerMapHandler.getPrimaryAnalyzerIdFromExtCourseId(Mockito.anyString())).thenReturn(cam);
-		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
-		List<TaskAnalyzerI> taskAnalyzerList = new ArrayList<TaskAnalyzerI>();
-		T_A1 ta1 = new T_A1();
+		PowerMockito.mockStatic(TaskHandler.class);
+		List<RecommTaskI> recommTaskList = new ArrayList<RecommTaskI>();
+		RecommTask_A1 ta1 = new RecommTask_A1();
 		ta1.setId(1);
 		Task task = new Task();
 		task.setExternal_id("10");
 		ta1.setTask(task);
-		taskAnalyzerList.add(ta1);
-		PowerMockito.when(TaskAnalyzerHandler.readByCourse(Mockito.any(Class.class),(Course)Mockito.anyObject())).thenReturn(taskAnalyzerList);
+		recommTaskList.add(ta1);
+		PowerMockito.when(TaskHandler.getRecommTasks(Mockito.any(Class.class),(Student)Mockito.anyObject(), (Course)Mockito.anyObject())).thenReturn(recommTaskList);
 		final List<String> resList = target(GETTASKS_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
 		assertEquals("10",resList.get(0));
 	}
@@ -137,9 +139,9 @@ public class RecommenderAPITest extends JerseyTest{
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenReturn(student);
 		PowerMockito.mockStatic(CourseAnalyzerMapHandler.class);
 		PowerMockito.when(CourseAnalyzerMapHandler.getPrimaryAnalyzerIdFromExtCourseId(Mockito.anyString())).thenReturn(cam);
-		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
-		List<TaskAnalyzerI> taskAnalyzerList = new ArrayList<TaskAnalyzerI>();
-		PowerMockito.when(TaskAnalyzerHandler.readByCourse(Mockito.any(Class.class),(Course)Mockito.anyObject())).thenReturn(taskAnalyzerList);
+		PowerMockito.mockStatic(TaskHandler.class);
+		List<RecommTaskI> recommTaskList = new ArrayList<RecommTaskI>();
+		PowerMockito.when(TaskHandler.getRecommTasks(Mockito.any(Class.class),(Student)Mockito.anyObject(), (Course)Mockito.anyObject())).thenReturn(recommTaskList);
 		try
 		{
 		final List<String> resp = target(GETTASKS_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);

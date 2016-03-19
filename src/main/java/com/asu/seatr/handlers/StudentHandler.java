@@ -1,6 +1,8 @@
 package com.asu.seatr.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -10,7 +12,9 @@ import org.hibernate.criterion.Restrictions;
 import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
+import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
+import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
@@ -103,6 +107,18 @@ public class StudentHandler {
 		session.delete(student);
 		session.getTransaction().commit();
 		session.close();
+	}
+	public static List<Analyzer> getAnalyzerList(Student student) throws CourseException
+	{
+		List<CourseAnalyzerMap> courseAnalyzerMapList = CourseAnalyzerMapHandler.getAnalyzerIdFromCourse(student.getCourse());
+		ListIterator<CourseAnalyzerMap> li = courseAnalyzerMapList.listIterator();
+		List<Analyzer> analyzerList = new ArrayList<Analyzer>();
+		while(li.hasNext())
+		{
+			analyzerList.add(li.next().getAnalyzer());
+		}
+		return analyzerList;
+		
 	}
 	
 

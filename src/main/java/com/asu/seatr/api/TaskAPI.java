@@ -13,6 +13,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
@@ -32,7 +33,7 @@ import com.asu.seatr.utils.MyStatus;
 
 @Path("analyzer/1/tasks")
 public class TaskAPI {
-	
+	static Logger logger = Logger.getLogger(TaskAPI.class);
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public TAReader1 getTask(
@@ -60,6 +61,7 @@ public class TaskAPI {
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e) {
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -100,6 +102,7 @@ public class TaskAPI {
 			throw new WebApplicationException(rb);
 		}
 	    catch(Exception e){
+	    	logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -135,7 +138,8 @@ public class TaskAPI {
 			throw new WebApplicationException(rb);
 		}
 		
-		catch(Exception e){			
+		catch(Exception e){		
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.NOT_FOUND)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST))
 					.build();
@@ -170,6 +174,7 @@ public class TaskAPI {
 			throw new WebApplicationException(rb);
 		}		
 		catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);

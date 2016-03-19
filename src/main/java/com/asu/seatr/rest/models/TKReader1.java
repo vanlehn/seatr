@@ -3,7 +3,7 @@ package com.asu.seatr.rest.models;
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 import com.asu.seatr.rest.models.interfaces.TKReaderI;
 
-public class TKReader implements TKReaderI{
+public class TKReader1 implements TKReaderI{
 
 	private boolean replace;
 	private TKAReader1[] tkaReader;

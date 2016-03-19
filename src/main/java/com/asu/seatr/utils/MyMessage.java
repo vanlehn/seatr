@@ -52,7 +52,8 @@ public enum MyMessage {
 	KC_NOT_FOUND_FOR_COURSE("no knowledge component found for the given course"), 
 	KC_TASK_MAP_COPIED("knowledge component - task mapping copied"), 
 	USER_NOT_FOUND("username not found"),
-	USER_NO_ACCESS_TO_COURSE("user does not have access to the course");
+	USER_NO_ACCESS_TO_COURSE("user does not have access to the course"),
+	RECOMM_TASK_INIT("Recommended tasks have been initialized");
 	
 	public String value;
 	

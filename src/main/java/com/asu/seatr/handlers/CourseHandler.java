@@ -1,15 +1,19 @@
 package com.asu.seatr.handlers;
 
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.hql.internal.ast.QuerySyntaxException;
 
+import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Course;
+import com.asu.seatr.models.Student;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
@@ -23,6 +27,15 @@ public class CourseHandler {
 	    session.save(course);
 	    session.getTransaction().commit();
 	    session.close();
+	}
+	
+	public static List<Course> readAll()
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		List<Course> records = session.createQuery("from " + DatabaseConstants.COURSE_TABLE_NAME).list();
+		session.close();
+		return records;
 	}
 	
 	public static Course readById(int id)
@@ -71,5 +84,54 @@ public class CourseHandler {
 		query.executeUpdate();
 		session.getTransaction().commit();
 		session.close();
+	}
+	
+	public static List<Integer> getInternalCourseList(Set<String> courseIdList)
+	{
+		if(courseIdList == null || courseIdList.isEmpty())
+		{
+			return null;
+		}
+		try
+		{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		String hql = "select c.id from Course c where c.external_id in :courseIdList";
+		Query query = session.createQuery(hql).setParameterList("courseIdList", courseIdList);
+		List<Integer> internal_course_list = query.list();
+		session.getTransaction().commit();
+		session.close();
+		return internal_course_list;
+		}
+		catch(QuerySyntaxException e)
+		{
+			System.out.println("Table Not Mapped");
+			return null;
+		}
+	}
+	public static List<Course> getCourseList(Set<String> courseIdList)
+	{
+		if(courseIdList == null || courseIdList.isEmpty())
+		{
+			return null;
+		}
+		try
+		{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		String hql = "select c from Course c where c.external_id in :courseIdList";
+		Query query = session.createQuery(hql).setParameterList("courseIdList", courseIdList);
+		List<Course> internal_course_list = query.list();
+		session.getTransaction().commit();
+		session.close();
+		return internal_course_list;
+		}
+		catch(QuerySyntaxException e)
+		{
+			System.out.println("Table Not Mapped");
+			return null;
+		}
 	}
 }

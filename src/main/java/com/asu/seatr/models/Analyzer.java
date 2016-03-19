@@ -1,9 +1,13 @@
 package com.asu.seatr.models;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -21,6 +25,9 @@ public class Analyzer {
 	
 	@Column(name = "description")
 	private String description;
+	
+	@OneToMany(mappedBy = "analyzer", cascade=CascadeType.ALL)
+	private List<CourseAnalyzerMap> CourseAnalyzerMap;
 	
 	public int getId() {
 		return id;
@@ -44,5 +51,12 @@ public class Analyzer {
 	public String toString()
 	{
 		return this.name;
+	}
+	
+	public List<CourseAnalyzerMap> getCourseAnalyzerMap() {
+		return CourseAnalyzerMap;
+	}
+	public void setCourseAnalyzerMap(List<CourseAnalyzerMap> courseAnalyzerMap) {
+		CourseAnalyzerMap = courseAnalyzerMap;
 	}
 }
