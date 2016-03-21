@@ -22,6 +22,7 @@ import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
+import com.asu.seatr.handlers.analyzer1.RecommTaskHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
@@ -32,11 +33,22 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-@Path("/gettasks")
+@Path("/")
 public class RecommenderAPI {
 
 	static Logger logger = Logger.getLogger(RecommenderAPI.class);
-	@Path("/")
+	
+	@Path("inittasks")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response initRecommendedTasks(@QueryParam("number_of_tasks") Integer number_of_tasks){
+		RecommTaskHandler.initRecommTasks(number_of_tasks);
+		return Response.status(Status.OK)
+				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
+				.build();
+	}
+	
+	@Path("gettasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getRecommendedTasks(
