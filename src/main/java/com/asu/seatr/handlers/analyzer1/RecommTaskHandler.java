@@ -60,6 +60,7 @@ public class RecommTaskHandler {
 		List<Student> stu_list=StudentHandler.readAll();
 		
 		numOfRecomm=num;
+		session.close();
 		for(Student stu: stu_list){
 				fillRecommTask(stu,stu.getCourse(),numOfRecomm);
 		}
