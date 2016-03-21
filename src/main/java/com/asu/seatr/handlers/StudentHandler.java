@@ -32,11 +32,12 @@ public class StudentHandler {
 		cr.add(Restrictions.eq("course", course));
 		
 		List<Student> studentList = (List<Student>)cr.list();
+		session.close();
 		if(studentList.size() == 0)
 		{
 			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
 		}
-		session.close();
+
 		Student student = studentList.get(0);
 		return student;
 	}

@@ -80,6 +80,7 @@ public class KCAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
+		session.close();
 		if(kcAnalyzerList.size() < 1 )
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
@@ -94,6 +95,7 @@ public class KCAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
+		session.close();
 		if(kcAnalyzerList.size() < 1 )
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
@@ -111,6 +113,7 @@ public class KCAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
+		session.close();
 		if(kcAnalyzerList.size() < 1 )
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);

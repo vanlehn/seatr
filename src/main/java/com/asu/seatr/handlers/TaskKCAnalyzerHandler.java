@@ -25,12 +25,18 @@ public class TaskKCAnalyzerHandler {
 	public static TaskKCAnalyzerI save(TaskKCAnalyzerI tkc) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
-	    int id = (int)session.save(tkc);
-	    tkc.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+	    try
+		    {
+		    session.beginTransaction();
+		    
+		    int id = (int)session.save(tkc);
+		    tkc.setId(id);
+		    session.getTransaction().commit();
+		    }
+	    finally
+	    {
+	    	session.close();
+	    }
 	    return tkc;
 	}
 	/**
@@ -109,32 +115,50 @@ public class TaskKCAnalyzerHandler {
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.merge(t_kcAnalyzer);
-		session.getTransaction().commit();
-		session.close();
+		try
+			{
+			session.beginTransaction();
+			session.merge(t_kcAnalyzer);
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
+		}
 		return t_kcAnalyzer;
 	}
 	public static void delete(TaskKCAnalyzerI kcAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.delete(kcAnalyzer);
-		session.getTransaction().commit();
-		session.close();
+		try
+			{
+			session.beginTransaction();
+			session.delete(kcAnalyzer);
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
+		}
 	}
 	
 	public static void batchDelete(List<TaskKCAnalyzerI> kcAnalyzerList)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		for(TaskKCAnalyzerI kcAnalyzer: kcAnalyzerList) {
-			session.delete(kcAnalyzer);
+		try
+			{
+			session.beginTransaction();
+			for(TaskKCAnalyzerI kcAnalyzer: kcAnalyzerList) {
+				session.delete(kcAnalyzer);
+			}
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
 		}
-		session.getTransaction().commit();
-		session.close();
 	}
 	
 	

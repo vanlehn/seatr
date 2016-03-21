@@ -25,11 +25,16 @@ public class CourseAnalyzerMapHandler {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
-	    
-	    int id = (int)session.save(courseAnalyzer);
-	    courseAnalyzer.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+	    try
+		    {
+		    int id = (int)session.save(courseAnalyzer);
+		    courseAnalyzer.setId(id);
+		    session.getTransaction().commit();
+		    }
+	    finally
+	    {
+	    	session.close();
+	    }
 	    return courseAnalyzer;
 	}
 	
@@ -37,8 +42,14 @@ public class CourseAnalyzerMapHandler {
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		CourseAnalyzerMap courseAnalyzer = (CourseAnalyzerMap)session.get(CourseAnalyzerMap.class, id);
-		session.close();
+		CourseAnalyzerMap courseAnalyzer;
+		try{
+			courseAnalyzer = (CourseAnalyzerMap)session.get(CourseAnalyzerMap.class, id);
+		}
+		finally
+		{
+			session.close();
+		}
 		return courseAnalyzer;
 	}
 	
@@ -58,6 +69,7 @@ public class CourseAnalyzerMapHandler {
 		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
 		criteria.add(Restrictions.eq("course", course));
 		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
+		session.close();
 		return courseAnalyzerMapList;
 	}
 
@@ -68,6 +80,7 @@ public class CourseAnalyzerMapHandler {
 		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
 		criteria.add(Restrictions.eq("course", course));
 		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
+		session.close();
 		return courseAnalyzerMapList;
 	}
 
@@ -76,13 +89,21 @@ public class CourseAnalyzerMapHandler {
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		Analyzer analyzer = AnalyzerHandler.getById(analyzer_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
+		List<CourseAnalyzerMap> courseAnalyzerMapList;
 		Session session = sf.openSession();
-		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
-		criteria.add(Restrictions.eq("course", course));
-		criteria.add(Restrictions.eq("analyzer", analyzer));
-		List<CourseAnalyzerMap> courseAnalyzerMapList = criteria.list();
-		if(courseAnalyzerMapList.size() == 0) {
-			throw new CourseAnalyzerMapException(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_MAP_NOT_FOUND);
+		try
+			{
+			Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
+			criteria.add(Restrictions.eq("course", course));
+			criteria.add(Restrictions.eq("analyzer", analyzer));
+			courseAnalyzerMapList = criteria.list();
+			if(courseAnalyzerMapList.size() == 0) {
+				throw new CourseAnalyzerMapException(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_MAP_NOT_FOUND);
+			}
+			}
+		finally
+		{
+			session.close();
 		}
 		return courseAnalyzerMapList.get(0);
 	}
@@ -93,15 +114,23 @@ public class CourseAnalyzerMapHandler {
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
-		criteria.add(Restrictions.eq("course", course));
-		criteria.add(Restrictions.eq("active", true));
-		List<CourseAnalyzerMap> courseAnalyzerMapList = (List<CourseAnalyzerMap>)criteria.list();
-		if(courseAnalyzerMapList.size() < 1)
+		CourseAnalyzerMap  courseAnalyzerMap;
+		try
+			{
+			Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
+			criteria.add(Restrictions.eq("course", course));
+			criteria.add(Restrictions.eq("active", true));
+			List<CourseAnalyzerMap> courseAnalyzerMapList = (List<CourseAnalyzerMap>)criteria.list();
+			if(courseAnalyzerMapList.size() < 1)
+			{
+				return null;//a null here indicates that primary analyzer does not exist and a default analyzer will be used
+			}
+			courseAnalyzerMap = courseAnalyzerMapList.get(0);
+			}
+		finally
 		{
-			return null;//a null here indicates that primary analyzer does not exist and a default analyzer will be used
+			session.close();
 		}
-		CourseAnalyzerMap  courseAnalyzerMap = courseAnalyzerMapList.get(0);
 		return courseAnalyzerMap;
 	}
 	
@@ -109,10 +138,18 @@ public class CourseAnalyzerMapHandler {
 		Course course=CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Query q=session.createQuery("from CourseAnalyzerMap where course_id=:c_id and analyzer_id=:a_id");
-		q.setParameter("c_id", course.getId());
-		q.setParameter("a_id", Integer.valueOf(analyzer_id));
-		List<CourseAnalyzerMap> ca_l=q.list();
+		List<CourseAnalyzerMap> ca_l;
+		try
+		{
+			Query q=session.createQuery("from CourseAnalyzerMap where course_id=:c_id and analyzer_id=:a_id");
+			q.setParameter("c_id", course.getId());
+			q.setParameter("a_id", Integer.valueOf(analyzer_id));
+			ca_l=q.list();
+		}
+		finally
+		{
+			session.close();
+		}
 		if(ca_l.size()<1)
 			return null;
 		else
@@ -124,32 +161,51 @@ public class CourseAnalyzerMapHandler {
 		Course course=CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		Query q=session.createQuery("update CourseAnalyzerMap set active=false where course_id=:c_id");
-		q.setParameter("c_id", course.getId());
-		q.executeUpdate();
-		session.getTransaction().commit();
-		session.close();
+		try
+			{
+			session.beginTransaction();
+			Query q=session.createQuery("update CourseAnalyzerMap set active=false where course_id=:c_id");
+			q.setParameter("c_id", course.getId());
+			q.executeUpdate();
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
+		}
+		
 	}
 	
 	public static CourseAnalyzerMap update(CourseAnalyzerMap courseAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.merge(courseAnalyzer);
-		session.getTransaction().commit();
-		session.close();
+		try
+		{
+			session.beginTransaction();
+			session.merge(courseAnalyzer);
+			session.getTransaction().commit();
+		}
+		finally
+		{
+			session.close();
+		}
 		return courseAnalyzer;
 	}
 	public static void delete(CourseAnalyzerMap courseAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.delete(courseAnalyzer);
-		session.getTransaction().commit();
-		session.close();
+		try
+			{
+			session.beginTransaction();
+			session.delete(courseAnalyzer);
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
+		}
 	}
 	
 

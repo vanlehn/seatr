@@ -59,6 +59,7 @@ public class StudentTaskHandler {
 		Criteria cr = session.createCriteria(StudentTask.class);
 		cr.add(Restrictions.eq("student", student));
 		List<StudentTask> studentTaskList= cr.list();
+		session.close();
 		return studentTaskList;
 	}
 	public static List<StudentTask> readByTask(Task task)
@@ -68,6 +69,7 @@ public class StudentTaskHandler {
 		Criteria cr = session.createCriteria(StudentTask.class);
 		cr.add(Restrictions.eq("task", task));
 		List<StudentTask> studentTaskList= cr.list();
+		session.close();
 		return studentTaskList;
 	}
 	public static List<StudentTask> readByStudent_Task(Student student, Task task) throws StudentException, TaskException
@@ -86,6 +88,7 @@ public class StudentTaskHandler {
 		cr.add(Restrictions.eq("student", student));
 		cr.add(Restrictions.eq("task", task));
 		List<StudentTask> studentTaskList = cr.list();
+		session.close();
 		return studentTaskList;
 		
 	}
@@ -99,6 +102,7 @@ public class StudentTaskHandler {
 		cr.add(Restrictions.eq("student", student));
 		cr.add(Restrictions.eq("task", task));
 		List<StudentTask> studentTaskList = cr.list();
+		session.close();
 		return studentTaskList;
 	}
 	public static StudentTask update(StudentTask studentTask)
