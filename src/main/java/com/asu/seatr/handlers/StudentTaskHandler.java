@@ -26,12 +26,16 @@ public class StudentTaskHandler {
 	public static StudentTask save(StudentTask studentTask) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
-	    int id = (int)session.save(studentTask);
-	    studentTask.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+	    try
+		    {
+		    session.beginTransaction();
+		    
+		    int id = (int)session.save(studentTask);
+		    studentTask.setId(id);
+		    session.getTransaction().commit();
+		    }
+	    finally{
+	    	session.close();}
 	    return studentTask;
 	}
 	

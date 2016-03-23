@@ -88,11 +88,18 @@ public class TaskHandler {
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria cr = session.createCriteria(Task.class);
-		cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
-		cr.add(Restrictions.eq(Task.p_course, course));
-		List<Task> taskList = (List<Task>) cr.list();
-		session.close();
+		List<Task> taskList;
+		try
+			{
+			Criteria cr = session.createCriteria(Task.class);
+			cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
+			cr.add(Restrictions.eq(Task.p_course, course));
+			taskList = (List<Task>) cr.list();
+			}
+		finally
+		{
+			session.close();
+		}
 		if(taskList.size() == 0){
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);			
 		}
