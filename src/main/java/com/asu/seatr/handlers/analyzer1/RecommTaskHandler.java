@@ -84,12 +84,15 @@ public class RecommTaskHandler {
 				session.beginTransaction();
 				session.delete(recommList.get(0));
 				session.getTransaction().commit();
+				session.close();
+				fillRecommTask(stu,course,1);
 				}
 			finally
 			{
-				session.close();	
+				if(session.isOpen())
+					session.close();	
 			}
-			fillRecommTask(stu,course,1);			
+						
 		}
 		else{
 				try{
@@ -97,13 +100,16 @@ public class RecommTaskHandler {
 				cr.add(Restrictions.eq("student", stu));
 				cr.add(Restrictions.eq("course", course));
 				recommList=cr.list();
+				session.close();
+				if(recommList.size()<numOfRecomm)
+					fillRecommTask(stu,course,numOfRecomm-recommList.size());
 				}
 			finally
 			{
-				session.close();	
+				if(session.isOpen())
+					session.close();	
 			}
-			if(recommList.size()<numOfRecomm)
-				fillRecommTask(stu,course,numOfRecomm-recommList.size());
+			
 		}
 		
 	}
