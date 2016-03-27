@@ -1,8 +1,11 @@
 package com.asu.seatr.api;
 
+import java.util.StringTokenizer;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
+import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -15,8 +18,16 @@ import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
 
+import com.asu.seatr.auth.AuthenticationService;
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.UserException;
 import com.asu.seatr.handlers.CourseAnalyzerHandler;
+import com.asu.seatr.handlers.CourseHandler;
+import com.asu.seatr.handlers.UserCourseHandler;
+import com.asu.seatr.handlers.UserHandler;
+import com.asu.seatr.models.Course;
+import com.asu.seatr.models.User;
+import com.asu.seatr.models.UserCourse;
 import com.asu.seatr.models.analyzers.course.C_A1;
 import com.asu.seatr.rest.models.CAReader1;
 import com.asu.seatr.utils.MyMessage;
@@ -25,6 +36,8 @@ import com.asu.seatr.utils.MyStatus;
 
 @Path("/analyzer/1/courses")
 public class CourseAPI {
+	public static final String AUTHENTICATION_HEADER = "Authorization";
+
 	static Logger logger = Logger.getLogger(CourseAPI.class);
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -56,23 +69,33 @@ public class CourseAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createCourse(CAReader1 reader){
+	public Response createCourse(CAReader1 reader, @HeaderParam(AUTHENTICATION_HEADER) String authHeader){
 		
 		C_A1 ca1 = new C_A1();
+		StringTokenizer tokenizer = AuthenticationService.getUsernameAndPassword(authHeader);
+		String username = tokenizer.nextToken();
 		
 		try{
 			ca1.createCourse(reader.getExternal_course_id(), reader.getDescription());
 			ca1.setTeaching_unit(reader.getTeaching_unit());
 			ca1.setThreshold(reader.getThreshold());
 			CourseAnalyzerHandler.save(ca1);
+			
+			UserCourseHandler.save(username, reader.getExternal_course_id());
+			
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_CREATED)).build();
 		
-		} catch (CourseException e) {
+		} catch (CourseException  e) {
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
-		}  catch(Exception e){
+		}  catch (UserException e) {
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		}
+		catch(Exception e){
 			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();

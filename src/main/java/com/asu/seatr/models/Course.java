@@ -41,6 +41,9 @@ public class Course {
 	private List<Student> Student;
 	
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
+	private List<UserCourse> UserCourse;
+	
+	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<Task> Task;
 	
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
@@ -51,6 +54,8 @@ public class Course {
 	
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<T_A1> T_A1;
+	
+	
 	
 	public int getId() {
 		return id;
@@ -88,6 +93,12 @@ public class Course {
 	}
 	public void setStudent(List<Student> student) {
 		Student = student;
+	}
+	public List<UserCourse> getUserCourse() {
+		return UserCourse;
+	}
+	public void setUserCourse(List<UserCourse> userCourse) {
+		UserCourse = userCourse;
 	}
 	public List<Task> getTask() {
 		return Task;

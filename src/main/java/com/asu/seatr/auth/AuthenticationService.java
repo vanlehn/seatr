@@ -1,4 +1,4 @@
-package com.asu.seatr.api.auth;
+package com.asu.seatr.auth;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -30,8 +30,6 @@ import com.asu.seatr.models.UserCourse;
 
 public class AuthenticationService {
 	
-	private static final String UNICODE_FORMAT = "ISO-8859-1";
-
     
     private static final char[] PASSWORD = "enfldsgbnlsngdlksdsgm".toCharArray();
     private static final byte[] SALT = {
@@ -39,7 +37,7 @@ public class AuthenticationService {
         (byte) 0xde, (byte) 0x23, (byte) 0x15, (byte) 0x15,
     };
     
-    private static String encrypt(String property) throws GeneralSecurityException, UnsupportedEncodingException {
+    public static String encrypt(String property) throws GeneralSecurityException, UnsupportedEncodingException {
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
         SecretKey key = keyFactory.generateSecret(new PBEKeySpec(PASSWORD));
         Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
@@ -47,12 +45,12 @@ public class AuthenticationService {
         return base64Encode(pbeCipher.doFinal(property.getBytes("UTF-8")));
     }
     
-    private static String base64Encode(byte[] bytes) {
+    public static String base64Encode(byte[] bytes) {
         // NB: This class is internal, and you probably should use another impl
         return DatatypeConverter.printBase64Binary(bytes); 
     }
 
-    private static String decrypt(String property) throws GeneralSecurityException, IOException {
+    public static String decrypt(String property) throws GeneralSecurityException, IOException {
         SecretKeyFactory keyFactory = SecretKeyFactory.getInstance("PBEWithMD5AndDES");
         SecretKey key = keyFactory.generateSecret(new PBEKeySpec(PASSWORD));
         Cipher pbeCipher = Cipher.getInstance("PBEWithMD5AndDES");
@@ -60,21 +58,14 @@ public class AuthenticationService {
         return new String(pbeCipher.doFinal(base64Decode(property)), "UTF-8");
     }
 
-    private static byte[] base64Decode(String property) throws IOException {
+    public static byte[] base64Decode(String property) throws IOException {
         // NB: This class is internal, and you probably should use another impl
         return DatatypeConverter.parseBase64Binary(property);
     }
 
 
-
-	public boolean authenticate(String authCredentials, String external_course_id) throws UserException, CourseException, 
-					UnsupportedEncodingException, GeneralSecurityException{
-
-		if (null == authCredentials)
-			return false;
-		// header value format will be "Basic encodedstring" for Basic
-		// authentication. Example "Basic YWRtaW46YWRtaW4="
-		final String encodedUserPassword = authCredentials.replaceFirst("Basic"
+    public static StringTokenizer getUsernameAndPassword(String authCredentials) {
+    	final String encodedUserPassword = authCredentials.replaceFirst("Basic"
 				+ " ", "");
 		String usernameAndPassword = null;
 		try {
@@ -86,15 +77,33 @@ public class AuthenticationService {
 		}
 		final StringTokenizer tokenizer = new StringTokenizer(
 				usernameAndPassword, ":");
+		return tokenizer;
+    }
+
+	public boolean authenticate(String authCredentials, String external_course_id, boolean isCourseCreate, boolean isSuperAdminReq) throws UserException, CourseException, 
+					UnsupportedEncodingException, GeneralSecurityException{
+
+		if (null == authCredentials)
+			return false;
+		// header value format will be "Basic encodedstring" for Basic
+		// authentication. Example "Basic YWRtaW46YWRtaW4="
+		
+		final StringTokenizer tokenizer = getUsernameAndPassword(authCredentials);
+		
 		final String username = tokenizer.nextToken();
 		final String password = tokenizer.nextToken();
 		
 		boolean authenticationStatus = false;
 		
+		if(isSuperAdminReq && !username.equals("superadmin")) {
+			authenticationStatus = false;
+			return authenticationStatus;
+		}
+		
 		User user = UserHandler.read(username);
 		authenticationStatus = user.getPassword().equals(encrypt(password));
 		
-		if(authenticationStatus) {
+		if(authenticationStatus && !isCourseCreate && !isSuperAdminReq) {
 			UserCourseHandler.read(username, external_course_id);										
 		}
 		
@@ -102,4 +111,12 @@ public class AuthenticationService {
 		return authenticationStatus;
 	}
 	
+	public static void main(String args[]) {
+		try {
+			System.out.println(encrypt("super123duper432seatr"));
+		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

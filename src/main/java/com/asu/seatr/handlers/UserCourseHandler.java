@@ -19,15 +19,15 @@ import com.asu.seatr.utils.MyStatus;
 public class UserCourseHandler {
 
 
-	public static UserCourse save(UserCourse user){
+	public static UserCourse save(UserCourse userCourse){
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
 	    session.beginTransaction();
-	    int id = (int)session.save(user);
-	    user.setId(id);
+	    int id = (int)session.save(userCourse);
+	    userCourse.setId(id);
 	    session.getTransaction().commit();
 	    session.close();
-	    return user;
+	    return userCourse;
 	}
 	
 	public static UserCourse read(int id)
@@ -41,12 +41,13 @@ public class UserCourseHandler {
 	
 	public static UserCourse read(String username, String external_course_id) throws UserException, CourseException
 	{
-		Course course = CourseHandler.getByExternalId(external_course_id);
-		User user = UserHandler.read(username);
 		
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();		
-		
+		Course course = CourseHandler.getByExternalId(external_course_id);
+		User user = UserHandler.read(username);
+		session.update(course);
+		session.update(user);
 		Criteria cr = session.createCriteria(UserCourse.class);
 		cr.add(Restrictions.eq("user", user));
 		cr.add(Restrictions.eq("course", course));
@@ -69,24 +70,43 @@ public class UserCourseHandler {
 		return userList;
 	}
 	
-	public static UserCourse update(UserCourse user)
+	public static UserCourse update(UserCourse userCourse)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
-		session.merge(user);
+		session.merge(userCourse);
 		session.getTransaction().commit();
 		session.close();
-		return user;
+		return userCourse;
 	}
-	public static void delete(UserCourse user)
+	public static void delete(UserCourse userCourse)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
-		session.delete(user);
+		session.delete(userCourse);
 		session.getTransaction().commit();
 		session.close();
+	}
+
+	public static UserCourse save(String username, String external_course_id) throws CourseException, UserException {
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		Course course = CourseHandler.getByExternalId(external_course_id);
+		User user = UserHandler.read(username);
+		session.update(course);
+		session.update(user);
+		UserCourse userCourse = new UserCourse();
+		userCourse.setCourse(course);
+		userCourse.setUser(user);
+		int id = (int)session.save(userCourse);
+	    userCourse.setId(id);
+		session.getTransaction().commit();
+		session.close();
+	    return userCourse;
+
 	}
 	
 

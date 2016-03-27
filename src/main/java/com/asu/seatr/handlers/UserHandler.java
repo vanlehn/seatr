@@ -6,6 +6,7 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.UserException;
@@ -18,14 +19,19 @@ import com.asu.seatr.utils.MyStatus;
 public class UserHandler {
 
 
-	public static User save(User user){
+	public static User save(User user) throws UserException{
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    int id = (int)session.save(user);
-	    user.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+	    try {
+		    session.beginTransaction();
+		    int id = (int)session.save(user);
+		    user.setId(id);
+		    session.getTransaction().commit();
+	    } catch(ConstraintViolationException cve) {
+	    	throw new UserException(MyStatus.ERROR, MyMessage.USER_ALREADY_PRESENT);
+	    } finally {
+	    	session.close();
+	    }		    
 	    return user;
 	}
 	

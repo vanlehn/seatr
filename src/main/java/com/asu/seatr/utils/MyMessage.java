@@ -53,7 +53,10 @@ public enum MyMessage {
 	KC_TASK_MAP_COPIED("knowledge component - task mapping copied"), 
 	USER_NOT_FOUND("username not found"),
 	USER_NO_ACCESS_TO_COURSE("user does not have access to the course"),
-	RECOMM_TASK_INIT("Recommended tasks have been initialized");
+	RECOMM_TASK_INIT("Recommended tasks have been initialized"), 
+	AUTHENTICATION_FAILED("Authentication failed"), 
+	USER_ALREADY_PRESENT("user already present"), 
+	USER_CREATED("user created");
 	
 	public String value;
 	
