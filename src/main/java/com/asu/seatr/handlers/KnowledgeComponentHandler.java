@@ -82,12 +82,13 @@ public class KnowledgeComponentHandler {
 		cr.add(Restrictions.eq("external_id", external_kc_id));
 		cr.add(Restrictions.eq("course", course));
 		List<KnowledgeComponent> kcList = (List<KnowledgeComponent>) cr.list();
+		session.close();
 		if(kcList.size() < 1)
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
 		KnowledgeComponent kc = kcList.get(0);
-		session.close();
+
 		return kc;
 	}
 	

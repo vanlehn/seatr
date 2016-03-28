@@ -29,11 +29,17 @@ public class TaskHandler {
 	public static Task save(Task task){
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    int id = (int)session.save(task);
-	    task.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+	    try
+		    {
+		    session.beginTransaction();
+		    int id = (int)session.save(task);
+		    task.setId(id);
+		    session.getTransaction().commit();
+		    }
+	    finally
+	    {
+	    	session.close();
+	    }
 	    return task;
 	}
 	
@@ -69,12 +75,12 @@ public class TaskHandler {
 		cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
 		cr.add(Restrictions.eq(Task.p_course, course));
 		List<Task> taskList = (List<Task>) cr.list();
-
+		session.close();
 		if(taskList.size() == 0){
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);		
 		}
 		Task task = taskList.get(0);
-		session.close();
+		
 		return task;
 	}
 	public static Task readByExtId(String external_task_id, String external_course_id) throws CourseException, TaskException
@@ -82,16 +88,23 @@ public class TaskHandler {
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria cr = session.createCriteria(Task.class);
-		cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
-		cr.add(Restrictions.eq(Task.p_course, course));
-		List<Task> taskList = (List<Task>) cr.list();
-
+		List<Task> taskList;
+		try
+			{
+			Criteria cr = session.createCriteria(Task.class);
+			cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
+			cr.add(Restrictions.eq(Task.p_course, course));
+			taskList = (List<Task>) cr.list();
+			}
+		finally
+		{
+			session.close();
+		}
 		if(taskList.size() == 0){
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);			
 		}
 		Task task = taskList.get(0);
-		session.close();
+		
 		return task;
 	}
 	
@@ -122,6 +135,7 @@ public class TaskHandler {
 		cr.add(Restrictions.eq("course", course));
 		cr.add(Restrictions.eq("student", stu));
 		List<RecommTaskI> taskList = (List<RecommTaskI>)cr.list();
+		session.close();
 		return taskList;
 	}
 	
@@ -129,20 +143,32 @@ public class TaskHandler {
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.merge(task);
-		session.getTransaction().commit();
-		session.close();
+		try
+			{
+			session.beginTransaction();
+			session.merge(task);
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
+		}
 		return task;
 	}
 	public static void delete(Task task)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.delete(task);
-		session.getTransaction().commit();
-		session.close();
+		try
+			{
+			session.beginTransaction();
+			session.delete(task);
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
+		}
 	}
 	public static List<Analyzer> getAnalyzerList(Task task) throws CourseException
 	{

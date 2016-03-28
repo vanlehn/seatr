@@ -26,27 +26,32 @@ public class RecommTaskHandler {
 	private static void fillRecommTask(Student stu,Course course, int numToFilled){
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
-		String sql="select task.id from task where course_id="+course.getId()+" and task.id not in "
-				+ "(select task_id from student_task, st_a1 "
-				+ "where student_task.student_id="+stu.getId()+" and student_task.id=st_a1.student_task_id and st_a1.d_status='done' "
-						+ "union "
-				+ "select task_id from recomm_task_a1 where student_id="+stu.getId()+")";
-		List<Integer> l=session.createSQLQuery(sql).addScalar("task.id", IntegerType.INSTANCE).list();
-		Random rand=new Random();
-		session.beginTransaction();
-		for(int i=0;i<numToFilled;i++){
-			if(l.size()==0)
-				break;
-			int index=rand.nextInt(l.size());
-			int taskid=l.remove(index);
-			RecommTask_A1 recom=new RecommTask_A1();
-			recom.setStudent(stu);
-			recom.setTask(TaskHandler.read(taskid));
-			recom.setCourse(course);
-			session.save(recom);
+			try{
+			String sql="select task.id from task where course_id="+course.getId()+" and task.id not in "
+					+ "(select task_id from student_task, st_a1 "
+					+ "where student_task.student_id="+stu.getId()+" and student_task.id=st_a1.student_task_id and st_a1.d_status='done' "
+							+ "union "
+					+ "select task_id from recomm_task_a1 where student_id="+stu.getId()+")";
+			List<Integer> l=session.createSQLQuery(sql).addScalar("task.id", IntegerType.INSTANCE).list();
+			Random rand=new Random();
+			session.beginTransaction();
+			for(int i=0;i<numToFilled;i++){
+				if(l.size()==0)
+					break;
+				int index=rand.nextInt(l.size());
+				int taskid=l.remove(index);
+				RecommTask_A1 recom=new RecommTask_A1();
+				recom.setStudent(stu);
+				recom.setTask(TaskHandler.read(taskid));
+				recom.setCourse(course);
+				session.save(recom);
+			}
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
 		}
-		session.getTransaction().commit();
-		session.close();
 	}
 	
 	public static void initRecommTasks(int num){
@@ -60,6 +65,7 @@ public class RecommTaskHandler {
 		List<Student> stu_list=StudentHandler.readAll();
 		
 		numOfRecomm=num;
+		session.close();
 		for(Student stu: stu_list){
 				fillRecommTask(stu,stu.getCourse(),numOfRecomm);
 		}
@@ -74,19 +80,37 @@ public class RecommTaskHandler {
 		cr.add(Restrictions.eq("course", course));
 		List<RecommTask_A1> recommList=cr.list();
 		if(recommList.size()>0){
-			session.beginTransaction();
-			session.delete(recommList.get(0));
-			session.getTransaction().commit();
-			fillRecommTask(stu,course,1);			
+				try{
+				session.beginTransaction();
+				session.delete(recommList.get(0));
+				session.getTransaction().commit();
+				session.close();
+				fillRecommTask(stu,course,1);
+				}
+			finally
+			{
+				if(session.isOpen())
+					session.close();	
+			}
+						
 		}
 		else{
-			cr=session.createCriteria(RecommTask_A1.class);
-			cr.add(Restrictions.eq("student", stu));
-			cr.add(Restrictions.eq("course", course));
-			recommList=cr.list();
-			if(recommList.size()<numOfRecomm)
-				fillRecommTask(stu,course,numOfRecomm-recommList.size());
+				try{
+				cr=session.createCriteria(RecommTask_A1.class);
+				cr.add(Restrictions.eq("student", stu));
+				cr.add(Restrictions.eq("course", course));
+				recommList=cr.list();
+				session.close();
+				if(recommList.size()<numOfRecomm)
+					fillRecommTask(stu,course,numOfRecomm-recommList.size());
+				}
+			finally
+			{
+				if(session.isOpen())
+					session.close();	
+			}
+			
 		}
-		session.close();	
+		
 	}
 }

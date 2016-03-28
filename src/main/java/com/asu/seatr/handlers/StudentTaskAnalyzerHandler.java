@@ -49,12 +49,17 @@ public class StudentTaskAnalyzerHandler {
 	public static StudentTaskAnalyzerI save(StudentTaskAnalyzerI studentTaskAnalyzer) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
-	    int id = (int)session.save(studentTaskAnalyzer);
-	    studentTaskAnalyzer.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+		    try{
+		    session.beginTransaction();
+		    
+		    int id = (int)session.save(studentTaskAnalyzer);
+		    studentTaskAnalyzer.setId(id);
+		    session.getTransaction().commit();
+		    }
+	    finally
+	    {
+	    	session.close();
+	    }
 	    return studentTaskAnalyzer;
 	}
 	

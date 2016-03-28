@@ -21,12 +21,18 @@ public class Handler {
 	public static int hqlTruncate(String myTable){
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-	    String hql = String.format("delete from %s",myTable);
-	    Query query = session.createQuery(hql);
-	    int result = query.executeUpdate();
-	    session.getTransaction().commit();
-		session.close();
+		int result;
+		try
+			{
+			session.beginTransaction();
+		    String hql = String.format("delete from %s",myTable);
+		    Query query = session.createQuery(hql);
+		    result = query.executeUpdate();
+		    session.getTransaction().commit();
+			}
+		finally{
+			session.close();
+		}
 		return result;
 	}
 }

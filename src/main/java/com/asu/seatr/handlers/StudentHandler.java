@@ -27,16 +27,23 @@ public class StudentHandler {
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria cr = session.createCriteria(Student.class);
-		cr.add(Restrictions.eq("external_id", external_student_id));
-		cr.add(Restrictions.eq("course", course));
-		
-		List<Student> studentList = (List<Student>)cr.list();
+		List<Student> studentList;
+			try{
+			Criteria cr = session.createCriteria(Student.class);
+			cr.add(Restrictions.eq("external_id", external_student_id));
+			cr.add(Restrictions.eq("course", course));
+			
+			studentList = (List<Student>)cr.list();
+			}
+		finally
+		{
+			session.close();
+		}
 		if(studentList.size() == 0)
 		{
 			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
 		}
-		session.close();
+
 		Student student = studentList.get(0);
 		return student;
 	}

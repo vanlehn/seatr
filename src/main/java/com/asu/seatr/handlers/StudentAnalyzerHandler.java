@@ -25,6 +25,9 @@ public class StudentAnalyzerHandler {
 	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id) throws CourseException, StudentException{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
+		List<StudentAnalyzerI> result;
+		try
+		{
 		Criteria cr = session.createCriteria(Course.class);
 		cr.add(Restrictions.eq("external_id", external_course_id));
 		List<Course> courseList = cr.list();
@@ -45,10 +48,15 @@ public class StudentAnalyzerHandler {
 		cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("student", student));
 		cr.add(Restrictions.eq("course", course));
-		List<StudentAnalyzerI> result = cr.list(); 
+		result = cr.list(); 
 		session.close();
 		if (result.size() == 0) {
 			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_NOT_FOUND);
+		}
+		}
+		finally
+		{
+			session.close();
 		}
 		
 		return result;		
