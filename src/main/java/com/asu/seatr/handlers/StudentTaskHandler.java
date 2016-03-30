@@ -1,6 +1,7 @@
 package com.asu.seatr.handlers;
 
 import java.util.List;
+import java.util.ListIterator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -11,6 +12,8 @@ import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
+import com.asu.seatr.models.Analyzer;
+import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
@@ -23,12 +26,16 @@ public class StudentTaskHandler {
 	public static StudentTask save(StudentTask studentTask) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
-	    int id = (int)session.save(studentTask);
-	    studentTask.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+	    try
+		    {
+		    session.beginTransaction();
+		    
+		    int id = (int)session.save(studentTask);
+		    studentTask.setId(id);
+		    session.getTransaction().commit();
+		    }
+	    finally{
+	    	session.close();}
 	    return studentTask;
 	}
 	
@@ -56,6 +63,17 @@ public class StudentTaskHandler {
 		Criteria cr = session.createCriteria(StudentTask.class);
 		cr.add(Restrictions.eq("student", student));
 		List<StudentTask> studentTaskList= cr.list();
+		session.close();
+		return studentTaskList;
+	}
+	public static List<StudentTask> readByTask(Task task)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(StudentTask.class);
+		cr.add(Restrictions.eq("task", task));
+		List<StudentTask> studentTaskList= cr.list();
+		session.close();
 		return studentTaskList;
 	}
 	public static List<StudentTask> readByStudent_Task(Student student, Task task) throws StudentException, TaskException
@@ -74,6 +92,7 @@ public class StudentTaskHandler {
 		cr.add(Restrictions.eq("student", student));
 		cr.add(Restrictions.eq("task", task));
 		List<StudentTask> studentTaskList = cr.list();
+		session.close();
 		return studentTaskList;
 		
 	}
@@ -87,6 +106,7 @@ public class StudentTaskHandler {
 		cr.add(Restrictions.eq("student", student));
 		cr.add(Restrictions.eq("task", task));
 		List<StudentTask> studentTaskList = cr.list();
+		session.close();
 		return studentTaskList;
 	}
 	public static StudentTask update(StudentTask studentTask)
@@ -109,8 +129,4 @@ public class StudentTaskHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	
-
-
-
 }

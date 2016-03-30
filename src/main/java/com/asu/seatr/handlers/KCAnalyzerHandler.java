@@ -3,13 +3,18 @@ package com.asu.seatr.handlers;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.hql.internal.ast.QuerySyntaxException;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
+import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
+import com.asu.seatr.models.StudentTask;
+import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.KCAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
@@ -75,6 +80,7 @@ public class KCAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
+		session.close();
 		if(kcAnalyzerList.size() < 1 )
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
@@ -89,6 +95,7 @@ public class KCAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
+		session.close();
 		if(kcAnalyzerList.size() < 1 )
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
@@ -106,10 +113,53 @@ public class KCAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
+		session.close();
 		if(kcAnalyzerList.size() < 1 )
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.NO_ANALYZER_FOR_KC);
 		}
 		return kcAnalyzerList.get(0);
+	}
+	
+	/**
+	 * 
+	 * @param analyzerName Analyzer name like A1, A2
+	 * @param courseList 
+	 * @param commit a true indicates that you want to commit the transaction in this function itself
+	 * 				 a false indicates that you may want to rollback the transaction later on, so the session is returned
+	 * 				 Do remember to handle the session(commit/rollback) if commit is false
+	 * @return		 session if commit is false
+	 * 				 null if commit is true
+	 */
+	public static Session hqlBatchDeleteByCourse(String analyzerName, List<Course> courseList,boolean commit)
+	{
+		if(courseList == null || courseList.isEmpty())
+		{
+			return null;
+		}
+		try
+		{
+			SessionFactory sf = HibernateUtil.getSessionFactory();
+			Session session = sf.openSession();
+			session.beginTransaction();
+			String hql = "select T from Task T where T.course in :courseList";
+			Query query = session.createQuery(hql).setParameterList("courseList", courseList);
+			List<Task> taskList = query.list();
+			if(taskList == null || taskList.isEmpty()){return null;}
+			hql = "delete from TK_" + analyzerName + " tk where tk.task in :taskList";
+			session.createQuery(hql).setParameterList("taskList", taskList).executeUpdate();
+			if(commit)
+			{
+				session.getTransaction().commit();
+				session.close();
+				return null;
+			}
+			return session;
+		}
+		catch(QuerySyntaxException e)
+		{
+			System.out.println("Table Not Mapped");
+			return null;
+		}
 	}
 }

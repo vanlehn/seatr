@@ -21,22 +21,27 @@ public class CourseAnalyzerHandler {
 	public static List<CourseAnalyzerI> readByExtId(Class typeParameterClass, String external_course_id) throws CourseException {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria cr = session.createCriteria(Course.class);
-		cr.add(Restrictions.eq("external_id", external_course_id));
-		List<Course> courseList = cr.list();
-		if (courseList.size() == 0) {
-
-			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
-		}		
-		Course course = courseList.get(0);
-		cr = session.createCriteria(typeParameterClass);		
-		cr.add(Restrictions.eq("course", course));
-		List<CourseAnalyzerI> result = cr.list();
-		session.close();
-		if (result.size() == 0) {
-			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_NOT_FOUND);
+		List<CourseAnalyzerI> result;
+			try{
+			Criteria cr = session.createCriteria(Course.class);
+			cr.add(Restrictions.eq("external_id", external_course_id));
+			List<Course> courseList = cr.list();
+			if (courseList.size() == 0) {
+	
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+			}		
+			Course course = courseList.get(0);
+			cr = session.createCriteria(typeParameterClass);		
+			cr.add(Restrictions.eq("course", course));
+			result = cr.list();
+			session.close();
+			if (result.size() == 0) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_NOT_FOUND);
+			}
+			}
+		finally{
+			session.close();
 		}
-		
 		return result;	
 
 	}
@@ -62,8 +67,14 @@ public class CourseAnalyzerHandler {
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		CourseAnalyzerI courseAnalyzer = (CourseAnalyzerI)session.get(CourseAnalyzerI.class, id);
-		session.close();
+		CourseAnalyzerI courseAnalyzer;
+		try{
+			courseAnalyzer = (CourseAnalyzerI)session.get(CourseAnalyzerI.class, id);
+		}
+		finally{
+			session.close();
+		}
+		
 		return courseAnalyzer;
 	}
 	
@@ -80,20 +91,29 @@ public class CourseAnalyzerHandler {
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.merge(courseAnalyzer);
-		session.getTransaction().commit();
-		session.close();
+		try{
+			session.beginTransaction();
+			session.merge(courseAnalyzer);
+			session.getTransaction().commit();
+			}
+		finally{
+			session.close();
+		}
 		return courseAnalyzer;
 	}
 	public static void delete(CourseAnalyzerI courseAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
+		try
+		{
 		session.beginTransaction();
 		session.delete(courseAnalyzer);
 		session.getTransaction().commit();
+		}
+		finally{
 		session.close();
+		}
 	}
 	
 

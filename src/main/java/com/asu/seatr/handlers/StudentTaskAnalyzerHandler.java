@@ -1,5 +1,6 @@
 package com.asu.seatr.handlers;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -7,10 +8,11 @@ import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.hql.internal.ast.QuerySyntaxException;
 
 import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
-
+import com.asu.seatr.models.StudentTask;
 public class StudentTaskAnalyzerHandler {
 
 	/*
@@ -47,12 +49,17 @@ public class StudentTaskAnalyzerHandler {
 	public static StudentTaskAnalyzerI save(StudentTaskAnalyzerI studentTaskAnalyzer) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
-	    int id = (int)session.save(studentTaskAnalyzer);
-	    studentTaskAnalyzer.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+		    try{
+		    session.beginTransaction();
+		    
+		    int id = (int)session.save(studentTaskAnalyzer);
+		    studentTaskAnalyzer.setId(id);
+		    session.getTransaction().commit();
+		    }
+	    finally
+	    {
+	    	session.close();
+	    }
 	    return studentTaskAnalyzer;
 	}
 	
@@ -93,6 +100,29 @@ public class StudentTaskAnalyzerHandler {
 		session.delete(studentTaskAnalyzer);
 		session.getTransaction().commit();
 		session.close();
+	}
+	public static void hqlBatchDelete(String analyzerName, List<StudentTask> studentTaskList)
+	{
+		try
+		{
+		List<Integer> studentTaskIdList = new ArrayList<Integer>();
+		for(StudentTask studentTask : studentTaskList)
+		{
+			studentTaskIdList.add(studentTask.getId());
+		}
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		String hql = "delete from ST_" + analyzerName + " st where st.id in :studentTaskIdList";
+		session.createQuery(hql).setParameterList("studentTaskIdList", studentTaskIdList).executeUpdate();
+		session.getTransaction().commit();
+		session.close();
+		}
+		catch(QuerySyntaxException e)
+		{
+			System.out.println("Table Not Mapped");
+		}
+		
 	}
 	
 }

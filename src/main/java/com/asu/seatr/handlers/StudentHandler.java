@@ -1,6 +1,8 @@
 package com.asu.seatr.handlers;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -10,7 +12,9 @@ import org.hibernate.criterion.Restrictions;
 import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
+import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
+import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
@@ -23,16 +27,23 @@ public class StudentHandler {
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		Criteria cr = session.createCriteria(Student.class);
-		cr.add(Restrictions.eq("external_id", external_student_id));
-		cr.add(Restrictions.eq("course", course));
-		
-		List<Student> studentList = (List<Student>)cr.list();
+		List<Student> studentList;
+			try{
+			Criteria cr = session.createCriteria(Student.class);
+			cr.add(Restrictions.eq("external_id", external_student_id));
+			cr.add(Restrictions.eq("course", course));
+			
+			studentList = (List<Student>)cr.list();
+			}
+		finally
+		{
+			session.close();
+		}
 		if(studentList.size() == 0)
 		{
 			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
 		}
-		session.close();
+
 		Student student = studentList.get(0);
 		return student;
 	}
@@ -103,6 +114,18 @@ public class StudentHandler {
 		session.delete(student);
 		session.getTransaction().commit();
 		session.close();
+	}
+	public static List<Analyzer> getAnalyzerList(Student student) throws CourseException
+	{
+		List<CourseAnalyzerMap> courseAnalyzerMapList = CourseAnalyzerMapHandler.getAnalyzerIdFromCourse(student.getCourse());
+		ListIterator<CourseAnalyzerMap> li = courseAnalyzerMapList.listIterator();
+		List<Analyzer> analyzerList = new ArrayList<Analyzer>();
+		while(li.hasNext())
+		{
+			analyzerList.add(li.next().getAnalyzer());
+		}
+		return analyzerList;
+		
 	}
 	
 

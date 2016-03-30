@@ -25,33 +25,48 @@ public class TaskKCAnalyzerHandler {
 	public static TaskKCAnalyzerI save(TaskKCAnalyzerI tkc) {
 	    SessionFactory sf = HibernateUtil.getSessionFactory();
 	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
-	    int id = (int)session.save(tkc);
-	    tkc.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
+	    try
+		    {
+		    session.beginTransaction();
+		    
+		    int id = (int)session.save(tkc);
+		    tkc.setId(id);
+		    session.getTransaction().commit();
+		    }
+	    finally
+	    {
+	    	session.close();
+	    }
 	    return tkc;
 	}
 	/**
-	 * used to save multiple task_kc maps in database
-	 * @param tkcArray array of task_kc objects that need to be stored
-	 * @return task_kc objects stored in databases updated with their id
+	 * 
+	 * @param tkcArray
+	 * @param commit whether you want to commit or not
+	 * @param session you can continue a previous session or to create a new sesion, send session as null
+	 * @return
 	 */
-	public static TaskKCAnalyzerI[] batchSave(TaskKCAnalyzerI tkcArray[])
+	public static Session batchSave(TaskKCAnalyzerI tkcArray[],boolean commit,Session session)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();
+		if(session == null)
+		{	
+			SessionFactory sf = HibernateUtil.getSessionFactory();
+			session = sf.openSession();
+			session.beginTransaction();
+		}
 	    for(int i = 0; i < tkcArray.length; i++)
 	    {
 	    	TaskKCAnalyzerI tkc = tkcArray[i];
 	    	int id = (int)session.save(tkc);
 	    	tkc.setId(id);
 	    }
-	    session.getTransaction().commit();
-	    session.close();
-	    return tkcArray;
+	    if(commit)
+	    {
+	    	session.getTransaction().commit();
+		    session.close();
+	    }
+
+	    return session;
 	}
 	
 	public static void batchSaveOrUpdate(List<TaskKCAnalyzerI> tkcArray)
@@ -100,32 +115,50 @@ public class TaskKCAnalyzerHandler {
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.merge(t_kcAnalyzer);
-		session.getTransaction().commit();
-		session.close();
+		try
+			{
+			session.beginTransaction();
+			session.merge(t_kcAnalyzer);
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
+		}
 		return t_kcAnalyzer;
 	}
 	public static void delete(TaskKCAnalyzerI kcAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		session.delete(kcAnalyzer);
-		session.getTransaction().commit();
-		session.close();
+		try
+			{
+			session.beginTransaction();
+			session.delete(kcAnalyzer);
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
+		}
 	}
 	
 	public static void batchDelete(List<TaskKCAnalyzerI> kcAnalyzerList)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
-		session.beginTransaction();
-		for(TaskKCAnalyzerI kcAnalyzer: kcAnalyzerList) {
-			session.delete(kcAnalyzer);
+		try
+			{
+			session.beginTransaction();
+			for(TaskKCAnalyzerI kcAnalyzer: kcAnalyzerList) {
+				session.delete(kcAnalyzer);
+			}
+			session.getTransaction().commit();
+			}
+		finally
+		{
+			session.close();
 		}
-		session.getTransaction().commit();
-		session.close();
 	}
 	
 	

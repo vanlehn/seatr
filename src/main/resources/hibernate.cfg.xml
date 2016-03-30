@@ -8,7 +8,7 @@
 		
 		<!-- Database Connection Settings -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
-		<property name="connection.url">jdbc:mysql://52.35.118.9:3306/seatr</property>
+		<property name="connection.url">jdbc:mysql://52.36.31.37:3306/seatr</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password">seatr</property>
 		
@@ -36,6 +36,8 @@
 		<mapping class="com.asu.seatr.models.StudentTask"/>
 		<mapping class="com.asu.seatr.models.Task"/>
 		<mapping class="com.asu.seatr.models.KnowledgeComponent"/>
+		<mapping class="com.asu.seatr.models.User"/>
+		<mapping class="com.asu.seatr.models.UserCourse"/>
 		
 		<mapping class="com.asu.seatr.models.analyzers.student.S_A1"/>
 		<mapping class="com.asu.seatr.models.analyzers.task.T_A1"/>
@@ -44,6 +46,7 @@
 		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A1"/>
 		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A2"/>
 		<mapping class="com.asu.seatr.models.analyzers.kc.K_A1"/>
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_A1"/>
 		
 		
 	</session-factory>

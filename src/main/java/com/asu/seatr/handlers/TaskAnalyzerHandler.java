@@ -28,12 +28,14 @@ public class TaskAnalyzerHandler {
 	    try{
 	    	int id = (int)session.save(taskAnalyzer);
 	    	taskAnalyzer.setId(id);
+	    	session.getTransaction().commit();
 	    }
 	    catch (ConstraintViolationException cve) {
 	    	throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT);
 	    }
-	    session.getTransaction().commit();
-	    session.close();
+	    
+	    finally
+	    {session.close();}
 	    return taskAnalyzer;
 	}
 	
@@ -62,11 +64,11 @@ public class TaskAnalyzerHandler {
 		cr.add(Restrictions.eq("task", task));
 		cr.add(Restrictions.eq("course", course));
 		List<TaskAnalyzerI> result = cr.list();
-
+		session.close();
 		if (result.size() == 0) {
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND);
 		}
-		session.close();
+		
 		TaskAnalyzerI taskAnalyzer = result.get(0);
 		return taskAnalyzer;
 		
@@ -82,6 +84,7 @@ public class TaskAnalyzerHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("course", course));
 		List<TaskAnalyzerI> taskAnalyzerList = (List<TaskAnalyzerI>)cr.list();
+		session.close();
 		return taskAnalyzerList;
 	}
 	

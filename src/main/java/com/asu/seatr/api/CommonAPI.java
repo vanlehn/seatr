@@ -15,6 +15,8 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
+import org.apache.log4j.Logger;
+
 import com.asu.seatr.exceptions.AnalyzerException;
 import com.asu.seatr.exceptions.CourseAnalyzerMapException;
 import com.asu.seatr.exceptions.CourseException;
@@ -27,6 +29,7 @@ import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentHandler;
+import com.asu.seatr.handlers.StudentTaskHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
@@ -50,6 +53,7 @@ import com.asu.seatr.utils.Utilities;
 @Path("/")
 public class CommonAPI {
 //set shouldn't be get..
+	static Logger logger = Logger.getLogger(CommonAPI.class);
 	@Path("/courses/setanalyzer")
 	@GET
 	public Response setAnalyzer(@QueryParam("external_course_id") String ext_c_id, @QueryParam("analyzer_id") String a_id, @QueryParam("active") Boolean active){
@@ -121,6 +125,7 @@ public class CommonAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -151,6 +156,7 @@ public class CommonAPI {
 				
 				Student student = (Student)StudentHandler
 						.getByExternalId(external_student_id, external_course_id);
+				//StudentTaskHandler.hqlDeleteByStudent(student);
 				StudentHandler.delete(student);
 				return Response.status(Status.OK)
 						.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
@@ -163,6 +169,7 @@ public class CommonAPI {
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			} catch(Exception e){
+				logger.error(e.getStackTrace());
 				Response rb = Response.status(Status.BAD_REQUEST)
 						.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 				throw new WebApplicationException(rb);
@@ -201,6 +208,7 @@ public class CommonAPI {
 				}
 			}
 			Task task = (Task)TaskHandler.readByExtId(external_task_id, external_course_id);
+			//StudentTaskHandler.hqlDeleteByTask(task);
 			TaskHandler.delete(task);
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_DELETED)).build();
@@ -218,6 +226,7 @@ public class CommonAPI {
 		}
 		
 		catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -285,6 +294,7 @@ public class CommonAPI {
 			throw new WebApplicationException(rb);
 			
 		} catch (Exception e) {
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);

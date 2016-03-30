@@ -50,7 +50,13 @@ public enum MyMessage {
 	ANALYZER_NOT_FOUND("The specified analyzer is not found."), 
 	COURSE_ANALYZER_MAP_NOT_FOUND("course analyzer mapping not found"), 
 	KC_NOT_FOUND_FOR_COURSE("no knowledge component found for the given course"), 
-	KC_TASK_MAP_COPIED("knowledge component - task mapping copied"); 
+	KC_TASK_MAP_COPIED("knowledge component - task mapping copied"), 
+	USER_NOT_FOUND("username not found"),
+	USER_NO_ACCESS_TO_COURSE("user does not have access to the course"),
+	RECOMM_TASK_INIT("Recommended tasks have been initialized"), 
+	AUTHENTICATION_FAILED("Authentication failed"), 
+	USER_ALREADY_PRESENT("user already present"), 
+	USER_CREATED("user created");
 	
 	public String value;
 	
