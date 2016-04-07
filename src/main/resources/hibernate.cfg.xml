@@ -41,8 +41,11 @@
 		
 		<mapping class="com.asu.seatr.models.analyzers.student.S_A1"/>
 		<mapping class="com.asu.seatr.models.analyzers.task.T_A1"/>
+		<mapping class="com.asu.seatr.models.analyzers.task.T_A3"/>
 		<mapping class="com.asu.seatr.models.analyzers.course.C_A1"/>
+		<mapping class="com.asu.seatr.models.analyzers.course.C_A3"/>
 		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A1"/>
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A3"/>
 		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A1"/>
 		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A2"/>
 		<mapping class="com.asu.seatr.models.analyzers.kc.K_A1"/>
