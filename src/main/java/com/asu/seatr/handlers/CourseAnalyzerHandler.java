@@ -34,7 +34,6 @@ public class CourseAnalyzerHandler {
 			cr = session.createCriteria(typeParameterClass);		
 			cr.add(Restrictions.eq("course", course));
 			result = cr.list();
-			session.close();
 			if (result.size() == 0) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_NOT_FOUND);
 			}

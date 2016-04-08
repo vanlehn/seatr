@@ -3,6 +3,7 @@ package com.asu.seatr.handlers;
 import java.util.List;
 
 import org.hibernate.Criteria;
+import org.hibernate.PropertyValueException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
@@ -30,8 +31,12 @@ public class TaskAnalyzerHandler {
 	    	taskAnalyzer.setId(id);
 	    	session.getTransaction().commit();
 	    }
-	    catch (ConstraintViolationException cve) {
-	    	throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT);
+	    catch (ConstraintViolationException cve) {	    	
+	    	
+	    	//throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT);
+	    	throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ENTRY_ALREADY_PRESENT);
+	    } catch (PropertyValueException pve) {
+	    	throw new TaskException(MyStatus.ERROR, MyMessage.FIELD_MISSING);
 	    }
 	    
 	    finally

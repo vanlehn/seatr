@@ -56,7 +56,10 @@ public enum MyMessage {
 	RECOMM_TASK_INIT("Recommended tasks have been initialized"), 
 	AUTHENTICATION_FAILED("Authentication failed"), 
 	USER_ALREADY_PRESENT("user already present"), 
-	USER_CREATED("user created");
+	USER_CREATED("user created"),
+	FIELD_MISSING("field missing"),
+	TASK_ENTRY_ALREADY_PRESENT("task entry already present");
+	
 	
 	public String value;
 	

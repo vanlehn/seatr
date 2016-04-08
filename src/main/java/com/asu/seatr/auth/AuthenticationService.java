@@ -27,6 +27,8 @@ import com.asu.seatr.handlers.UserCourseHandler;
 import com.asu.seatr.handlers.UserHandler;
 import com.asu.seatr.models.User;
 import com.asu.seatr.models.UserCourse;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyStatus;
 
 public class AuthenticationService {
 	
@@ -91,9 +93,13 @@ public class AuthenticationService {
 		final StringTokenizer tokenizer = getUsernameAndPassword(authCredentials);
 		
 		final String username = tokenizer.nextToken();
-		final String password = tokenizer.nextToken();
+		final String password = tokenizer.nextToken();		
 		
 		boolean authenticationStatus = false;
+		
+		if(username == null || username.equals("") || password == null || password.equals("")) {
+			throw new UserException(MyStatus.ERROR, MyMessage.AUTHENTICATION_FAILED);
+		}
 		
 		if(isSuperAdminReq && !username.equals("superadmin")) {
 			authenticationStatus = false;

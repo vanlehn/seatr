@@ -93,7 +93,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 					JSONObject requestParams = requestParamsToJSON(multiReadHttpServletRequest);
 					external_course_id = requestParams.get("external_course_id").toString();
 				}
-				System.out.println(external_course_id);
+				
 				AuthenticationService authenticationService = new AuthenticationService();
 				
 				authenticationStatus = authenticationService
