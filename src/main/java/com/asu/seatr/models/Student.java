@@ -38,6 +38,9 @@ public class Student {
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
 	private List<S_A1> S_A1;
 
+	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
+	private List<S_A3> S_A3;
+
 	public int getId() {
 		return id;
 	}

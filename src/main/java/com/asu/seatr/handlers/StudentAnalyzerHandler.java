@@ -49,7 +49,7 @@ public class StudentAnalyzerHandler {
 		cr.add(Restrictions.eq("student", student));
 		cr.add(Restrictions.eq("course", course));
 		result = cr.list(); 
-		session.close();
+		
 		if (result.size() == 0) {
 			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_NOT_FOUND);
 		}
