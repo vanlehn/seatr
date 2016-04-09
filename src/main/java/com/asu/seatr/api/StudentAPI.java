@@ -106,13 +106,13 @@ public class StudentAPI {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_ALREADY_PRESENT)).build();
 			throw new WebApplicationException(rb);
 		}
-		catch(Exception e){
-			logger.error(e.getStackTrace());
-			System.out.println(e.getMessage());
-			Response rb = Response.status(Status.BAD_REQUEST)
-					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-			throw new WebApplicationException(rb);
-		}
+//		catch(Exception e){
+//			logger.error(e.getStackTrace());
+//			System.out.println(e.getMessage());
+//			Response rb = Response.status(Status.BAD_REQUEST)
+//					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+//			throw new WebApplicationException(rb);
+//		}
 		
 	}
 	

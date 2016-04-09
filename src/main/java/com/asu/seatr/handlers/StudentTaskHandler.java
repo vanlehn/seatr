@@ -6,6 +6,7 @@ import java.util.ListIterator;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 import com.asu.seatr.constants.DatabaseConstants;
@@ -109,6 +110,22 @@ public class StudentTaskHandler {
 		session.close();
 		return studentTaskList;
 	}
+	
+	public static List<StudentTask> readByExtIdOrderByTime(String external_student_id, String external_course_id, String external_task_id) throws CourseException, TaskException, StudentException
+	{
+		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
+		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(StudentTask.class);
+		cr.add(Restrictions.eq("student", student));
+		cr.add(Restrictions.eq("task", task));
+		cr.addOrder(Order.desc("timestamp"));
+		List<StudentTask> studentTaskList = cr.list();
+		session.close();
+		return studentTaskList;
+	}
+	
 	public static StudentTask update(StudentTask studentTask)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();

@@ -85,6 +85,7 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 		StudentTask studentTask = new StudentTask();
 		studentTask.setStudent(student);
 		studentTask.setTask(task);
+		studentTask.setTimestamp(System.currentTimeMillis());
 	
 		try
 		{

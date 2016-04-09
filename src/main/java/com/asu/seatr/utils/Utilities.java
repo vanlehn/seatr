@@ -1,7 +1,6 @@
 package com.asu.seatr.utils;
 
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
-import com.asu.seatr.models.analyzers.task_kc.TK_A2;
 
 public class Utilities {
 	
@@ -26,7 +25,6 @@ public class Utilities {
 		
 		switch(from_analyzer_id) {
 			case 1: return TK_A1.class;
-			case 2: return TK_A2.class;
 			default: return null;
 		}
 				

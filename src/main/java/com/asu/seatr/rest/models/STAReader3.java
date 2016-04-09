@@ -8,7 +8,7 @@ public class STAReader3 implements STAReaderI {
 	private String external_student_id;
 	private String external_course_id;
 	private Boolean d_is_answered;	
-	private Integer d_current_n;
+	//private Integer d_current_n;
 	
 	@Override
 	public String getExternal_task_id() {
@@ -40,10 +40,10 @@ public class STAReader3 implements STAReaderI {
 	public void setD_is_answered(Boolean d_is_answered) {
 		this.d_is_answered = d_is_answered;
 	}
-	public Integer getD_current_n() {
-		return d_current_n;
-	}
-	public void setD_current_n(Integer d_current_n) {
-		this.d_current_n = d_current_n;
-	}
+//	public Integer getD_current_n() {
+//		return d_current_n;
+//	}
+//	public void setD_current_n(Integer d_current_n) {
+//		this.d_current_n = d_current_n;
+//	}
 }

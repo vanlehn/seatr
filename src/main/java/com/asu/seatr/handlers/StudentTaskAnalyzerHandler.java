@@ -7,12 +7,22 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.hql.internal.ast.QuerySyntaxException;
 
 import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.StudentException;
+import com.asu.seatr.exceptions.StudentTaskException;
+import com.asu.seatr.exceptions.TaskException;
+import com.asu.seatr.models.Course;
+import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
+import com.asu.seatr.models.Task;
 public class StudentTaskAnalyzerHandler {
 
 	/*
@@ -34,6 +44,29 @@ public class StudentTaskAnalyzerHandler {
 	}
 	*/
 	
+	public static List<StudentTaskAnalyzerI> readOrderByTimestamp(Class typeParameterClass, 
+			String external_student_id, String external_course_id, String external_task_id) throws CourseException, StudentException, TaskException, StudentTaskException {
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		Criteria cr = session.createCriteria(typeParameterClass);
+		
+		List<StudentTask> studentTasks = StudentTaskHandler.readByExtIdOrderByTime(external_student_id, external_course_id, external_task_id);
+		
+		if(studentTasks.size() == 0) {
+			throw new StudentTaskException(MyStatus.ERROR, MyMessage.STUDENT_TASK_NOT_FOUND);
+		}
+		StudentTask studentTask = studentTasks.get(0);
+	
+		cr.add(Restrictions.eq("studentTask", studentTask));
+			
+		List<StudentTaskAnalyzerI> result = cr.list();
+		if (result.size() == 0) {
+			throw new StudentTaskException(MyStatus.ERROR, MyMessage.STUDENT_TASK_ANALYZER_NOT_FOUND);
+		}
+		session.close();
+		return result;
+		
+	}
 
 	public static List<StudentTaskAnalyzerI> readByCriteria(Class typeParameterClass, HashMap<String, Object> eqRestrictions) {
 		SessionFactory sf = HibernateUtil.getSessionFactory();

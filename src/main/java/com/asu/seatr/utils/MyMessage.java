@@ -58,7 +58,8 @@ public enum MyMessage {
 	USER_ALREADY_PRESENT("user already present"), 
 	USER_CREATED("user created"),
 	FIELD_MISSING("field missing"),
-	TASK_ENTRY_ALREADY_PRESENT("task entry already present");
+	TASK_ENTRY_ALREADY_PRESENT("task entry already present"), 
+	STUDENT_TASK_ANALYZER_NOT_FOUND("student task analyzer not found");
 	
 	
 	public String value;

@@ -42,7 +42,6 @@ import com.asu.seatr.models.analyzers.course.C_A1;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.models.analyzers.task.T_A1;
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
-import com.asu.seatr.models.analyzers.task_kc.TK_A2;
 import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 import com.asu.seatr.rest.models.TKCAReader;
 import com.asu.seatr.utils.MyMessage;
@@ -274,14 +273,14 @@ public class CommonAPI {
 						taskKCToList.add(tka);
 					}
 					break;
-				case 2: 
-					for (TaskKCAnalyzerI taskKC: taskKCFromList) {
-						TK_A2 tka = new TK_A2();
-						tka.setKc(taskKC.getKc());
-						tka.setTask(taskKC.getTask());
-						taskKCToList.add(tka);
-					}
-					break;						
+//				case 2: 
+//					for (TaskKCAnalyzerI taskKC: taskKCFromList) {
+//						TK_A2 tka = new TK_A2();
+//						tka.setKc(taskKC.getKc());
+//						tka.setTask(taskKC.getTask());
+//						taskKCToList.add(tka);
+//					}
+//					break;						
 					
 			}
 			TaskKCAnalyzerHandler.batchSaveOrUpdate(taskKCToList);

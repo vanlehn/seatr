@@ -85,6 +85,7 @@ public class ST_A3 implements StudentTaskAnalyzerI{
 		StudentTask studentTask = new StudentTask();
 		studentTask.setStudent(student);
 		studentTask.setTask(task);
+		studentTask.setTimestamp(System.currentTimeMillis());
 	
 		try
 		{
@@ -113,7 +114,7 @@ public class ST_A3 implements StudentTaskAnalyzerI{
 
 	@Override
 	public StudentTask getStudentTask(String external_student_id, String external_course_id, int task_id) {
-		// TODO Auto-generated method stub
+		
 		return null;
 	}
 	
