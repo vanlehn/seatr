@@ -37,7 +37,39 @@ public class RecommTaskHandler {
 			}
 			if(taskList.size()<number)
 			{
-				String TasksWithIncorrectResponse = "Select t_a3 from T_A3 t_a3 where t_a3.course = :course and t_a3.s_is_required = true and t_a3.s_unit_no = (Select d_current_unit_no from C_A3 where course = :course) and t_a3.task in (Select student_task.task from ST_A3 st_a3 inner join st_a3.studentTask student_task on student_task.id = st_a3.studentTask where student_task.student = :student group by student_task.student, student_task.task) order by t_a3.s_sequence_no asc";
+				
+				String TasksWithBigN = "Select t_a3 from T_A3 t_a3 where t_a3.course = :course and t_a3.s_is_required = true and "
+						+ "t_a3.s_unit_no = (Select d_current_unit_no from C_A3 where course = :course) and t_a3.task in "
+						+ "(Select task from StudentTask s1 where s1.id in ("
+						+ "Select studentTask from ST_A3 s2 where s2.id in (Select id"
+						+ " from StudentTask s3 where s3.timestamp in (Select max(timestamp) as timestamp from StudentTask s4 where "
+						+ "s4.student =:student group by student,task)"
+						+ ") and s2.d_is_answered = false and s2.d_current_n > (Select d_max_n from C_A3 where course = :course))"
+						+ ") order by t_a3.s_sequence_no asc";
+				Query query2 = session.createQuery(TasksWithBigN);
+				query2.setParameter("course", course);
+				query2.setParameter("student", student);
+				List<T_A3> tempTaskList = (List<T_A3>)query2.list();
+				if(tempTaskList.size()>0)
+				{
+					System.out.println("n limit reached");
+					System.out.println("execute optional tasks now");
+				}
+				else
+				{
+				
+				String TasksWithIncorrectResponse = "Select t_a3 from T_A3 t_a3 where t_a3.course = :course and t_a3.s_is_required = true and "
+						+ "t_a3.s_unit_no = (Select d_current_unit_no from C_A3 where course = :course) and t_a3.task in "
+						+ "(Select task from StudentTask s1 where s1.id in ("
+						+ "Select studentTask from ST_A3 s2 where s2.id in (Select id"
+						+ " from StudentTask s3 where s3.timestamp in (Select max(timestamp) as timestamp from StudentTask s4 where "
+						+ "s4.student =:student group by student,task)"
+						+ ") and s2.d_is_answered = false)"
+						+ ") order by t_a3.s_sequence_no asc";
+				
+				/*String TasksWithIncorrectResponse = "Select task from StudentTask s1 where s1.id in (Select studentTask from ST_A3 s2 where s2.id in (Select id"
+						+ " from StudentTask s3 where s3.timestamp in (Select max(timestamp) as timestamp from StudentTask group by student,task)"
+						+ ") and s2.d_is_answered = false)";*/
 				Query query1 = session.createQuery(TasksWithIncorrectResponse);
 				query1.setParameter("course", course);
 				query1.setParameter("student", student);
@@ -46,6 +78,7 @@ public class RecommTaskHandler {
 				for(T_A3 t_a3 : taskList1)
 				{
 					System.out.println(t_a3.getTask().getExternal_id()+","+t_a3.getId());
+				}
 				}
 			}
 		}
