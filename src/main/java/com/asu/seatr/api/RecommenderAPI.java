@@ -17,12 +17,15 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.RecommException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
+import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.analyzer1.RecommTaskHandler;
+import com.asu.seatr.handlers.analyzer3.RecommTaskHandler_3;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
@@ -48,7 +51,7 @@ public class RecommenderAPI {
 				.build();
 	}
 	
-	@Path("gettasks")
+	@Path("analyzer/1/gettasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public List<String> getRecommendedTasks(
@@ -136,6 +139,47 @@ public class RecommenderAPI {
 		}
 		
 		catch(Exception e){
+			logger.error(e.getStackTrace());
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
+	}
+	
+	@Path("analyzer/3/gettasks")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public List<String> getRecommendedTasks_3(
+			@QueryParam("external_student_id") String external_student_id,
+			@QueryParam("external_course_id") String external_course_id,
+			@QueryParam("number_of_tasks") Integer number_of_tasks
+		)
+	{
+		try
+		{			
+			Course course = CourseHandler.getByExternalId(external_course_id);
+			Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
+			return RecommTaskHandler_3.getTasks(course, student, number_of_tasks);
+		}
+		catch(StudentException e)
+		{	
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);	
+		}
+		catch(CourseException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);			
+		}
+		catch(RecommException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);			
+		}
+		
+		catch(Exception e)
+		{
 			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
