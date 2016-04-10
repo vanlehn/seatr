@@ -32,8 +32,8 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 @Path("analyzer/1/tasks")
-public class TaskAPI {
-	static Logger logger = Logger.getLogger(TaskAPI.class);
+public class TaskAPI_1 {
+	static Logger logger = Logger.getLogger(TaskAPI_1.class);
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public TAReader1 getTask(

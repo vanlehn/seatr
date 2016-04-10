@@ -40,7 +40,7 @@ import com.asu.seatr.utils.MyStatus;
 public class CourseAPI_3 {
 	public static final String AUTHENTICATION_HEADER = "Authorization";
 
-	static Logger logger = Logger.getLogger(CourseAPI.class);
+	static Logger logger = Logger.getLogger(CourseAPI_1.class);
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public CAReader3 getCourse(@QueryParam("external_course_id") String external_course_id){

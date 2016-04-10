@@ -28,9 +28,9 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 @Path("analyzer/1/students")
-public class StudentAPI {
+public class StudentAPI_1 {
 
-	static Logger logger = Logger.getLogger(StudentAPI.class);
+	static Logger logger = Logger.getLogger(StudentAPI_1.class);
 	
 	
 	@GET

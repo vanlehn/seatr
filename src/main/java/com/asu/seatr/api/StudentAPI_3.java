@@ -30,7 +30,7 @@ import com.asu.seatr.utils.MyStatus;
 @Path("analyzer/3/students")
 public class StudentAPI_3 {
 
-	static Logger logger = Logger.getLogger(StudentAPI.class);
+	static Logger logger = Logger.getLogger(StudentAPI_1.class);
 	
 	
 	@GET

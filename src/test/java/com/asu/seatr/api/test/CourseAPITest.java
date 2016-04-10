@@ -22,7 +22,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.CourseAPI;
+import com.asu.seatr.api.CourseAPI_1;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.handlers.CourseAnalyzerHandler;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
@@ -34,7 +34,7 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-@PrepareForTest({CourseAPI.class, CourseAnalyzerMapHandler.class, C_A1.class, 
+@PrepareForTest({CourseAPI_1.class, CourseAnalyzerMapHandler.class, C_A1.class, 
 	CourseAnalyzerHandler.class})
 @RunWith(PowerMockRunner.class)
 
@@ -45,7 +45,7 @@ public class CourseAPITest extends JerseyTest {
 	@Override
     protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(CourseAPI.class);
+        return new ResourceConfig(CourseAPI_1.class);
     }
 	
 	@Test

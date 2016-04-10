@@ -23,7 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.asu.seatr.api.CommonAPI;
-import com.asu.seatr.api.CourseAPI;
+import com.asu.seatr.api.CourseAPI_1;
 import com.asu.seatr.api.KCAPI;
 import com.asu.seatr.exceptions.AnalyzerException;
 import com.asu.seatr.exceptions.CourseAnalyzerMapException;

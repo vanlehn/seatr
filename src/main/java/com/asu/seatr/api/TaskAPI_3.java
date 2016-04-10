@@ -35,7 +35,7 @@ import com.asu.seatr.utils.MyStatus;
 
 @Path("analyzer/3/tasks")
 public class TaskAPI_3 {
-	static Logger logger = Logger.getLogger(TaskAPI.class);
+	static Logger logger = Logger.getLogger(TaskAPI_1.class);
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public TAReader3 getTask(

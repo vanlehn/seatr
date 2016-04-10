@@ -29,8 +29,8 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 @Path("analyzer/1/studenttasks")
-public class StudentTaskAPI {
-	static Logger logger = Logger.getLogger(StudentTaskAPI.class);
+public class StudentTaskAPI_1 {
+	static Logger logger = Logger.getLogger(StudentTaskAPI_1.class);
 	/*get,update and delete operations have been disabled because a single student can have multiple records of
 	the same task associated with it.
 	*/

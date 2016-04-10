@@ -37,7 +37,7 @@ import com.asu.seatr.utils.MyStatus;
 
 @Path("analyzer/3/studenttasks")
 public class StudentTaskAPI_3 {
-	static Logger logger = Logger.getLogger(StudentTaskAPI.class);
+	static Logger logger = Logger.getLogger(StudentTaskAPI_1.class);
 
 	//create student task
 	@POST

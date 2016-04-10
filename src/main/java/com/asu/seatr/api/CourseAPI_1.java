@@ -35,10 +35,10 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 @Path("/analyzer/1/courses")
-public class CourseAPI {
+public class CourseAPI_1 {
 	public static final String AUTHENTICATION_HEADER = "Authorization";
 
-	static Logger logger = Logger.getLogger(CourseAPI.class);
+	static Logger logger = Logger.getLogger(CourseAPI_1.class);
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public CAReader1 getCourse(@QueryParam("external_course_id") String external_course_id){
