@@ -1,12 +1,12 @@
-package com.asu.seatr.rest.models;
+package com.asu.seatr.rest.models.analyzer2;
 
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 import com.asu.seatr.rest.models.interfaces.TKReaderI;
 
-public class TKReader1 implements TKReaderI{
+public class TKReader2 implements TKReaderI{
 
 	private boolean replace;
-	private TKAReaderI[] tkaReader;
+	private TKAReader2[] tkaReader;
 	@Override
 	public boolean getReplace() {
 		// TODO Auto-generated method stub
@@ -28,7 +28,7 @@ public class TKReader1 implements TKReaderI{
 	@Override
 	public void setTkaReader(TKAReaderI[] tkaReader) {
 		// TODO Auto-generated method stub
-		this.tkaReader = tkaReader;
+		this.tkaReader = (TKAReader2[]) tkaReader;
 	}
 
 }

@@ -6,7 +6,7 @@ public interface TKReaderI {
 
 	public boolean getReplace();
 	public void setReplace(boolean replace);
-	public TKAReader1[] getTkaReader();
-	public void setTkaReader(TKAReader1[] tkaReader);
+	public TKAReaderI[] getTkaReader();
+	public void setTkaReader(TKAReaderI[] tkaReader);
 	
 }
