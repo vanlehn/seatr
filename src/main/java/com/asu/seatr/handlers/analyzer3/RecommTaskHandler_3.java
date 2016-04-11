@@ -102,6 +102,9 @@ public class RecommTaskHandler_3 {
 			}
 			else
 			{
+				if (finalTaskList.size() > numberOfTasks) {
+					finalTaskList = finalTaskList.subList(0, numberOfTasks);
+				}
 				return finalTaskList;
 			}
 		}
