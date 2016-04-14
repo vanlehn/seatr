@@ -37,13 +37,13 @@ import com.asu.seatr.utils.MyStatus;
 public class StudentTaskAPITest extends JerseyTest
 {
 	private static String ANALYZER1_URL="analyzer/1/studenttasks";
-	
+
 	@Override
-    protected Application configure() {
+	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(StudentTaskAPI_1.class);
-    }
-	
+		return new ResourceConfig(StudentTaskAPI_1.class);
+	}
+
 	@Test
 	public void createStudentTaskTestSuccess() throws Exception
 	{
@@ -149,5 +149,5 @@ public class StudentTaskAPITest extends JerseyTest
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_TASK_PROPERTY_NULL), 
 				resp.readEntity(String.class));
 	}
-	
+
 }

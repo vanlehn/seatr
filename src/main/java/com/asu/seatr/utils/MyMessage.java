@@ -62,15 +62,24 @@ public enum MyMessage {
 	STUDENT_TASK_ANALYZER_NOT_FOUND("student task analyzer not found"), 
 	RECOMMENDATION_ERROR("Error while finding recommended tasks"),
 	ROUTE_NOT_FOUND("route not found"),
-	NOT_FOUND_IN_REQUEST("not found in request.");
-	
-	
+	NOT_FOUND_IN_REQUEST("not found in request."), 
+	USERNAME_MISSING("username missing"),
+	PASSWORD_MISSING("password missing"), 
+	COURSE_ID_MISSING("course id missing"), 
+	ANALYZER_ID_MISSING("analyzer id missing"), 
+	STUDENT_ID_MISSING("student id missing"), 
+	TASK_ID_MISSING("task id missing"), 
+	FROM_ANALYZER_ID_MISSING("from analyzer id missing"),
+	TO_ANALYZER_ID_MISSING("to analyzer id missing"), 
+	KC_ID_MISSING("kc id missing");
+
+
 	public String value;
-	
+
 	private MyMessage(String value) {
 		this.value = value;
 	}	
-	
+
 	public String getValue() {
 		return this.value;
 	}

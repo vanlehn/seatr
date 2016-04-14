@@ -26,20 +26,20 @@ import com.asu.seatr.utils.MyStatus;
 @Entity
 @Table(name = "t_a1", uniqueConstraints = @UniqueConstraint(columnNames = {"task_id","course_id"}))
 public class T_A1 implements TaskAnalyzerI{
-	
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "task_id", referencedColumnName = "id", nullable=false)
 	private Task task;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
-	
+
 	public Course getCourse() {
 		return course;
 	}
@@ -51,7 +51,7 @@ public class T_A1 implements TaskAnalyzerI{
 	//properties that do not change
 	@Column(name = "s_difficulty_level")
 	private Integer s_difficulty_level;
-	
+
 	@Override
 	public int getId() {
 		// TODO Auto-generated method stub
@@ -62,7 +62,7 @@ public class T_A1 implements TaskAnalyzerI{
 	public void setId(int id) {
 		// TODO Auto-generated method stub
 		this.id = id;
-		
+
 	}
 	@Override
 	public Task getTask() {
@@ -104,19 +104,19 @@ public class T_A1 implements TaskAnalyzerI{
 		}
 		this.task = task;
 		this.course = course;
-		
+
 	}
 
 	@Override
 	public void deleteTask(String task_ext_id, String course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void updateTask(String task_ext_id, String course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override

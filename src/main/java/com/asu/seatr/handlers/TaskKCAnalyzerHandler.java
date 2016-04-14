@@ -20,24 +20,24 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
 
 public class TaskKCAnalyzerHandler {
-	
-	
+
+
 	public static TaskKCAnalyzerI save(TaskKCAnalyzerI tkc) {
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    try
-		    {
-		    session.beginTransaction();
-		    
-		    int id = (int)session.save(tkc);
-		    tkc.setId(id);
-		    session.getTransaction().commit();
-		    }
-	    finally
-	    {
-	    	session.close();
-	    }
-	    return tkc;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		try
+		{
+			session.beginTransaction();
+
+			int id = (int)session.save(tkc);
+			tkc.setId(id);
+			session.getTransaction().commit();
+		}
+		finally
+		{
+			session.close();
+		}
+		return tkc;
 	}
 	/**
 	 * 
@@ -54,43 +54,43 @@ public class TaskKCAnalyzerHandler {
 			session = sf.openSession();
 			session.beginTransaction();
 		}
-	    for(int i = 0; i < tkcArray.length; i++)
-	    {
-	    	TaskKCAnalyzerI tkc = tkcArray[i];
-	    	int id = (int)session.save(tkc);
-	    	tkc.setId(id);
-	    }
-	    if(commit)
-	    {
-	    	session.getTransaction().commit();
-		    session.close();
-	    }
+		for(int i = 0; i < tkcArray.length; i++)
+		{
+			TaskKCAnalyzerI tkc = tkcArray[i];
+			int id = (int)session.save(tkc);
+			tkc.setId(id);
+		}
+		if(commit)
+		{
+			session.getTransaction().commit();
+			session.close();
+		}
 
-	    return session;
+		return session;
 	}
-	
+
 	public static void batchSaveOrUpdate(List<TaskKCAnalyzerI> tkcArray)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
-	    
-	    
-	    for(TaskKCAnalyzerI tkc: tkcArray)
-	    {	Session session = null;
-	    	try {
-	    		session = sf.openSession();
-	    		session.beginTransaction();
-	    		session.save(tkc);
-	    		session.getTransaction().commit();
-	    		
-	    		
-	    	} catch(ConstraintViolationException cve) {
-	    		// entry already present so do nothing
-	    	} finally {
-	    		session.close();
-	    	}
-	    }
-	    
-	    	    
+
+
+		for(TaskKCAnalyzerI tkc: tkcArray)
+		{	Session session = null;
+		try {
+			session = sf.openSession();
+			session.beginTransaction();
+			session.save(tkc);
+			session.getTransaction().commit();
+
+
+		} catch(ConstraintViolationException cve) {
+			// entry already present so do nothing
+		} finally {
+			session.close();
+		}
+		}
+
+
 	}
 	public static TaskKCAnalyzerI readById(int id)
 	{
@@ -110,17 +110,17 @@ public class TaskKCAnalyzerHandler {
 		session.close();
 		return t_kcAnalyzerList;
 	}
-	
+
 	public static TaskKCAnalyzerI update(TaskKCAnalyzerI t_kcAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		try
-			{
+		{
 			session.beginTransaction();
 			session.merge(t_kcAnalyzer);
 			session.getTransaction().commit();
-			}
+		}
 		finally
 		{
 			session.close();
@@ -132,36 +132,36 @@ public class TaskKCAnalyzerHandler {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		try
-			{
+		{
 			session.beginTransaction();
 			session.delete(kcAnalyzer);
 			session.getTransaction().commit();
-			}
+		}
 		finally
 		{
 			session.close();
 		}
 	}
-	
+
 	public static void batchDelete(List<TaskKCAnalyzerI> kcAnalyzerList)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		try
-			{
+		{
 			session.beginTransaction();
 			for(TaskKCAnalyzerI kcAnalyzer: kcAnalyzerList) {
 				session.delete(kcAnalyzer);
 			}
 			session.getTransaction().commit();
-			}
+		}
 		finally
 		{
 			session.close();
 		}
 	}
-	
-	
+
+
 	public static TaskKCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id, String external_task_id) throws CourseException, TaskException, KCException
 	{
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
@@ -180,10 +180,10 @@ public class TaskKCAnalyzerHandler {
 		TaskKCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
 		return t_kc;
 	}
-	
+
 	public static List<TaskKCAnalyzerI> readByExtCourseId(Class typeParameterClass, String external_course_id) throws CourseException, TaskException, KCException
 	{
-		
+
 		List<KnowledgeComponent> kcList = KnowledgeComponentHandler.getByExtCourseId(external_course_id);
 		List<TaskKCAnalyzerI> t_kcAnalyzerList = new ArrayList<TaskKCAnalyzerI>();
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -193,7 +193,7 @@ public class TaskKCAnalyzerHandler {
 			cr.add(Restrictions.eq("kc", kc));
 			t_kcAnalyzerList.addAll((List<TaskKCAnalyzerI>)cr.list());
 		}
-		 
+
 		session.close();
 		if(t_kcAnalyzerList.size() == 0)
 		{
@@ -203,7 +203,7 @@ public class TaskKCAnalyzerHandler {
 		//return t_kc;
 		return t_kcAnalyzerList;
 	}
-	
+
 	public static TaskKCAnalyzerI readByKC_Task(Class typeParameterClass, KnowledgeComponent kc, Task task) throws TaskException, KCException
 	{
 		if(task == null)
@@ -227,6 +227,6 @@ public class TaskKCAnalyzerHandler {
 		}
 		TaskKCAnalyzerI t_kc = t_kcAnalyzerList.get(0);
 		return t_kc;
-		
+
 	}
 }

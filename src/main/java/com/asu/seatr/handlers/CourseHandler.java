@@ -13,27 +13,26 @@ import org.hibernate.hql.internal.ast.QuerySyntaxException;
 import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Course;
-import com.asu.seatr.models.Student;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
 
 public class CourseHandler {
 	public static void save(Course course) {
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-		    try{
-		    session.beginTransaction();
-		    
-		    session.save(course);
-		    session.getTransaction().commit();
-		    }
-	    finally
-		    {
-		    session.close();
-		    }
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		try{
+			session.beginTransaction();
+
+			session.save(course);
+			session.getTransaction().commit();
+		}
+		finally
+		{
+			session.close();
+		}
 	}
-	
+
 	public static List<Course> readAll()
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -42,7 +41,7 @@ public class CourseHandler {
 		session.close();
 		return records;
 	}
-	
+
 	public static Course readById(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -57,47 +56,47 @@ public class CourseHandler {
 		}
 		return course;
 	}
-	
+
 	public static void delete(Course course)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		try
-			{
+		{
 			session.beginTransaction();
 			session.delete(course);
 			session.getTransaction().commit();
-			}
+		}
 		finally
 		{
 			session.close();
 		}
 	}
-	
+
 	public static Course getByExternalId(String external_course_id) throws CourseException{
-		
+
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
 		Course course;
 		try
-			{
+		{
 			Criteria cr = session.createCriteria(Course.class);
 			cr.add(Restrictions.eq("external_id", external_course_id));
 			List<Course> courseList = (List<Course>)cr.list();
-	
+
 			if(courseList.size() == 0){
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 			}
 			course = courseList.get(0);
-			}
+		}
 		finally
 		{
 			session.close();
 		}
 		return course;
-		
+
 	}
-	
+
 	public static void updateCourseByExternalID(String external_id,Course course){
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
@@ -108,13 +107,13 @@ public class CourseHandler {
 			query.setParameter("external_id", course.getExternal_id());
 			query.executeUpdate();
 			session.getTransaction().commit();
-			}
+		}
 		finally
 		{
 			session.close();
 		}
 	}
-	
+
 	public static List<Integer> getInternalCourseList(Set<String> courseIdList)
 	{
 		if(courseIdList == null || courseIdList.isEmpty())
@@ -126,13 +125,13 @@ public class CourseHandler {
 		try
 		{
 
-		session.beginTransaction();
-		String hql = "select c.id from Course c where c.external_id in :courseIdList";
-		Query query = session.createQuery(hql).setParameterList("courseIdList", courseIdList);
-		List<Integer> internal_course_list = query.list();
-		session.getTransaction().commit();
-		session.close();
-		return internal_course_list;
+			session.beginTransaction();
+			String hql = "select c.id from Course c where c.external_id in :courseIdList";
+			Query query = session.createQuery(hql).setParameterList("courseIdList", courseIdList);
+			List<Integer> internal_course_list = query.list();
+			session.getTransaction().commit();
+			session.close();
+			return internal_course_list;
 		}
 		catch(QuerySyntaxException e)
 		{
@@ -150,11 +149,11 @@ public class CourseHandler {
 		{
 			return null;
 		}
-		
+
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		try
-			{
+		{
 			session.beginTransaction();
 			String hql = "select c from Course c where c.external_id in :courseIdList";
 			Query query = session.createQuery(hql).setParameterList("courseIdList", courseIdList);
@@ -162,7 +161,7 @@ public class CourseHandler {
 			session.getTransaction().commit();
 			//session.close();
 			return internal_course_list;
-			}
+		}
 		catch(QuerySyntaxException e)
 		{
 			System.out.println("Table Not Mapped");

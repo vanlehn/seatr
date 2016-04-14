@@ -3,13 +3,13 @@ package com.asu.seatr.rest.models;
 import com.asu.seatr.rest.models.interfaces.STAReaderI;
 
 public class STAReader1 implements STAReaderI {
-	
+
 	private String external_task_id;
 	private String external_student_id;
 	private String external_course_id;
 	private String d_status; 
 	private Integer d_time_lastattempt;
-	
+
 	@Override
 	public String getExternal_task_id() {
 		return external_task_id;
@@ -46,5 +46,5 @@ public class STAReader1 implements STAReaderI {
 	public void setD_time_lastattempt(Integer d_time_lastattempt) {
 		this.d_time_lastattempt = d_time_lastattempt;
 	}
-	
+
 }

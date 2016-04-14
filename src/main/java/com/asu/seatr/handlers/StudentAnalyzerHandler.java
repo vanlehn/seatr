@@ -20,48 +20,46 @@ import com.asu.seatr.utils.MyStatus;
 
 public class StudentAnalyzerHandler {
 
-	
-
 	public static List<StudentAnalyzerI> readByExtId(Class typeParameterClass, String external_student_id, String external_course_id) throws CourseException, StudentException{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		List<StudentAnalyzerI> result;
 		try
 		{
-		Criteria cr = session.createCriteria(Course.class);
-		cr.add(Restrictions.eq("external_id", external_course_id));
-		List<Course> courseList = cr.list();
-		if (courseList.size() == 0) {
+			Criteria cr = session.createCriteria(Course.class);
+			cr.add(Restrictions.eq("external_id", external_course_id));
+			List<Course> courseList = cr.list();
+			if (courseList.size() == 0) {
 
-			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
-		}		
-		Course course = courseList.get(0);
-		cr = session.createCriteria(Student.class);
-		cr.add(Restrictions.eq("external_id", external_student_id));
-		cr.add(Restrictions.eq("course", course));
-		List<Student> studentList = cr.list();
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+			}		
+			Course course = courseList.get(0);
+			cr = session.createCriteria(Student.class);
+			cr.add(Restrictions.eq("external_id", external_student_id));
+			cr.add(Restrictions.eq("course", course));
+			List<Student> studentList = cr.list();
 
-		if (studentList.size() == 0) {
-			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
-		}
-		Student student = (Student) cr.list().get(0);
-		cr = session.createCriteria(typeParameterClass);
-		cr.add(Restrictions.eq("student", student));
-		cr.add(Restrictions.eq("course", course));
-		result = cr.list(); 
-		
-		if (result.size() == 0) {
-			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_NOT_FOUND);
-		}
+			if (studentList.size() == 0) {
+				throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
+			}
+			Student student = (Student) cr.list().get(0);
+			cr = session.createCriteria(typeParameterClass);
+			cr.add(Restrictions.eq("student", student));
+			cr.add(Restrictions.eq("course", course));
+			result = cr.list(); 
+
+			if (result.size() == 0) {
+				throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_NOT_FOUND);
+			}
 		}
 		finally
 		{
 			session.close();
 		}
-		
+
 		return result;		
 	}
-	
+
 
 	public static List<StudentAnalyzerI> readByCriteria(Class typeParameterClass, HashMap<String, Object> eqRestrictions) {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -72,24 +70,24 @@ public class StudentAnalyzerHandler {
 		session.close();
 		return result;		
 	}
-	
+
 
 	public static StudentAnalyzerI save(StudentAnalyzerI studentAnalyzer) throws StudentException {
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    try {
-		    int id = (int)session.save(studentAnalyzer);
-		    studentAnalyzer.setId(id);
-		    session.getTransaction().commit();
-	    } catch (ConstraintViolationException cve) {
-	    	throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_ALREADY_PRESENT);
-	    } finally {	    
-	    	session.close();
-	    }
-	    return studentAnalyzer;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		try {
+			int id = (int)session.save(studentAnalyzer);
+			studentAnalyzer.setId(id);
+			session.getTransaction().commit();
+		} catch (ConstraintViolationException cve) {
+			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ANALYZER_ALREADY_PRESENT);
+		} finally {	    
+			session.close();
+		}
+		return studentAnalyzer;
 	}
-	
+
 	public static StudentAnalyzerI read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -98,7 +96,7 @@ public class StudentAnalyzerHandler {
 		session.close();
 		return studentAnalyzer;
 	}
-	
+
 	public static List<StudentAnalyzerI> readAll(String tableName)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -107,7 +105,7 @@ public class StudentAnalyzerHandler {
 		session.close();
 		return records;
 	}
-	
+
 	public static StudentAnalyzerI update(StudentAnalyzerI studentAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -128,5 +126,5 @@ public class StudentAnalyzerHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	
+
 }

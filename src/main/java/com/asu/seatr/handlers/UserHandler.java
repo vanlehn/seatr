@@ -8,9 +8,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.exception.ConstraintViolationException;
 
-import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.UserException;
-import com.asu.seatr.models.Course;
 import com.asu.seatr.models.User;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
@@ -20,21 +18,21 @@ public class UserHandler {
 
 
 	public static User save(User user) throws UserException{
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    try {
-		    session.beginTransaction();
-		    int id = (int)session.save(user);
-		    user.setId(id);
-		    session.getTransaction().commit();
-	    } catch(ConstraintViolationException cve) {
-	    	throw new UserException(MyStatus.ERROR, MyMessage.USER_ALREADY_PRESENT);
-	    } finally {
-	    	session.close();
-	    }		    
-	    return user;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		try {
+			session.beginTransaction();
+			int id = (int)session.save(user);
+			user.setId(id);
+			session.getTransaction().commit();
+		} catch(ConstraintViolationException cve) {
+			throw new UserException(MyStatus.ERROR, MyMessage.USER_ALREADY_PRESENT);
+		} finally {
+			session.close();
+		}		    
+		return user;
 	}
-	
+
 	public static User read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -43,7 +41,7 @@ public class UserHandler {
 		session.close();
 		return user;
 	}
-	
+
 	public static User read(String username) throws UserException
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -68,7 +66,7 @@ public class UserHandler {
 		session.close();
 		return userList;
 	}
-	
+
 	public static User update(User user)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -88,6 +86,6 @@ public class UserHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	
+
 
 }

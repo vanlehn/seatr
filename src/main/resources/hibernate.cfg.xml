@@ -5,52 +5,52 @@
 
 <hibernate-configuration>
 	<session-factory>
-		
+
 		<!-- Database Connection Settings -->
 		<property name="connection.driver_class">com.mysql.jdbc.Driver</property>
 		<property name="connection.url">jdbc:mysql://52.36.31.37:3306/seatr</property>
 		<property name="connection.username">root</property>
 		<property name="connection.password">seatr</property>
-		
+
 		<!-- JDBC connection pool (use the built in) -->
 		<property name="connection.pool_size">1</property>
-		
+
 		<!-- SQL dialect -->
-		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>		
-		
+		<property name="dialect">org.hibernate.dialect.MySQLDialect</property>
+
 		<!-- Enable Hibernate's automatic session context management -->
 		<property name="current_session_context_class">thread</property>
-		
+
 		<!-- Disable second level cache -->
 		<property name="cache.provider_class">org.hibernate.cache.NoCacheProvider</property>
-		
+
 		<!-- Echo all executed SQL to stdout -->
 		<property name="show_sql">false</property>
-		
+
 		<property name="hbm2ddl.auto">update</property>
-		
-		<mapping class="com.asu.seatr.models.Course"/>
-		<mapping class="com.asu.seatr.models.Analyzer"/>
-		<mapping class="com.asu.seatr.models.CourseAnalyzerMap"/>
-		<mapping class="com.asu.seatr.models.Student"/>
-		<mapping class="com.asu.seatr.models.StudentTask"/>
-		<mapping class="com.asu.seatr.models.Task"/>
-		<mapping class="com.asu.seatr.models.KnowledgeComponent"/>
-		<mapping class="com.asu.seatr.models.User"/>
-		<mapping class="com.asu.seatr.models.UserCourse"/>
-		
-		<mapping class="com.asu.seatr.models.analyzers.student.S_A1"/>
-		<mapping class="com.asu.seatr.models.analyzers.student.S_A3"/>
-		<mapping class="com.asu.seatr.models.analyzers.task.T_A1"/>
-		<mapping class="com.asu.seatr.models.analyzers.task.T_A3"/>
-		<mapping class="com.asu.seatr.models.analyzers.course.C_A1"/>
-		<mapping class="com.asu.seatr.models.analyzers.course.C_A3"/>
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A1"/>
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A3"/>
-		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A1"/>		
-		<mapping class="com.asu.seatr.models.analyzers.kc.K_A1"/>
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_A1"/>
-		
-		
+
+		<mapping class="com.asu.seatr.models.Course" />
+		<mapping class="com.asu.seatr.models.Analyzer" />
+		<mapping class="com.asu.seatr.models.CourseAnalyzerMap" />
+		<mapping class="com.asu.seatr.models.Student" />
+		<mapping class="com.asu.seatr.models.StudentTask" />
+		<mapping class="com.asu.seatr.models.Task" />
+		<mapping class="com.asu.seatr.models.KnowledgeComponent" />
+		<mapping class="com.asu.seatr.models.User" />
+		<mapping class="com.asu.seatr.models.UserCourse" />
+
+		<mapping class="com.asu.seatr.models.analyzers.student.S_A1" />
+		<mapping class="com.asu.seatr.models.analyzers.student.S_A3" />
+		<mapping class="com.asu.seatr.models.analyzers.task.T_A1" />
+		<mapping class="com.asu.seatr.models.analyzers.task.T_A3" />
+		<mapping class="com.asu.seatr.models.analyzers.course.C_A1" />
+		<mapping class="com.asu.seatr.models.analyzers.course.C_A3" />
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A1" />
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A3" />
+		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A1" />
+		<mapping class="com.asu.seatr.models.analyzers.kc.K_A1" />
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_A1" />
+
+
 	</session-factory>
 </hibernate-configuration>

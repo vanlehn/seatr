@@ -1,7 +1,7 @@
 package com.asu.seatr.rest.models;
 
 public class TKCAReader {
-	
+
 	private Boolean replace;
 	private String external_course_id;
 	private Integer from_analyzer_id;

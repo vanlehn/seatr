@@ -25,23 +25,23 @@ public class TK_A1 implements TaskKCAnalyzerI{
 	public static final String TASK_ID = "task_id";
 	public static final String KC_ID = "kc_id";
 	public static final String MIN_MASTERY_LEVEL = "min_mastery_level";
-	
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "task_id", referencedColumnName = "id")
 	private Task task;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "kc_id", referencedColumnName = "id")
 	private KnowledgeComponent kc;
-	
+
 	@Column(name = "min_mastery_level")
 	private int s_min_mastery_level;
-	
+
 
 	@Override
 	public int getId() {
@@ -52,9 +52,9 @@ public class TK_A1 implements TaskKCAnalyzerI{
 	@Override
 	public void setId(int id) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
+
 	@Override
 	public Task getTask() {
 		return task;
@@ -71,7 +71,7 @@ public class TK_A1 implements TaskKCAnalyzerI{
 	public void setKc(KnowledgeComponent kc) {
 		this.kc = kc;
 	}
-	
+
 	public int getS_min_mastery_level() {
 		return s_min_mastery_level;
 	}
@@ -79,7 +79,7 @@ public class TK_A1 implements TaskKCAnalyzerI{
 	public void setS_min_mastery_level(int s_min_mastery_level) {
 		this.s_min_mastery_level = s_min_mastery_level;
 	}
-	
+
 
 
 }

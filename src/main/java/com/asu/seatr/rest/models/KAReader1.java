@@ -4,11 +4,11 @@ import com.asu.seatr.rest.models.interfaces.KAReaderI;
 
 public class KAReader1 implements KAReaderI{
 
-	
+
 	private String external_kc_id;
 	private String external_course_id;
 	private Integer s_unit;
-	
+
 	public Integer getS_unit() {
 		return s_unit;
 	}

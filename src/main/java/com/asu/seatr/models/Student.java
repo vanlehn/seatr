@@ -15,7 +15,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.models.analyzers.student.*;
+import com.asu.seatr.models.analyzers.student.S_A1;
+import com.asu.seatr.models.analyzers.student.S_A3;
 
 @Entity
 @Table(name = "student", uniqueConstraints = @UniqueConstraint(columnNames = {"external_id","course_id"}))
@@ -24,17 +25,17 @@ public class Student {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-		
+
 	@Column(name = "external_id", nullable=false)
 	private String external_id;
-		
+
 	@ManyToOne(targetEntity = Course.class)
 	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
-	
+
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
 	private List<StudentTask> StudentTask;
-	
+
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
 	private List<S_A1> S_A1;
 

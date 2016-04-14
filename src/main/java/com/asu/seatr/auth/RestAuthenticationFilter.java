@@ -2,9 +2,6 @@ package com.asu.seatr.auth;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.security.GeneralSecurityException;
-import java.text.ParseException;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -15,10 +12,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.NotFoundException;
-import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.json.JSONObject;
@@ -45,7 +39,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 		} catch (Exception e) { throw e; }
 
 		jsonObject = new JSONObject(jb.toString());
-		
+
 		return jsonObject;
 
 	}
@@ -54,27 +48,27 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 		String path = ((HttpServletRequest) request).getPathInfo();
 		String re1="(\\/analyzer\\/\\d+\\/courses)";
 		Pattern p = Pattern.compile(re1,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-	    Matcher m = p.matcher(path);
-	    return m.find() && ((HttpServletRequest) request).getMethod().equals("POST");
+		Matcher m = p.matcher(path);
+		return m.find() && ((HttpServletRequest) request).getMethod().equals("POST");
 	}
-	
+
 	private boolean isSuperAdminRequest(ServletRequest request) {
 		String path = ((HttpServletRequest) request).getPathInfo();
 		String re1="(\\/superadmin\\/users)";
 		Pattern p = Pattern.compile(re1,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
-	    Matcher m = p.matcher(path);
-	    return m.find();
-		
+		Matcher m = p.matcher(path);
+		return m.find();
+
 	}
-	
+
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
 			FilterChain filter) throws IOException, ServletException {
 		response.setContentType(MediaType.APPLICATION_JSON);		
-				
-	    boolean isCourseCreate = isCourseCreateRequest(request) && ((HttpServletRequest) request).getMethod().equals("POST"); 
-	    boolean isSuperAdmin = isSuperAdminRequest(request);		
-		
+
+		boolean isCourseCreate = isCourseCreateRequest(request) && ((HttpServletRequest) request).getMethod().equals("POST"); 
+		boolean isSuperAdmin = isSuperAdminRequest(request);		
+
 		if (request instanceof HttpServletRequest) {
 			//HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			MultiReadHttpServletRequest multiReadHttpServletRequest = new MultiReadHttpServletRequest((HttpServletRequest)request);
@@ -94,12 +88,12 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 					JSONObject requestParams = requestParamsToJSON(multiReadHttpServletRequest);
 					external_course_id = requestParams.get("external_course_id").toString();
 				}
-				
+
 				AuthenticationService authenticationService = new AuthenticationService();
-				
+
 				authenticationStatus = authenticationService
 						.authenticate(authCredentials, external_course_id, isCourseCreate, isSuperAdmin);
-				
+
 			} catch (UserException e) {
 				exception = true;
 				authenticationStatus = false;
@@ -125,7 +119,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 				.setStatus(Status.BAD_REQUEST.getStatusCode());
 				httpServletResponse.getWriter().write(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST));
 			} 	
-			
+
 			if (authenticationStatus) {
 				filter.doFilter(multiReadHttpServletRequest, response);
 			} else if (!exception){
@@ -137,7 +131,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 					httpServletResponse.getWriter().write(MyResponse.build(MyStatus.ERROR, MyMessage.AUTHENTICATION_FAILED));
 				}
 			}
-			
+
 		}
 
 

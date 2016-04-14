@@ -25,7 +25,7 @@ import com.asu.seatr.utils.MyStatus;
 @Entity
 @Table(name = "k_a1")
 public class K_A1 implements KCAnalyzerI{
-	
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
@@ -34,7 +34,7 @@ public class K_A1 implements KCAnalyzerI{
 	@ManyToOne
 	@JoinColumn(name = "kc_id", referencedColumnName = "id", unique=true)
 	private KnowledgeComponent kc;
-	
+
 	//properties that do not change
 	@Column(name = "s_unit")
 	private Integer s_unit;
@@ -62,9 +62,9 @@ public class K_A1 implements KCAnalyzerI{
 	public void setS_unit(Integer s_unit) {
 		this.s_unit = s_unit;
 	}
-	
+
 	public void createKC(String external_kc_id, String external_course_id) throws CourseException, KCException{
-		
+
 		Course course = CourseHandler.getByExternalId(external_course_id);		
 		KnowledgeComponent kc = new KnowledgeComponent();
 		kc.setExternal_id(external_kc_id);
@@ -77,10 +77,10 @@ public class K_A1 implements KCAnalyzerI{
 		} catch(PropertyValueException pve) {
 			throw new KCException(MyStatus.ERROR, MyMessage.KC_PROPERTY_NULL);
 		}
-		
+
 		this.kc = kc;
 	}
-	
+
 
 
 }

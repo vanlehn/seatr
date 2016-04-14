@@ -20,29 +20,29 @@ import com.asu.seatr.models.analyzers.studenttask.ST_A3;
 @Entity
 @Table(name = "student_task")
 public class StudentTask {
-	
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "student_id", referencedColumnName = "id", nullable=false)//internal student id
 	private Student student;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "task_id", referencedColumnName = "id", nullable=false)
 	private Task task;	
-	
+
 	@Column(name = "timestamp")
 	private Long timestamp;
 
 	@OneToMany(mappedBy = "studentTask", cascade=CascadeType.ALL)
 	private List<ST_A1> ST_A1;
-	
+
 	@OneToMany(mappedBy = "studentTask", cascade=CascadeType.ALL)
 	private List<ST_A3> ST_A3;
-	
+
 
 	public int getId() {
 		return id;

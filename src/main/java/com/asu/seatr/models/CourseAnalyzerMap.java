@@ -14,23 +14,23 @@ import org.hibernate.annotations.GenericGenerator;
 @Entity
 @Table( name = "course_analyzer", uniqueConstraints = @UniqueConstraint(columnNames = {"course_id", "analyzer_id"}))
 public class CourseAnalyzerMap {
-	
+
 	@Id
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "analyzer_id", referencedColumnName = "id", nullable=false)
 	private Analyzer analyzer;
-	
+
 	@Column(name = "active", nullable=false)
 	private boolean active;
-	
+
 	public int getId() {
 		return id;
 	}

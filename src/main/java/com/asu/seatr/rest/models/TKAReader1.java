@@ -8,7 +8,7 @@ public class TKAReader1 implements TKAReaderI{
 	private String external_kc_id;
 	private String external_task_id;
 	private Integer min_mastery_level;
-	
+
 	@Override
 	public String getExternal_kc_id() {
 		// TODO Auto-generated method stub
@@ -45,7 +45,7 @@ public class TKAReader1 implements TKAReaderI{
 		// TODO Auto-generated method stub
 		this.external_task_id = external_task_id;
 	}
-	
+
 	public Integer getMin_mastery_level() {
 		return min_mastery_level;
 	}

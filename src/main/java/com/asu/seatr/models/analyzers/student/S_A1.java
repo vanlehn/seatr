@@ -31,21 +31,21 @@ public class S_A1 implements StudentAnalyzerI{
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "student_id", referencedColumnName = "id", nullable=false)//internal student id
 	Student student;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)//internal course id
 	Course course;
-	
+
 	//Properties that dont change
 	@Column(name = "s_placement_score")
 	private Double s_placement_score;
 	@Column(name = "s_year")
 	private String s_year;
-	
+
 	public Double getS_placement_score() {
 		return s_placement_score;
 	}
@@ -76,7 +76,7 @@ public class S_A1 implements StudentAnalyzerI{
 
 	@Override
 	public void createStudent(String student_ext_id, String external_course_id, int analyzer_id) throws CourseException, StudentException {
-		
+
 		Course course = CourseHandler.getByExternalId(external_course_id);		
 		Student student = new Student();
 		student.setExternal_id(student_ext_id);
@@ -89,7 +89,7 @@ public class S_A1 implements StudentAnalyzerI{
 		} catch(PropertyValueException pve) {
 			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_PROPERTY_NULL);
 		}
-		
+
 		this.student = student;
 		this.course = course;
 	}
@@ -97,24 +97,24 @@ public class S_A1 implements StudentAnalyzerI{
 	@Override
 	public void deleteStudent(String student_ext_id, String external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void updateStudent(String student_ext_id, String external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public Student getStudent(String external_student_id, String external_course_id, int analyzer_id) {
-		
+
 		/*
 		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);		
 		this.student = student;
 		this.course = student.getCourse();
 		return student;
-		*/
+		 */
 		return null;
 	}
 

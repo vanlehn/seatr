@@ -32,14 +32,14 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "student_task_id", referencedColumnName = "id", unique=true, nullable=false)//internal student id
 	StudentTask studentTask;
-	
+
 	@Column(name = "d_status")
 	private String d_status; // done or not
-	
+
 	@Column(name = "d_time_lastattempt")
 	private Integer d_time_lastattempt; // time taken for the last attempt
 
@@ -47,12 +47,12 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 	public int getId() {
 		return id;
 	}
-	
+
 	@Override
 	public void setId(int id) {
 		this.id = id;
 	}
-	
+
 	public StudentTask getStudentTask() {
 		return studentTask;
 	}
@@ -86,7 +86,7 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 		studentTask.setStudent(student);
 		studentTask.setTask(task);
 		studentTask.setTimestamp(System.currentTimeMillis());
-	
+
 		try
 		{
 			StudentTaskHandler.save(studentTask);
@@ -95,21 +95,21 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 			throw new TaskException(MyStatus.ERROR, MyMessage.STUDENT_TASK_PROPERTY_NULL);
 		}
 		this.studentTask = studentTask;
-		
-		
+
+
 	}
 
 	@Override
 	public void deleteStudentTask(String external_student_id, String external_course_id, int task_id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void updateStudentTask(String external_student_id, String external_course_id, String external_task_id,
 			int analyzer_id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -117,6 +117,6 @@ public class ST_A1 implements StudentTaskAnalyzerI{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 
 }

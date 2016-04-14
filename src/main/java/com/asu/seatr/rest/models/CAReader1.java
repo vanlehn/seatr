@@ -5,7 +5,7 @@ public class CAReader1 {
 	private String description;
 	private Double threshold;
 	private String teaching_unit;
-	
+
 	public String getExternal_course_id() {
 		return external_course_id;
 	}
@@ -30,5 +30,5 @@ public class CAReader1 {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+
 }

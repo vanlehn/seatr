@@ -8,5 +8,5 @@ public class CourseAnalyzerMapException extends AbstractMyException {
 	public CourseAnalyzerMapException(MyStatus status, MyMessage message) {
 		super(status, message);
 	}
-	
+
 }

@@ -19,16 +19,16 @@ public class User {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@Column(name = "username", nullable=false, unique=true)
 	private String username;
-	
+
 	@Column(name = "password", nullable=false)
 	private String password;
 
 	@OneToMany(mappedBy = "user", cascade=CascadeType.ALL)
 	private List<UserCourse> UserCourse;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -60,5 +60,5 @@ public class User {
 	public void setUserCourse(List<UserCourse> userCourse) {
 		UserCourse = userCourse;
 	}
-	
+
 }

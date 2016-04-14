@@ -22,7 +22,6 @@ import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentHandler;
-import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.analyzer1.RecommTaskHandler;
 import com.asu.seatr.handlers.analyzer3.RecommTaskHandler_3;
@@ -31,16 +30,16 @@ import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.RecommTaskI;
-import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.Utilities;
 
 @Path("/")
 public class RecommenderAPI {
 
 	static Logger logger = Logger.getLogger(RecommenderAPI.class);
-	
+
 	@Path("inittasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -50,7 +49,7 @@ public class RecommenderAPI {
 				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
 				.build();
 	}
-	
+
 	@Path("analyzer/1/gettasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -60,10 +59,22 @@ public class RecommenderAPI {
 			@QueryParam("number_of_tasks") Integer number_of_tasks
 			)
 	{
-		List<String> resultTaskSet = new ArrayList<String>();
+
 		try
 		{
-			
+			if(!Utilities.checkExists(external_course_id)) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(external_student_id)) {
+				throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ID_MISSING);
+			}
+			if(!Utilities.checkExists(number_of_tasks)) {
+				//default number of tasks
+				number_of_tasks = 5;
+			}
+
+			List<String> resultTaskSet = new ArrayList<String>();
+
 			CourseAnalyzerMap  courseAnalyzerMap = CourseAnalyzerMapHandler.getPrimaryAnalyzerIdFromExtCourseId(external_course_id);
 			if(courseAnalyzerMap == null)
 			{
@@ -78,9 +89,9 @@ public class RecommenderAPI {
 				}
 				ListIterator<Task> taskListIterator = taskList.listIterator();
 				while(taskListIterator.hasNext())
-					{
-						resultTaskSet.add(taskListIterator.next().getExternal_id());
-					}
+				{
+					resultTaskSet.add(taskListIterator.next().getExternal_id());
+				}
 				Collections.shuffle(resultTaskSet);
 			}
 			else
@@ -88,7 +99,7 @@ public class RecommenderAPI {
 				//select tasks based on analyzer
 				/*Course course = courseAnalyzerMap.getCourse();
 				List<TaskAnalyzerI> taskAnalyzerList = TaskAnalyzerHandler.readByCourse(Class.forName("com.asu.seatr.models.analyzers.task.T_" + courseAnalyzerMap.getAnalyzer().toString()), course);
-				
+
 				if(taskAnalyzerList.isEmpty())
 				{
 					Response rb = Response.status(Status.NOT_FOUND)
@@ -100,11 +111,11 @@ public class RecommenderAPI {
 				{
 					resultTaskSet.add(taskAnalyzerListIterator.next().getTask().getExternal_id());
 				}*/
-				
+
 				Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
 				Course course = courseAnalyzerMap.getCourse();
 				List<RecommTaskI> taskList=TaskHandler.getRecommTasks(Class.forName("com.asu.seatr.models.analyzers.studenttask.RecommTask_" + courseAnalyzerMap.getAnalyzer().toString()), student, course);
-				
+
 				if(taskList.isEmpty())
 				{
 					Response rb = Response.status(Status.NOT_FOUND)
@@ -117,9 +128,9 @@ public class RecommenderAPI {
 					resultTaskSet.add(taskListIterator.next().getTask().getExternal_id());
 				}
 			}
-			
-		return resultTaskSet.subList(0, (resultTaskSet.size()>number_of_tasks)?number_of_tasks:resultTaskSet.size());
-		
+
+			return resultTaskSet.subList(0, (resultTaskSet.size()>number_of_tasks)?number_of_tasks:resultTaskSet.size());
+
 		}
 
 		catch(StudentException e)
@@ -137,15 +148,15 @@ public class RecommenderAPI {
 		{
 			throw new WebApplicationException(e.getResponse());
 		}
-		
+
 		catch(Exception e){
-			logger.error(e.getStackTrace());
+			logger.error("Exception while getting tasks", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
 	}
-	
+
 	@Path("analyzer/3/gettasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -153,10 +164,20 @@ public class RecommenderAPI {
 			@QueryParam("external_student_id") String external_student_id,
 			@QueryParam("external_course_id") String external_course_id,
 			@QueryParam("number_of_tasks") Integer number_of_tasks
-		)
+			)
 	{
 		try
-		{			
+		{
+			if(!Utilities.checkExists(external_course_id)) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(external_student_id)) {
+				throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ID_MISSING);
+			}
+			if(!Utilities.checkExists(number_of_tasks)) {
+				//default number of tasks
+				number_of_tasks = 5;
+			}
 			Course course = CourseHandler.getByExternalId(external_course_id);
 			Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
 			return RecommTaskHandler_3.getTasks(course, student, number_of_tasks);
@@ -177,10 +198,10 @@ public class RecommenderAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);			
 		}
-		
+
 		catch(Exception e)
 		{
-			logger.error(e.getStackTrace());
+			logger.error("Exception while getting tasks - analyzer 3", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);

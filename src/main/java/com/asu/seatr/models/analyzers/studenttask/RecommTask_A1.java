@@ -2,6 +2,9 @@ package com.asu.seatr.models.analyzers.studenttask;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -10,10 +13,6 @@ import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.RecommTaskI;
-
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 
 
 @Entity
@@ -24,15 +23,15 @@ public class RecommTask_A1 implements RecommTaskI{  //all the recommended tasks 
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name="student_id", referencedColumnName="id", nullable=false)
 	private Student student;
-	
+
 	@ManyToOne
 	@JoinColumn(name="task_id", referencedColumnName="id", nullable=false)
 	private Task task;
-	
+
 	@ManyToOne
 	@JoinColumn(name="course_id", referencedColumnName="id", nullable=false)
 	private Course course;
@@ -68,7 +67,7 @@ public class RecommTask_A1 implements RecommTaskI{  //all the recommended tasks 
 	public void setTask(Task task) {
 		this.task = task;
 	}
-	
-	
-	
+
+
+
 }

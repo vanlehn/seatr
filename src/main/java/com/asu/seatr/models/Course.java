@@ -12,7 +12,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.models.analyzers.course.*;
+import com.asu.seatr.models.analyzers.course.C_A1;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.models.analyzers.task.T_A1;
 @Entity
@@ -24,39 +24,39 @@ public class Course {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@Column(name="external_id", nullable=false, unique=true)
 	private String external_id;
-	
+
 	@Column(name="description")
 	private String description;
-	
+
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<CourseAnalyzerMap> CourseAnalyzerMap;
-	
+
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<KnowledgeComponent> KnowledgeComponent;
-	
+
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<Student> Student;
-	
+
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<UserCourse> UserCourse;
-	
+
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<Task> Task;
-	
+
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<C_A1> C_A1;
-	
+
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<S_A1> S_A1;
-	
+
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<T_A1> T_A1;
-	
-	
-	
+
+
+
 	public int getId() {
 		return id;
 	}
@@ -75,7 +75,7 @@ public class Course {
 	public void setExternal_id(String external_id) {
 		this.external_id = external_id;
 	}
-	
+
 	public List<CourseAnalyzerMap> getCourseAnalyzerMap() {
 		return CourseAnalyzerMap;
 	}
@@ -124,6 +124,6 @@ public class Course {
 	public void setT_A1(List<T_A1> t_A1) {
 		T_A1 = t_A1;
 	}	
-	
-	
+
+
 }

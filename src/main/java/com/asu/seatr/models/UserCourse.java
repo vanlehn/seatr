@@ -17,11 +17,11 @@ public class UserCourse {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "user_id", referencedColumnName = "id", nullable=false)
 	private User user;
-	
+
 	@ManyToOne
 	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
@@ -49,5 +49,5 @@ public class UserCourse {
 	public void setCourse(Course course) {
 		this.course = course;
 	}
-	
+
 }

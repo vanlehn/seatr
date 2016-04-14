@@ -27,13 +27,14 @@ import com.asu.seatr.rest.models.STAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.Utilities;
 
 @Path("analyzer/1/studenttasks")
 public class StudentTaskAPI_1 {
 	static Logger logger = Logger.getLogger(StudentTaskAPI_1.class);
 	/*get,update and delete operations have been disabled because a single student can have multiple records of
 	the same task associated with it.
-	*/
+	 */
 	/*
 	//read student task
 	@Path("/1")
@@ -65,26 +66,35 @@ public class StudentTaskAPI_1 {
 			throw new WebApplicationException(rb);
 		}
 	}
-	*/
+	 */
 	//create student task
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createStudentTask(STAReader1 sta){
-		
+
 		try {
+			if(!Utilities.checkExists(sta.getExternal_course_id())) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(sta.getExternal_student_id())) {
+				throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ID_MISSING);
+			}
+			if(!Utilities.checkExists(sta.getExternal_task_id())) {
+				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
+			}
 			ST_A1 sta1 = new ST_A1();
 			sta1.createStudentTask(sta.getExternal_student_id(),sta.getExternal_course_id(),sta.getExternal_task_id(), 1);
 			sta1.setD_status(sta.getD_status());
 			sta1.setD_time_lastattempt(sta.getD_time_lastattempt());
 			StudentTaskAnalyzerHandler.save(sta1);
-			
+
 			Student student = StudentHandler.getByExternalId(sta.getExternal_student_id(), sta.getExternal_course_id());
 			Task task = TaskHandler.readByExtId(sta.getExternal_task_id(), sta.getExternal_course_id());
 			Course course=CourseHandler.getByExternalId(sta.getExternal_course_id());
 			if(sta.getD_status().equals("done"))
 				RecommTaskHandler.completeATask(student, course,task);
-			
+
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_TASK_CREATED)).build();
 		}
@@ -105,12 +115,12 @@ public class StudentTaskAPI_1 {
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
-			logger.error(e.getStackTrace());
+			logger.error("Exception while creating student", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
-		
+
 	}
 	/*
 	//update
@@ -118,7 +128,7 @@ public class StudentTaskAPI_1 {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateStudentTask(STAReader1 sta){
-		
+
 		try
 		{
 			ST_A1 sta1 = (ST_A1) StudentTaskAnalyzerHandler.readByExtId(ST_A1.class, sta.getExternal_student_id(), sta.getExternal_course_id(), sta.getExternal_task_id()).get(0);
@@ -141,7 +151,7 @@ public class StudentTaskAPI_1 {
 					.build();
 			throw new WebApplicationException(rb);
 		}
-		
+
 	}
 	//delete analyzer	
 	@Path("/1")
@@ -152,7 +162,7 @@ public class StudentTaskAPI_1 {
 			@QueryParam("external_course_id") String external_course_id,
 			@QueryParam("external_task_id") String external_task_id
 			){
-		
+
 		try
 		{
 			ST_A1 sta1 = (ST_A1) StudentTaskAnalyzerHandler.readByExtId(ST_A1.class,external_student_id, 
@@ -172,7 +182,7 @@ public class StudentTaskAPI_1 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
-		
+
 	}
 	//delete student task
 	@Path("/")
@@ -207,11 +217,11 @@ public class StudentTaskAPI_1 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
-		
-		
-	
+
+
+
 	}
-	*/
-	
+	 */
+
 
 }

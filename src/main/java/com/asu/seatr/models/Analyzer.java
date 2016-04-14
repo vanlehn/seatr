@@ -19,16 +19,16 @@ public class Analyzer {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@Column(name = "name", nullable=false)
 	private String name;
-	
+
 	@Column(name = "description")
 	private String description;
-	
+
 	@OneToMany(mappedBy = "analyzer", cascade=CascadeType.ALL)
 	private List<CourseAnalyzerMap> CourseAnalyzerMap;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -52,7 +52,7 @@ public class Analyzer {
 	{
 		return this.name;
 	}
-	
+
 	public List<CourseAnalyzerMap> getCourseAnalyzerMap() {
 		return CourseAnalyzerMap;
 	}

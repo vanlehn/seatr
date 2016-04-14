@@ -23,27 +23,27 @@ public class TaskAnalyzerHandler {
 
 
 	public static TaskAnalyzerI save(TaskAnalyzerI taskAnalyzer) throws TaskException {
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();	
-	    try{
-	    	int id = (int)session.save(taskAnalyzer);
-	    	taskAnalyzer.setId(id);
-	    	session.getTransaction().commit();
-	    }
-	    catch (ConstraintViolationException cve) {	    	
-	    	
-	    	//throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT);
-	    	throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ENTRY_ALREADY_PRESENT);
-	    } catch (PropertyValueException pve) {
-	    	throw new TaskException(MyStatus.ERROR, MyMessage.FIELD_MISSING);
-	    }
-	    
-	    finally
-	    {session.close();}
-	    return taskAnalyzer;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();	
+		try{
+			int id = (int)session.save(taskAnalyzer);
+			taskAnalyzer.setId(id);
+			session.getTransaction().commit();
+		}
+		catch (ConstraintViolationException cve) {	    	
+
+			//throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT);
+			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ENTRY_ALREADY_PRESENT);
+		} catch (PropertyValueException pve) {
+			throw new TaskException(MyStatus.ERROR, MyMessage.FIELD_MISSING);
+		}
+
+		finally
+		{session.close();}
+		return taskAnalyzer;
 	}
-	
+
 	/*
 	 * @param int id
 	 * @desc
@@ -73,10 +73,10 @@ public class TaskAnalyzerHandler {
 		if (result.size() == 0) {
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND);
 		}
-		
+
 		TaskAnalyzerI taskAnalyzer = result.get(0);
 		return taskAnalyzer;
-		
+
 	}
 	public static List<TaskAnalyzerI> readByCourse(Class typeParameterClass, Course course) throws CourseException
 	{
@@ -92,7 +92,7 @@ public class TaskAnalyzerHandler {
 		session.close();
 		return taskAnalyzerList;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static List<TaskAnalyzerI> readAll(Class typeParameterClass)
 	{
@@ -103,7 +103,7 @@ public class TaskAnalyzerHandler {
 		session.close();
 		return taskAnalyzerList;
 	}
-	
+
 	public static TaskAnalyzerI update(TaskAnalyzerI taskAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -123,8 +123,8 @@ public class TaskAnalyzerHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	
-	
+
+
 
 
 

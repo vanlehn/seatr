@@ -6,7 +6,7 @@ public class CAReader3 {
 	private Integer s_units;
 	private Integer d_current_unit_no;
 	private Integer d_max_n;
-	
+
 	public String getExternal_course_id() {
 		return external_course_id;
 	}
@@ -37,5 +37,5 @@ public class CAReader3 {
 	public void setD_max_n(Integer d_max_n) {
 		this.d_max_n = d_max_n;
 	}
-	
+
 }

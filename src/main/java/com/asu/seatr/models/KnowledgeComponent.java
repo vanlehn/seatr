@@ -13,10 +13,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
-import com.asu.seatr.models.analyzers.kc.*;
-import com.asu.seatr.models.analyzers.task_kc.TK_A1;
-
 import org.hibernate.annotations.GenericGenerator;
+
+import com.asu.seatr.models.analyzers.kc.K_A1;
+import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 
 @Entity
 @Table(name = "kc", uniqueConstraints = @UniqueConstraint(columnNames = {"external_id","course_id"}))
@@ -25,20 +25,20 @@ public class KnowledgeComponent {
 	@GeneratedValue(generator = "increment")
 	@GenericGenerator(name = "increment", strategy = "increment")
 	private int id;
-	
+
 	@Column(name = "external_id")
 	private String external_id;
-	
+
 	@ManyToOne(targetEntity = Course.class)
 	@JoinColumn(name = "course_id", referencedColumnName = "id")
 	private Course course;
 
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<K_A1> K_A1;
-	
+
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<TK_A1> TK_A1;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -78,8 +78,8 @@ public class KnowledgeComponent {
 	public void setTK_A1(List<TK_A1> tK_A1) {
 		TK_A1 = tK_A1;
 	}
-	
-	
+
+
 
 
 }

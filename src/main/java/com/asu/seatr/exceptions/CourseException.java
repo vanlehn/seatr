@@ -8,5 +8,5 @@ public class CourseException extends AbstractMyException {
 	public CourseException(MyStatus status, MyMessage message) {
 		super(status, message);
 	}
-	
+
 }

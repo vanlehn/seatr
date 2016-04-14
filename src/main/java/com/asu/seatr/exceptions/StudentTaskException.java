@@ -8,5 +8,5 @@ public class StudentTaskException extends AbstractMyException {
 	public StudentTaskException(MyStatus status, MyMessage message) {
 		super(status, message);
 	}
-	
+
 }

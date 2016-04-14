@@ -38,14 +38,14 @@ import com.asu.seatr.utils.MyStatus;
 @RunWith(PowerMockRunner.class)
 public class TaskAPITest extends JerseyTest
 {
-	
+
 	private static String ANALYZER1_URL="analyzer/1/tasks";
-	
+
 	@Override
-    protected Application configure() {
+	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(TaskAPI_1.class);
-    }
+		return new ResourceConfig(TaskAPI_1.class);
+	}
 
 	@Test
 	public void getTaskTestSuccess() throws CourseException, TaskException
@@ -73,7 +73,7 @@ public class TaskAPITest extends JerseyTest
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND), 
 				resp.readEntity(String.class));
 	}
-	
+
 	@Test
 	public void getTaskTest_FailsWithTaskNotFound() throws CourseException, TaskException
 	{
@@ -100,7 +100,7 @@ public class TaskAPITest extends JerseyTest
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND), 
 				resp.readEntity(String.class));
 	}
-	
+
 	@Test
 	public void createTaskTestSuccess() throws Exception
 	{
@@ -181,7 +181,7 @@ public class TaskAPITest extends JerseyTest
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT), 
 				resp.readEntity(String.class));
 	}
-	
+
 	@Test
 	public void updateTaskTestSuccess() throws CourseException, TaskException
 	{
@@ -199,7 +199,7 @@ public class TaskAPITest extends JerseyTest
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_UPDATED),resp.readEntity(String.class));	
 	}
-	
+
 	@Test
 	public void updateTaskTest_FailsWithCourseNotFound() throws CourseException, TaskException
 	{
@@ -251,7 +251,7 @@ public class TaskAPITest extends JerseyTest
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND),resp.readEntity(String.class));	
 	}
-	
+
 	@Test
 	public void deleteTask1AnalyzerTestSuccess() throws Exception
 	{
@@ -308,7 +308,7 @@ public class TaskAPITest extends JerseyTest
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_NOT_FOUND),resp.readEntity(String.class));
 	}
-	
+
 	@Test
 	public void deleteTask() throws Exception
 	{
@@ -327,6 +327,6 @@ public class TaskAPITest extends JerseyTest
 		final Response resp = target("tasks/").queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().delete(Response.class);
 		assertEquals(Status.OK.getStatusCode(),resp.getStatus());
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_DELETED),resp.readEntity(String.class));
-		
+
 	}
 }

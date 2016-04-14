@@ -1,7 +1,6 @@
 package com.asu.seatr.handlers;
 
 import java.util.List;
-import java.util.ListIterator;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
@@ -13,8 +12,6 @@ import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
-import com.asu.seatr.models.Analyzer;
-import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
@@ -25,21 +22,21 @@ import com.asu.seatr.utils.MyStatus;
 public class StudentTaskHandler {
 
 	public static StudentTask save(StudentTask studentTask) {
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    try
-		    {
-		    session.beginTransaction();
-		    
-		    int id = (int)session.save(studentTask);
-		    studentTask.setId(id);
-		    session.getTransaction().commit();
-		    }
-	    finally{
-	    	session.close();}
-	    return studentTask;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		try
+		{
+			session.beginTransaction();
+
+			int id = (int)session.save(studentTask);
+			studentTask.setId(id);
+			session.getTransaction().commit();
+		}
+		finally{
+			session.close();}
+		return studentTask;
 	}
-	
+
 	public static StudentTask read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -48,7 +45,7 @@ public class StudentTaskHandler {
 		session.close();
 		return studentTask;
 	}
-	
+
 	public static List<StudentTask> readAll()
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -95,7 +92,7 @@ public class StudentTaskHandler {
 		List<StudentTask> studentTaskList = cr.list();
 		session.close();
 		return studentTaskList;
-		
+
 	}
 	public static List<StudentTask> readByExtId(String external_student_id, String external_course_id, String external_task_id) throws CourseException, TaskException, StudentException
 	{
@@ -110,7 +107,7 @@ public class StudentTaskHandler {
 		session.close();
 		return studentTaskList;
 	}
-	
+
 	public static List<StudentTask> readByExtIdOrderByTime(String external_student_id, String external_course_id, String external_task_id) throws CourseException, TaskException, StudentException
 	{
 		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
@@ -125,7 +122,7 @@ public class StudentTaskHandler {
 		session.close();
 		return studentTaskList;
 	}
-	
+
 	public static StudentTask update(StudentTask studentTask)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -136,7 +133,7 @@ public class StudentTaskHandler {
 		session.close();
 		return studentTask;
 	}
-	
+
 	public static void delete(StudentTask studentTask)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();

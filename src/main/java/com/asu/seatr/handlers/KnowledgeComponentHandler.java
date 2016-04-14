@@ -17,19 +17,19 @@ import com.asu.seatr.utils.MyStatus;
 
 public class KnowledgeComponentHandler {
 
-	
+
 	public static KnowledgeComponent save(KnowledgeComponent kc) {
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
-	    int id = (int)session.save(kc);
-	    kc.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
-	    return kc;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+
+		int id = (int)session.save(kc);
+		kc.setId(id);
+		session.getTransaction().commit();
+		session.close();
+		return kc;
 	}
-	
+
 	public static KnowledgeComponent getByInternalId(int id) throws KCException
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -42,7 +42,7 @@ public class KnowledgeComponentHandler {
 		}
 		return kc;
 	}
-	
+
 	public static List<KnowledgeComponent> getByExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
@@ -54,7 +54,7 @@ public class KnowledgeComponentHandler {
 		session.close();
 		return kcList;
 	}
-	
+
 	public static List<KnowledgeComponent> getByCourse(Course course) throws CourseException
 	{
 		if(course == null)
@@ -69,7 +69,7 @@ public class KnowledgeComponentHandler {
 		session.close();
 		return kcList;
 	}
-	
+
 	public static KnowledgeComponent getByExtKCId_Course(String external_kc_id, Course course) throws CourseException, KCException
 	{
 		if(course == null)
@@ -91,8 +91,8 @@ public class KnowledgeComponentHandler {
 
 		return kc;
 	}
-	
-	
+
+
 	public static KnowledgeComponent readByExtId(String external_kc_id, String external_course_id) throws CourseException, KCException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
@@ -110,7 +110,7 @@ public class KnowledgeComponentHandler {
 		KnowledgeComponent kc = kcList.get(0);
 		return kc;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static List<KnowledgeComponent> readAll()
 	{
@@ -121,7 +121,7 @@ public class KnowledgeComponentHandler {
 		session.close();
 		return kcList;
 	}
-	
+
 	public static KnowledgeComponent update(KnowledgeComponent kc)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -141,5 +141,5 @@ public class KnowledgeComponentHandler {
 		session.getTransaction().commit();
 		session.close();
 	}
-	
+
 }

@@ -38,55 +38,57 @@ import com.asu.seatr.models.analyzers.kc.K_A1;
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 
 import com.asu.seatr.rest.models.KAReader1;
-import com.asu.seatr.rest.models.TKAReader1;
-
 import com.asu.seatr.rest.models.TKReader1;
 
-		
+
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.Utilities;
 
 
 @Path("analyzer/1/kc")
 public class KCAPI {
 
 	static Logger logger = Logger.getLogger(KCAPI.class);
-	
+
 	@Path("/createkc")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createKC1(KAReader1 kaReader)
-	{
-		
-		K_A1 ka1 = new K_A1();
+	{		
 		try {
+			if(!Utilities.checkExists(kaReader.getExternal_course_id())) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(kaReader.getExternal_kc_id())) {
+				throw new KCException(MyStatus.ERROR, MyMessage.KC_ID_MISSING);
+			}						
+
+			K_A1 ka1 = new K_A1();
 			ka1.createKC(kaReader.getExternal_kc_id(), kaReader.getExternal_course_id());
 			ka1.setS_unit(kaReader.getS_unit());
 			KCAnalyzerHandler.save(ka1);
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_CREATED)).build();
 		} catch (CourseException e) {
-			// TODO Auto-generated catch block
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch (KCException e) {
-			// TODO Auto-generated catch block
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
-			logger.error(e.getStackTrace());
-			System.out.println(e.getMessage());
+			logger.error("Exception while creating kc", e);			
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
 	}
-	
+
 	/**
 	 * Created KC_TASK mapping entry in tk_a1 table
 	 * If replace is true, first all records are truncated and then mappings inserted
@@ -102,7 +104,20 @@ public class KCAPI {
 	{
 		Session session = null;
 		try {
-			
+			if(!Utilities.checkExists(tkReader.getExternal_course_id())) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(tkReader.getExternal_kc_id())) {
+				throw new KCException(MyStatus.ERROR, MyMessage.KC_ID_MISSING);
+			}
+			if(!Utilities.checkExists(tkReader.getExternal_task_id())) {
+				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
+			}
+			if(!Utilities.checkExists(tkReader.getReplace())) {
+				//set default as false
+				tkReader.setReplace(false);
+			}
+
 			boolean replace = tkReader.getReplace();
 			if(replace)
 			{
@@ -110,29 +125,29 @@ public class KCAPI {
 				externalCourseSet.add(tkReader.getExternal_course_id());				
 				List<Course> courseList = CourseHandler.getCourseList(externalCourseSet);
 				session = KCAnalyzerHandler.hqlBatchDeleteByCourse("A1", courseList,false);
-				
+
 			}
-			
-				TK_A1 tk1 = new TK_A1();
-				TK_A1 tk1Array[] = new TK_A1[1];
-				KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(tkReader.getExternal_kc_id(), tkReader.getExternal_course_id());
-				Task task = TaskHandler.readByExtId(tkReader.getExternal_task_id(), tkReader.getExternal_course_id());
-				tk1.setKc(kc);
-				tk1.setTask(task);
-				tk1.setS_min_mastery_level(tkReader.getMin_mastery_level());			
-				tk1Array[0] = tk1;
+
+			TK_A1 tk1 = new TK_A1();
+			TK_A1 tk1Array[] = new TK_A1[1];
+			KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(tkReader.getExternal_kc_id(), tkReader.getExternal_course_id());
+			Task task = TaskHandler.readByExtId(tkReader.getExternal_task_id(), tkReader.getExternal_course_id());
+			tk1.setKc(kc);
+			tk1.setTask(task);
+			tk1.setS_min_mastery_level(tkReader.getMin_mastery_level());			
+			tk1Array[0] = tk1;
 			TaskKCAnalyzerHandler.batchSave(tk1Array, true, session);			
-			
+
 			return Response.status(Status.CREATED)
-				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED)).build();
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED)).build();
 		} catch (CourseException e) {
 			// TODO Auto-generated catch block
-				if(session != null)
-				{
-					session.getTransaction().rollback();
-					session.close();
-				}
-				
+			if(session != null)
+			{
+				session.getTransaction().rollback();
+				session.close();
+			}
+
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
@@ -147,19 +162,19 @@ public class KCAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		}
-		
-		  catch(KCException e)
+
+		catch(KCException e)
 		{
-				// TODO Auto-generated catch block
-				if(session != null)
-				{
-					session.getTransaction().rollback();
-					session.close();
-				}
-				Response rb = Response.status(Status.OK)
-						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
-				throw new WebApplicationException(rb);
+			// TODO Auto-generated catch block
+			if(session != null)
+			{
+				session.getTransaction().rollback();
+				session.close();
 			}
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		}
 		catch(ConstraintViolationException cve) {
 			//kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
 			if(session != null)
@@ -172,22 +187,22 @@ public class KCAPI {
 			throw new WebApplicationException(rb);
 		} 
 		catch(Exception e){
-			
+
 			if(session != null)
 			{
 				session.getTransaction().rollback();
 				session.close();
 			}
-			System.out.println(e.getMessage());
-			logger.error(e.getStackTrace());
+
+			logger.error("Exception while mapping KC to Task", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
-		
+
 	}
 
-	
-	
+
+
 
 }

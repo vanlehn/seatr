@@ -13,28 +13,28 @@ import org.hibernate.SessionFactory;
 import com.asu.seatr.exceptions.RecommException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
+import com.asu.seatr.models.analyzers.task.T_A3;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
-import com.asu.seatr.models.analyzers.task.T_A3;
 
 public class RecommTaskHandler_3 {
 	static Logger log = Logger.getLogger(RecommTaskHandler_3.class);
 
 	static List<String> shuffleArray(List<String> ar) {
-	    // If running on Java 6 or older, use `new Random()` on RHS here
-	    Random rnd = ThreadLocalRandom.current();
-	    for (int i = ar.size() - 1; i > 0; i--)
-	    {
-		  int index = rnd.nextInt(i + 1);
-		  // Simple swap
-		  String a = ar.get(index);
-		  ar.set(index, ar.get(i));
-		  ar.set(i, a);		  
-	    }
-	    return ar;
+		// If running on Java 6 or older, use `new Random()` on RHS here
+		Random rnd = ThreadLocalRandom.current();
+		for (int i = ar.size() - 1; i > 0; i--)
+		{
+			int index = rnd.nextInt(i + 1);
+			// Simple swap
+			String a = ar.get(index);
+			ar.set(index, ar.get(i));
+			ar.set(i, a);		  
+		}
+		return ar;
 	}
-	
+
 	public static List<String> getTasks(Course course,Student student, int numberOfTasks) throws RecommException
 	{
 		List<String> finalTaskList = new ArrayList<String>();
@@ -57,7 +57,7 @@ public class RecommTaskHandler_3 {
 			}
 			if(taskList.size()<numberOfTasks)
 			{
-				
+
 				String TasksWithBigN = "Select t_a3 from T_A3 t_a3 where t_a3.course = :course and t_a3.s_is_required = true and "
 						+ "t_a3.s_unit_no = (Select d_current_unit_no from C_A3 where course = :course) and t_a3.task in "
 						+ "(Select task from StudentTask s1 where s1.id in ("
@@ -73,7 +73,7 @@ public class RecommTaskHandler_3 {
 				List<T_A3> tempTaskList = (List<T_A3>)query2.list();
 				if(tempTaskList.size()<1)
 				{
-					
+
 					/*String optionalTasks = "Select t_a3 from T_A3 t_a3 where t_a3.course = :course and t_a3.s_is_required = false "
 							+ "and t_a3.s_unit_no = (Select d_current_unit_no from C_A3 where course = :course)";*/
 					String optionalTasks = "Select t_a3 from T_A3 t_a3 where t_a3.course = :course and t_a3.s_is_required = false and "
@@ -88,14 +88,14 @@ public class RecommTaskHandler_3 {
 					query3.setParameter("course", course);
 					query3.setParameter("student", student);
 					List<T_A3> tasksList = (List<T_A3>)query3.list();
-					
+
 					for (T_A3 t_a3 : tasksList) {
 						finalTaskList.add(t_a3.getTask().getExternal_id());
 						log.info("optional tasks: " + t_a3.getTask().getExternal_id());
 					}
-					
+
 					finalTaskList = shuffleArray(finalTaskList);
-					
+
 					if (finalTaskList.size() > numberOfTasks) {
 						finalTaskList = finalTaskList.subList(0, numberOfTasks);
 					}
@@ -104,12 +104,12 @@ public class RecommTaskHandler_3 {
 				}
 				else
 				{
-				for(T_A3 t_a3 : tempTaskList)
-				{
-					finalTaskList.add(t_a3.getTask().getExternal_id());
-					log.info("incorrect required tasks: " + t_a3.getTask().getExternal_id());
-				}
-				return finalTaskList;
+					for(T_A3 t_a3 : tempTaskList)
+					{
+						finalTaskList.add(t_a3.getTask().getExternal_id());
+						log.info("incorrect required tasks: " + t_a3.getTask().getExternal_id());
+					}
+					return finalTaskList;
 				}
 			}
 			else
@@ -120,12 +120,12 @@ public class RecommTaskHandler_3 {
 				return finalTaskList;
 			}
 		}
-		
+
 		catch (Exception e) {
 			e.printStackTrace();
 			throw new RecommException(MyStatus.ERROR, MyMessage.RECOMMENDATION_ERROR);
 		}
-		
+
 		finally
 		{
 			session.close();

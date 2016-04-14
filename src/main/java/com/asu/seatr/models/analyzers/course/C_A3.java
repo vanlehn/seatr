@@ -27,11 +27,11 @@ public class C_A3 implements CourseAnalyzerI{
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy="increment")
 	private int id;
-	
+
 	@OneToOne
 	@JoinColumn(name="course_id", referencedColumnName="id", unique = true, nullable=false) //id of a course
 	Course course;
-	
+
 	//Properties
 	@Column(name="s_units", nullable = false)
 	private Integer s_units;
@@ -39,7 +39,7 @@ public class C_A3 implements CourseAnalyzerI{
 	private Integer d_current_unit_no;
 	@Column(name="d_max_n", nullable = false)
 	private Integer d_max_n;
-	
+
 	public int getId() {
 		return id;
 	}
@@ -47,7 +47,7 @@ public class C_A3 implements CourseAnalyzerI{
 	public void setId(int id) {
 		this.id = id;		
 	}
-	
+
 	public Course getCourse() {
 		return course;
 	}
@@ -59,17 +59,17 @@ public class C_A3 implements CourseAnalyzerI{
 	public void setCourseByExt_id(String course_ext_id) throws CourseException {
 		Course course=CourseHandler.getByExternalId(course_ext_id);
 		this.course=course;
-		
+
 	}
-	
+
 	public String getCourseExtId(){
 		return this.course.getExternal_id();
 	}
-	
+
 	public String getCourseDesc(){
 		return this.course.getDescription();
 	}
-	
+
 	public Integer getS_units() {
 		return s_units;
 	}
@@ -102,31 +102,31 @@ public class C_A3 implements CourseAnalyzerI{
 		try {
 			CourseHandler.save(course);
 		} 
-		
+
 		catch (ConstraintViolationException cve) {
 			course = CourseHandler.getByExternalId(external_course_id);
 			this.course = course;
 		} 
-		
+
 		catch (PropertyValueException pve) {
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_PROPERTY_NULL);
 		} 
 		this.course = course;
-		
+
 	}
 
-	
+
 
 	@Override
 	public void updateCourse(String external_course_id, String description) throws CourseException {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void deleteCourse(String external_course_id, int analyzer_id) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
@@ -135,6 +135,6 @@ public class C_A3 implements CourseAnalyzerI{
 		return null;
 	}
 
-	
+
 
 }

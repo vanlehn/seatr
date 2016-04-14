@@ -7,7 +7,7 @@ public abstract class AbstractMyException extends Exception {
 
 	MyStatus myStatus;
 	MyMessage myMessage;
-	
+
 	public AbstractMyException(MyStatus status, MyMessage message) {
 		super(message.value);
 		this.myStatus = status;
@@ -29,5 +29,5 @@ public abstract class AbstractMyException extends Exception {
 		this.myMessage = myMessage;
 	}
 
-	
+
 }

@@ -20,16 +20,16 @@ public class UserCourseHandler {
 
 
 	public static UserCourse save(UserCourse userCourse){
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    int id = (int)session.save(userCourse);
-	    userCourse.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
-	    return userCourse;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+		int id = (int)session.save(userCourse);
+		userCourse.setId(id);
+		session.getTransaction().commit();
+		session.close();
+		return userCourse;
 	}
-	
+
 	public static UserCourse read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -38,10 +38,10 @@ public class UserCourseHandler {
 		session.close();
 		return user;
 	}
-	
+
 	public static UserCourse read(String username, String external_course_id) throws UserException, CourseException
 	{
-		
+
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();		
 		Course course = CourseHandler.getByExternalId(external_course_id);
@@ -69,7 +69,7 @@ public class UserCourseHandler {
 		session.close();
 		return userList;
 	}
-	
+
 	public static UserCourse update(UserCourse userCourse)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -102,12 +102,12 @@ public class UserCourseHandler {
 		userCourse.setCourse(course);
 		userCourse.setUser(user);
 		int id = (int)session.save(userCourse);
-	    userCourse.setId(id);
+		userCourse.setId(id);
 		session.getTransaction().commit();
 		session.close();
-	    return userCourse;
+		return userCourse;
 
 	}
-	
+
 
 }

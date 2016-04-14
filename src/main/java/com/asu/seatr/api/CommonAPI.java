@@ -29,7 +29,6 @@ import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.handlers.StudentHandler;
-import com.asu.seatr.handlers.StudentTaskHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
@@ -51,13 +50,28 @@ import com.asu.seatr.utils.Utilities;
 
 @Path("/")
 public class CommonAPI {
-//set shouldn't be get..
+	//set shouldn't be get..
 	static Logger logger = Logger.getLogger(CommonAPI.class);
+
 	@Path("/courses/setanalyzer")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response setAnalyzer(@QueryParam("external_course_id") String ext_c_id, @QueryParam("analyzer_id") String a_id, @QueryParam("active") Boolean active){
-		try{
+	public Response setAnalyzer(
+			@QueryParam("external_course_id") String ext_c_id, 
+			@QueryParam("analyzer_id") String a_id, 
+			@QueryParam("active") Boolean active){
+
+		try {
+			if(!Utilities.checkExists(ext_c_id)) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(a_id)) {
+				throw new AnalyzerException(MyStatus.ERROR, MyMessage.ANALYZER_ID_MISSING);
+			}
+			if(!Utilities.checkExists(active)) {
+				//set default value
+				active = false;
+			}
 			CourseAnalyzerMap ca_map=CourseAnalyzerMapHandler.getByCourseAndAnalyzer(ext_c_id, a_id);
 			if(ca_map!=null){
 				if(active){
@@ -79,24 +93,27 @@ public class CommonAPI {
 				ca_map.setAnalyzer(analyzer);
 				ca_map.setActive(active);
 				CourseAnalyzerMapHandler.save(ca_map);
-				
+
 			}
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_ANALYZER_UPDATED)).build();
-		}
-		catch (CourseException e) {
-				Response rb = Response.status(Status.OK)
-						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
-				throw new WebApplicationException(rb);
-			} 
-		catch (AnalyzerException e) {
+		} catch (CourseException e) {
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
-		} 
+		} catch (AnalyzerException e) {
+			Response rb = Response.status(Status.OK)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch (Exception e) {
+			logger.error("Exception while setting analyzer", e);
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
 	}
-	
-	
+
+
 	@Path("/courses")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -105,8 +122,12 @@ public class CommonAPI {
 		C_A1 c_a1;
 		// delete all course analyzers and then delete the course record
 		try {
+			if(!Utilities.checkExists(external_course_id)) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+
 			try {
-			
+
 				c_a1 = (C_A1)CourseAnalyzerHandler.readByExtId(C_A1.class, external_course_id).get(0);
 				CourseAnalyzerHandler.delete(c_a1);
 				//delete all analyzers here
@@ -115,7 +136,7 @@ public class CommonAPI {
 					throw c;
 				}
 			}
-			
+
 			Course course =(Course)CourseHandler.getByExternalId(external_course_id);
 			CourseHandler.delete(course);
 			return Response.status(Status.OK)
@@ -125,14 +146,14 @@ public class CommonAPI {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
-			logger.error(e.getStackTrace());
+			logger.error("Exception while deleting course", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
 	}
-	
-	
+
+
 	@Path("/students")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -140,43 +161,49 @@ public class CommonAPI {
 	public Response deleteStudent(
 			@QueryParam("external_student_id") String external_student_id, 
 			@QueryParam("external_course_id") String external_course_id){
-		
-		
+
+		try {
+			if(!Utilities.checkExists(external_course_id)) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(external_student_id)) {
+				throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ID_MISSING);
+			}
+
 			S_A1 s_a1;
 			try {
-				try {
-					s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId (S_A1.class, external_student_id, external_course_id).get(0);			
-					//delete all other analyzers here			
-					StudentAnalyzerHandler.delete(s_a1);
-				} catch(StudentException s) {
-					if(!(s.getMyStatus() == MyStatus.ERROR && s.getMyMessage() == MyMessage.STUDENT_ANALYZER_NOT_FOUND)) {
-						throw s;
-					}
+				s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId (S_A1.class, external_student_id, external_course_id).get(0);			
+				//delete all other analyzers here			
+				StudentAnalyzerHandler.delete(s_a1);
+			} catch(StudentException s) {
+				if(!(s.getMyStatus() == MyStatus.ERROR && s.getMyMessage() == MyMessage.STUDENT_ANALYZER_NOT_FOUND)) {
+					throw s;
 				}
-				
-				Student student = (Student)StudentHandler
-						.getByExternalId(external_student_id, external_course_id);
-				//StudentTaskHandler.hqlDeleteByStudent(student);
-				StudentHandler.delete(student);
-				return Response.status(Status.OK)
-						.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
-			} catch (CourseException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
-						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
-				throw new WebApplicationException(rb);
-			} catch (StudentException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
-						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
-				throw new WebApplicationException(rb);
-			} catch(Exception e){
-				logger.error(e.getStackTrace());
-				Response rb = Response.status(Status.BAD_REQUEST)
-						.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
-				throw new WebApplicationException(rb);
-			}	
+			}
+
+			Student student = (Student)StudentHandler
+					.getByExternalId(external_student_id, external_course_id);
+			//StudentTaskHandler.hqlDeleteByStudent(student);
+			StudentHandler.delete(student);
+			return Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED)).build();
+		} catch (CourseException e) {
+			Response rb = Response.status(Status.NOT_FOUND)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch (StudentException e) {
+			Response rb = Response.status(Status.NOT_FOUND)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
+			throw new WebApplicationException(rb);
+		} catch(Exception e){
+			logger.error("Exception while deleting student", e);
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}	
 	}
-	
-	
+
+
 	@Path("/tasks")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -188,9 +215,16 @@ public class CommonAPI {
 	{
 
 		try {
+			if(!Utilities.checkExists(external_course_id)) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(external_task_id)) {
+				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
+			}
+
 			try
 			{
-				
+
 				T_A1 t_a1 = (T_A1) TaskAnalyzerHandler.readByExtId
 						(T_A1.class, external_task_id, external_course_id);
 				//delete all other analyzers here			
@@ -224,36 +258,50 @@ public class CommonAPI {
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
-		
+
 		catch(Exception e){
-			logger.error(e.getStackTrace());
+			logger.error("Exception while deleting task", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
 	}
-	
+
 	@Path("/copykcmap")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response copyKCMap(TKCAReader reader)  
 	{		
-		
+
 		try {
-			
+
+			if(!Utilities.checkExists(reader.getExternal_course_id())){
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(reader.getFrom_analyzer_id())){
+				throw new AnalyzerException(MyStatus.ERROR, MyMessage.FROM_ANALYZER_ID_MISSING);
+			}
+			if(!Utilities.checkExists(reader.getTo_analyzer_id())){
+				throw new AnalyzerException(MyStatus.ERROR, MyMessage.TO_ANALYZER_ID_MISSING);
+			}
+			if(!Utilities.checkExists(reader.getReplace())){
+				//default value for replace
+				reader.setReplace(false);
+			}
+
 			// this call will fail when there's no course analyzer mapping found
 			CourseAnalyzerMapHandler
-					.getAnalyzerIdFromExtCourseIdAnalyzerId(reader.getExternal_course_id(), reader.getFrom_analyzer_id());
+			.getAnalyzerIdFromExtCourseIdAnalyzerId(reader.getExternal_course_id(), reader.getFrom_analyzer_id());
 			CourseAnalyzerMapHandler
-					.getAnalyzerIdFromExtCourseIdAnalyzerId(reader.getExternal_course_id(), reader.getTo_analyzer_id());
+			.getAnalyzerIdFromExtCourseIdAnalyzerId(reader.getExternal_course_id(), reader.getTo_analyzer_id());
 
 			// Default behaviour is true
 			boolean replace = (reader.getReplace() != null) ? reader.getReplace() : true;			
 			if(replace) {
 				try {
 					List<TaskKCAnalyzerI> taskKCList = TaskKCAnalyzerHandler.readByExtCourseId
-						(Utilities.getTKClass(reader.getTo_analyzer_id()), reader.getExternal_course_id());
+							(Utilities.getTKClass(reader.getTo_analyzer_id()), reader.getExternal_course_id());
 					TaskKCAnalyzerHandler.batchDelete(taskKCList);
 				} catch (KCException kce) {
 					if (!(kce.getMyStatus() == MyStatus.ERROR && kce.getMyMessage() == MyMessage.KC_NOT_FOUND_FOR_COURSE)) {
@@ -261,46 +309,46 @@ public class CommonAPI {
 					}
 				}
 			}
-			
+
 			List<TaskKCAnalyzerI> taskKCFromList = TaskKCAnalyzerHandler.readByExtCourseId
 					(Utilities.getTKClass(reader.getFrom_analyzer_id()), reader.getExternal_course_id());
 			List<TaskKCAnalyzerI> taskKCToList = new ArrayList<TaskKCAnalyzerI>();
 			switch(reader.getTo_analyzer_id()) {
-				case 1: 
-					for (TaskKCAnalyzerI taskKC: taskKCFromList) {
-						TK_A1 tka = new TK_A1();
-						tka.setKc(taskKC.getKc());
-						tka.setTask(taskKC.getTask());
-						taskKCToList.add(tka);
-					}
-					break;
-//				case 2: 
-//					for (TaskKCAnalyzerI taskKC: taskKCFromList) {
-//						TK_A2 tka = new TK_A2();
-//						tka.setKc(taskKC.getKc());
-//						tka.setTask(taskKC.getTask());
-//						taskKCToList.add(tka);
-//					}
-//					break;						
-					
+			case 1: 
+				for (TaskKCAnalyzerI taskKC: taskKCFromList) {
+					TK_A1 tka = new TK_A1();
+					tka.setKc(taskKC.getKc());
+					tka.setTask(taskKC.getTask());
+					taskKCToList.add(tka);
+				}
+				break;
+				//				case 2: 
+				//					for (TaskKCAnalyzerI taskKC: taskKCFromList) {
+				//						TK_A2 tka = new TK_A2();
+				//						tka.setKc(taskKC.getKc());
+				//						tka.setTask(taskKC.getTask());
+				//						taskKCToList.add(tka);
+				//					}
+				//					break;						
+
 			}
 			TaskKCAnalyzerHandler.batchSaveOrUpdate(taskKCToList);
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_MAP_COPIED)).build();			
-		
+
 		} catch (CourseException | AnalyzerException | CourseAnalyzerMapException | TaskException | KCException e) {
 			Response rb = Response.status(Status.OK).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
-			
+
 		} catch (Exception e) {
-			logger.error(e.getStackTrace());
+			logger.error("Exception while copying KC map", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}		
-		
+
 	}
-	
-	
+
+
 }

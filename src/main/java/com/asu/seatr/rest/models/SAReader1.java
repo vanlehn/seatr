@@ -3,12 +3,12 @@ package com.asu.seatr.rest.models;
 import com.asu.seatr.rest.models.interfaces.SAReaderI;
 
 public class SAReader1 implements SAReaderI {
-	
+
 	private String external_student_id;
 	private String external_course_id;
 	private Double s_placement_score;
 	private String s_year;
-	
+
 	public String getExternal_student_id() {
 		return external_student_id;
 	}
@@ -33,6 +33,6 @@ public class SAReader1 implements SAReaderI {
 	public void setS_year(String s_year) {
 		this.s_year = s_year;
 	}
-	
+
 
 }

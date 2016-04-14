@@ -18,7 +18,6 @@ import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.RecommTaskI;
-import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
@@ -27,22 +26,22 @@ public class TaskHandler {
 
 
 	public static Task save(Task task){
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    try
-		    {
-		    session.beginTransaction();
-		    int id = (int)session.save(task);
-		    task.setId(id);
-		    session.getTransaction().commit();
-		    }
-	    finally
-	    {
-	    	session.close();
-	    }
-	    return task;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		try
+		{
+			session.beginTransaction();
+			int id = (int)session.save(task);
+			task.setId(id);
+			session.getTransaction().commit();
+		}
+		finally
+		{
+			session.close();
+		}
+		return task;
 	}
-	
+
 	public static Task read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -80,7 +79,7 @@ public class TaskHandler {
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);		
 		}
 		Task task = taskList.get(0);
-		
+
 		return task;
 	}
 	public static Task readByExtId(String external_task_id, String external_course_id) throws CourseException, TaskException
@@ -90,12 +89,12 @@ public class TaskHandler {
 		Session session = sf.openSession();
 		List<Task> taskList;
 		try
-			{
+		{
 			Criteria cr = session.createCriteria(Task.class);
 			cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
 			cr.add(Restrictions.eq(Task.p_course, course));
 			taskList = (List<Task>) cr.list();
-			}
+		}
 		finally
 		{
 			session.close();
@@ -104,10 +103,10 @@ public class TaskHandler {
 			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND);			
 		}
 		Task task = taskList.get(0);
-		
+
 		return task;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public static List<Task> readAll()
 	{
@@ -118,7 +117,7 @@ public class TaskHandler {
 		session.close();
 		return taskList;
 	}
-	
+
 	public static List<RecommTaskI> getRecommTasks(Class typeParameterClass, Student stu, Course course) throws CourseException, StudentException
 	{
 		if(stu == null)
@@ -138,17 +137,17 @@ public class TaskHandler {
 		session.close();
 		return taskList;
 	}
-	
+
 	public static Task update(Task task)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		try
-			{
+		{
 			session.beginTransaction();
 			session.merge(task);
 			session.getTransaction().commit();
-			}
+		}
 		finally
 		{
 			session.close();
@@ -160,11 +159,11 @@ public class TaskHandler {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		try
-			{
+		{
 			session.beginTransaction();
 			session.delete(task);
 			session.getTransaction().commit();
-			}
+		}
 		finally
 		{
 			session.close();
@@ -180,8 +179,8 @@ public class TaskHandler {
 			analyzerList.add(li.next().getAnalyzer());
 		}
 		return analyzerList;
-		
+
 	}
-	
+
 
 }

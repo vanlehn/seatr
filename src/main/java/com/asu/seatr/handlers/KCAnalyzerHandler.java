@@ -13,7 +13,6 @@ import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
-import com.asu.seatr.models.StudentTask;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.KCAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
@@ -24,16 +23,16 @@ public class KCAnalyzerHandler {
 
 
 	public static KCAnalyzerI save(KCAnalyzerI kcAnalyzer) {
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();	    
-	    int id = (int)session.save(kcAnalyzer);
-	    kcAnalyzer.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
-	    return kcAnalyzer;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();	    
+		int id = (int)session.save(kcAnalyzer);
+		kcAnalyzer.setId(id);
+		session.getTransaction().commit();
+		session.close();
+		return kcAnalyzer;
 	}
-	
+
 	public static KCAnalyzerI readById(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -52,7 +51,7 @@ public class KCAnalyzerHandler {
 		session.close();
 		return kcAnalyzerList;
 	}
-	
+
 	public static KCAnalyzerI update(KCAnalyzerI kcAnalyzer)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -120,7 +119,7 @@ public class KCAnalyzerHandler {
 		}
 		return kcAnalyzerList.get(0);
 	}
-	
+
 	/**
 	 * 
 	 * @param analyzerName Analyzer name like A1, A2

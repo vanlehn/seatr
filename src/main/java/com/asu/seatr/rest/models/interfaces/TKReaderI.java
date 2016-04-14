@@ -1,7 +1,5 @@
 package com.asu.seatr.rest.models.interfaces;
 
-import com.asu.seatr.rest.models.TKAReader1;
-
 public interface TKReaderI {
 
 	public boolean getReplace();
@@ -12,5 +10,5 @@ public interface TKReaderI {
 	public void setExternal_course_id(String external_course_id);
 	public String getExternal_task_id();
 	public void setExternal_task_id(String external_task_id);
-	
+
 }

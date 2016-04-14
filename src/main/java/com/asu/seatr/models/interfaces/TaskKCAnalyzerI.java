@@ -11,5 +11,5 @@ public interface TaskKCAnalyzerI {
 	public void setTask(Task task);
 	public KnowledgeComponent getKc();
 	public void setKc(KnowledgeComponent kc);
-	
+
 }

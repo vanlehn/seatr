@@ -9,7 +9,7 @@ public class TAReader3 implements TaskReaderI{
 	private Integer s_unit_no;
 	private Integer s_sequence_no;
 	private Boolean s_is_required;
-	
+
 	@Override
 	public String getExternal_task_id() {
 		return external_task_id;
@@ -44,6 +44,6 @@ public class TAReader3 implements TaskReaderI{
 	public void setS_is_required(Boolean s_is_required) {
 		this.s_is_required = s_is_required;
 	}
-	
-	
+
+
 }

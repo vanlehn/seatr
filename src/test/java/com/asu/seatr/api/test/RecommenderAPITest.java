@@ -35,9 +35,7 @@ import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.studenttask.RecommTask_A1;
-import com.asu.seatr.models.analyzers.task.T_A1;
 import com.asu.seatr.models.interfaces.RecommTaskI;
-import com.asu.seatr.models.interfaces.TaskAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -49,12 +47,12 @@ public class RecommenderAPITest extends JerseyTest{
 
 	private static String GETTASKS_1_URL="analyzer/1/gettasks/";
 	private static String GETTASKS_3_URL="analyzer/3/gettasks/";
-	
+
 	@Override
-    protected Application configure() {
+	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-        return new ResourceConfig(RecommenderAPI.class);
-    }
+		return new ResourceConfig(RecommenderAPI.class);
+	}
 	@Test
 	public void getRecommendedTasks1Test() throws StudentException, CourseException
 	{
@@ -87,19 +85,19 @@ public class RecommenderAPITest extends JerseyTest{
 		PowerMockito.when(TaskHandler.readByExtCourseId(Mockito.anyString())).thenReturn(taskList);
 		try
 		{
-		final List<String> resp = target(GETTASKS_1_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
+			final List<String> resp = target(GETTASKS_1_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
 		}
 		catch(WebApplicationException rb)
 		{
 			assertEquals(Status.NOT_FOUND.getStatusCode(),rb.getResponse().getStatus());
 			assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.NO_TASK_PRESENT_FOR_COURSE),rb.getResponse().readEntity(String.class));
 		}
-		
+
 	}
 	@Test
 	public void getRecommendedTasks3Test() throws StudentException, CourseException
 	{
-		
+
 		Student student = new Student();
 		CourseAnalyzerMap cam = new CourseAnalyzerMap();
 		Analyzer a = new Analyzer();
@@ -129,7 +127,7 @@ public class RecommenderAPITest extends JerseyTest{
 	@Test
 	public void getRecommendedTasks4Test() throws StudentException, CourseException
 	{
-		
+
 		Student student = new Student();
 		CourseAnalyzerMap cam = new CourseAnalyzerMap();
 		Analyzer a = new Analyzer();
@@ -149,145 +147,145 @@ public class RecommenderAPITest extends JerseyTest{
 		PowerMockito.when(TaskHandler.getRecommTasks(Mockito.any(Class.class),(Student)Mockito.anyObject(), (Course)Mockito.anyObject())).thenReturn(recommTaskList);
 		try
 		{
-		final List<String> resp = target(GETTASKS_1_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
+			final List<String> resp = target(GETTASKS_1_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).queryParam("number_of_tasks", 10).request().get(List.class);
 		}
 		catch(WebApplicationException rb)
 		{
 			assertEquals(Status.NOT_FOUND.getStatusCode(),rb.getResponse().getStatus());
 			assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.NO_TASK_PRESENT_FOR_COURSE),rb.getResponse().readEntity(String.class));
 		}
-		
+
 	}
-	
+
 	@Test
 	public void getRecommended3TasksTest_success() throws StudentException, CourseException, RecommException {
-		
+
 		Student student = new Student();
 		student.setId(1);
-		
+
 		Course course = new Course();
 		course.setExternal_id("35");
 		course.setId(1);
 		PowerMockito.mockStatic(CourseHandler.class);
 		PowerMockito.mockStatic(StudentHandler.class);
 		PowerMockito.mockStatic(RecommTaskHandler_3.class);
-		
+
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenReturn(student);
 		PowerMockito.when(CourseHandler.getByExternalId(Mockito.anyString())).thenReturn(course);
-			
-		
+
+
 		List<String> l = new ArrayList<String>();
 		l.add("1");
 		l.add("2");
 		l.add("3");
 		PowerMockito.when(RecommTaskHandler_3.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
 				Mockito.anyInt())).thenReturn(l);
-		
+
 		final List<String> resp = target(GETTASKS_3_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).
-			queryParam("number_of_tasks", 10).request().get(List.class);
+				queryParam("number_of_tasks", 10).request().get(List.class);
 		assertEquals("1", l.get(0));
 		assertEquals("2", l.get(1));
 		assertEquals("3", l.get(2));
-		
+
 	}
-	
+
 	@Test
 	public void getRecommended3TasksTest_CourseException() throws StudentException, CourseException, RecommException {
-		
+
 		Student student = new Student();
 		student.setId(1);
-		
+
 		Course course = new Course();
 		course.setExternal_id("35");
 		course.setId(1);
 		PowerMockito.mockStatic(CourseHandler.class);
 		PowerMockito.mockStatic(StudentHandler.class);
 		PowerMockito.mockStatic(RecommTaskHandler_3.class);
-		
+
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenReturn(student);
 		PowerMockito.when(CourseHandler.getByExternalId(Mockito.anyString())).thenThrow(new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND));
-			
-		
+
+
 		List<String> l = new ArrayList<String>();
 		l.add("1");
 		l.add("2");
 		l.add("3");
 		PowerMockito.when(RecommTaskHandler_3.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
 				Mockito.anyInt())).thenReturn(l);
-		
+
 		try {
-		final List<String> resp = target(GETTASKS_3_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).
-				queryParam("number_of_tasks", 10).request().get(List.class);
+			final List<String> resp = target(GETTASKS_3_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).
+					queryParam("number_of_tasks", 10).request().get(List.class);
 		} catch (WebApplicationException rb) {
 			assertEquals(Status.BAD_REQUEST.getStatusCode(), rb.getResponse().getStatus());
 			assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND),rb.getResponse().readEntity(String.class));
 		}
-		
+
 	}
-	
+
 	public void getRecommended3TasksTest_StudentException() throws StudentException, CourseException, RecommException {
-		
+
 		Student student = new Student();
 		student.setId(1);
-		
+
 		Course course = new Course();
 		course.setExternal_id("35");
 		course.setId(1);
 		PowerMockito.mockStatic(CourseHandler.class);
 		PowerMockito.mockStatic(StudentHandler.class);
 		PowerMockito.mockStatic(RecommTaskHandler_3.class);
-		
+
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenThrow(new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND));
 		PowerMockito.when(CourseHandler.getByExternalId(Mockito.anyString())).thenReturn(course);
-			
-		
+
+
 		List<String> l = new ArrayList<String>();
 		l.add("1");
 		l.add("2");
 		l.add("3");
 		PowerMockito.when(RecommTaskHandler_3.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
 				Mockito.anyInt())).thenReturn(l);
-		
+
 		try {
-		final List<String> resp = target(GETTASKS_3_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).
-				queryParam("number_of_tasks", 10).request().get(List.class);
+			final List<String> resp = target(GETTASKS_3_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).
+					queryParam("number_of_tasks", 10).request().get(List.class);
 		} catch (WebApplicationException rb) {
 			assertEquals(Status.BAD_REQUEST.getStatusCode(), rb.getResponse().getStatus());
 			assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND),rb.getResponse().readEntity(String.class));
 		}
-		
+
 	}
-	
+
 	public void getRecommended3TasksTest_RecommException() throws StudentException, CourseException, RecommException {
-		
+
 		Student student = new Student();
 		student.setId(1);
-		
+
 		Course course = new Course();
 		course.setExternal_id("35");
 		course.setId(1);
 		PowerMockito.mockStatic(CourseHandler.class);
 		PowerMockito.mockStatic(StudentHandler.class);
 		PowerMockito.mockStatic(RecommTaskHandler_3.class);
-		
+
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenReturn(student);
 		PowerMockito.when(CourseHandler.getByExternalId(Mockito.anyString())).thenReturn(course);
-			
-		
+
+
 		List<String> l = new ArrayList<String>();
 		l.add("1");
 		l.add("2");
 		l.add("3");
 		PowerMockito.when(RecommTaskHandler_3.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
 				Mockito.anyInt())).thenThrow(new RecommException(MyStatus.ERROR, MyMessage.RECOMMENDATION_ERROR));
-		
+
 		try {
-		final List<String> resp = target(GETTASKS_3_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).
-				queryParam("number_of_tasks", 10).request().get(List.class);
+			final List<String> resp = target(GETTASKS_3_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).
+					queryParam("number_of_tasks", 10).request().get(List.class);
 		} catch (WebApplicationException rb) {
 			assertEquals(Status.BAD_REQUEST.getStatusCode(), rb.getResponse().getStatus());
 			assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.RECOMMENDATION_ERROR),rb.getResponse().readEntity(String.class));
 		}
-		
+
 	}
 }

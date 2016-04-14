@@ -22,19 +22,18 @@ import com.asu.seatr.utils.MyStatus;
 
 public class StudentHandler {
 
-
 	public static Student getByExternalId(String external_student_id, String external_course_id) throws StudentException, CourseException{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
 		List<Student> studentList;
-			try{
+		try{
 			Criteria cr = session.createCriteria(Student.class);
 			cr.add(Restrictions.eq("external_id", external_student_id));
 			cr.add(Restrictions.eq("course", course));
-			
+
 			studentList = (List<Student>)cr.list();
-			}
+		}
 		finally
 		{
 			session.close();
@@ -47,19 +46,19 @@ public class StudentHandler {
 		Student student = studentList.get(0);
 		return student;
 	}
-	
+
 	public static Student save(Student student) {
-	    SessionFactory sf = HibernateUtil.getSessionFactory();
-	    Session session = sf.openSession();
-	    session.beginTransaction();
-	    
-	    int id = (int)session.save(student);
-	    student.setId(id);
-	    session.getTransaction().commit();
-	    session.close();
-	    return student;
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		session.beginTransaction();
+
+		int id = (int)session.save(student);
+		student.setId(id);
+		session.getTransaction().commit();
+		session.close();
+		return student;
 	}
-	
+
 	public static Student read(int id)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -68,7 +67,7 @@ public class StudentHandler {
 		session.close();
 		return student;
 	}
-	
+
 	/*
 	public static Student readByExtStudentId_and_ExtCourseId(String external_student_id, String external_course_id) throws CourseException, StudentException
 	{
@@ -86,7 +85,7 @@ public class StudentHandler {
 		Student student = studentList.get(0);
 		return student;
 	}
-	*/
+	 */
 	public static List<Student> readAll()
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -95,7 +94,7 @@ public class StudentHandler {
 		session.close();
 		return records;
 	}
-	
+
 	public static Student update(Student student)
 	{
 		SessionFactory sf = HibernateUtil.getSessionFactory();
@@ -125,8 +124,8 @@ public class StudentHandler {
 			analyzerList.add(li.next().getAnalyzer());
 		}
 		return analyzerList;
-		
+
 	}
-	
+
 
 }
