@@ -52,7 +52,7 @@ public class T_A3 implements TaskAnalyzerI{
 	@Column(name = "s_unit_no", nullable = false)
 	private Integer s_unit_no;
 
-	@Column(name = "s_sequence_no", unique = true)
+	@Column(name = "s_sequence_no")
 	private Integer s_sequence_no;
 
 	@Column(name = "s_is_required", nullable = false)
