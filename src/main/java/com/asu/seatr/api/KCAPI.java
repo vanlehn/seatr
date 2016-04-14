@@ -102,48 +102,30 @@ public class KCAPI {
 	{
 		Session session = null;
 		try {
-			boolean replace = tkReader.getReplace();
-			/*if(replace)
-			{
-				Handler.hqlTruncate("TK_A1");
-			}*/
-			TKAReader1 tkReaderArray[] = tkReader.getTkaReader();
 			
+			boolean replace = tkReader.getReplace();
 			if(replace)
 			{
 				Set<String> externalCourseSet = new HashSet<String>();
-				for(int i=0; i < tkReaderArray.length; i++)
-				{
-					externalCourseSet.add(tkReaderArray[i].getExternal_course_id());
-				}
+				externalCourseSet.add(tkReader.getExternal_course_id());				
 				List<Course> courseList = CourseHandler.getCourseList(externalCourseSet);
 				session = KCAnalyzerHandler.hqlBatchDeleteByCourse("A1", courseList,false);
+				
 			}
-			TK_A1 tk1Array[] = new TK_A1[tkReaderArray.length];
-			for(int i = 0; i<tkReaderArray.length;i++)
-			{
+			
 				TK_A1 tk1 = new TK_A1();
-				TKAReader1 tkReader1 = tkReaderArray[i];
-				KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(tkReader1.getExternal_kc_id(), tkReader1.getExternal_course_id());
-				Task task;
-				task = TaskHandler.readByExtId(tkReader1.getExternal_task_id(), tkReader1.getExternal_course_id());
+				TK_A1 tk1Array[] = new TK_A1[1];
+				KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(tkReader.getExternal_kc_id(), tkReader.getExternal_course_id());
+				Task task = TaskHandler.readByExtId(tkReader.getExternal_task_id(), tkReader.getExternal_course_id());
 				tk1.setKc(kc);
 				tk1.setTask(task);
-				tk1.setS_min_mastery_level(tkReader1.getMin_mastery_level());
-				tk1Array[i] = tk1;
-			}
-			session = TaskKCAnalyzerHandler.batchSave(tk1Array,false,session);
-			if(session != null)
-			
-				{
-				session.getTransaction().commit();
-				session.close();
-				}
-
+				tk1.setS_min_mastery_level(tkReader.getMin_mastery_level());			
+				tk1Array[0] = tk1;
+			TaskKCAnalyzerHandler.batchSave(tk1Array, true, session);			
 			
 			return Response.status(Status.CREATED)
-					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED)).build();
-			} catch (CourseException e) {
+				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED)).build();
+		} catch (CourseException e) {
 			// TODO Auto-generated catch block
 				if(session != null)
 				{

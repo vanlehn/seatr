@@ -60,7 +60,8 @@ public enum MyMessage {
 	FIELD_MISSING("field missing"),
 	TASK_ENTRY_ALREADY_PRESENT("task entry already present"), 
 	STUDENT_TASK_ANALYZER_NOT_FOUND("student task analyzer not found"), 
-	RECOMMENDATION_ERROR("Error while finding recommended tasks");
+	RECOMMENDATION_ERROR("Error while finding recommended tasks"),
+	ROUTE_NOT_FOUND("route not found");
 	
 	
 	public String value;

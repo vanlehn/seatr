@@ -55,6 +55,7 @@ public class CommonAPI {
 	static Logger logger = Logger.getLogger(CommonAPI.class);
 	@Path("/courses/setanalyzer")
 	@GET
+	@Produces(MediaType.APPLICATION_JSON)
 	public Response setAnalyzer(@QueryParam("external_course_id") String ext_c_id, @QueryParam("analyzer_id") String a_id, @QueryParam("active") Boolean active){
 		try{
 			CourseAnalyzerMap ca_map=CourseAnalyzerMapHandler.getByCourseAndAnalyzer(ext_c_id, a_id);

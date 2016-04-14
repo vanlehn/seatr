@@ -15,6 +15,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.ws.rs.NotFoundException;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -54,7 +55,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 		String re1="(\\/analyzer\\/\\d+\\/courses)";
 		Pattern p = Pattern.compile(re1,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 	    Matcher m = p.matcher(path);
-	    return m.find();
+	    return m.find() && ((HttpServletRequest) request).getMethod().equals("POST");
 	}
 	
 	private boolean isSuperAdminRequest(ServletRequest request) {
@@ -136,6 +137,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 					httpServletResponse.getWriter().write(MyResponse.build(MyStatus.ERROR, MyMessage.AUTHENTICATION_FAILED));
 				}
 			}
+			
 		}
 
 
