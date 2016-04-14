@@ -40,6 +40,9 @@ public class RecommTask_A2 implements RecommTaskI{  //all the recommended tasks 
 	
 	@Column(name = "utility")
 	private Double utility; //  the higher the better
+	
+	@Column(name ="timestamp")
+	private long timestamp;
 
 	public Course getCourse() {
 		return course;
@@ -79,6 +82,14 @@ public class RecommTask_A2 implements RecommTaskI{  //all the recommended tasks 
 
 	public void setUtility(Double utility) {
 		this.utility = utility;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 	
 	

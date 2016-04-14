@@ -16,6 +16,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
+import org.hibernate.type.LongType;
 
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
@@ -35,20 +36,24 @@ public class RecommTaskHandler {
 	public static int numOfRecomm=1;
 	public static int n_in_a_row=3;
 	
-	private static void fillRecommTask(Student stu,Course course, int numToFilled,double maxUtility){
+	private static void fillRecommTask(Student stu,Course course, int numToFilled,double maxUtility,long recent_time){
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
 		String utility_cr=" ";
+		String time_cr=" ";
 		if(maxUtility!=-1)
 			utility_cr+="and utility<"+maxUtility+" ";
-		String sql="select task.id as tid, stu_a2.utility as utility "
+		if(recent_time!=-1)
+			time_cr+="and timestamp>"+recent_time+" ";
+		String sql="select task.id as tid, stu_a2.utility as utility, stu_a2.timestamp as timestamp "
 				+ "from stu_a2, task "
-				+ "where stu_a2.task_id=task.id and stu_a2.student_id="+stu.getId()+" and task.course_id="+course.getId()+utility_cr
-				+ "order by utility desc";
+				+ "where stu_a2.task_id=task.id and stu_a2.student_id="+stu.getId()+" and task.course_id="+course.getId()+utility_cr+time_cr
+				+ "order by utility desc, timestamp asc";
 		Criteria cr=session.createCriteria(STU_A2.class);
 		SQLQuery sqlQuery=session.createSQLQuery(sql);
 		sqlQuery.addScalar("tid", IntegerType.INSTANCE);
 		sqlQuery.addScalar("utility", DoubleType.INSTANCE);
+		sqlQuery.addScalar("timestamp", LongType.INSTANCE);
 		sqlQuery.setMaxResults(numToFilled);
 		List<Object[]> result_list=sqlQuery.list();
 		
@@ -60,6 +65,7 @@ public class RecommTaskHandler {
 			Task task=TaskHandler.read((int)result[0]);
 			recomm.setTask(task);
 			recomm.setUtility((double)result[1]);
+			recomm.setTimestamp((long)result[2]);
 			session.save(recomm);
 		}
 		session.getTransaction().commit();
@@ -79,7 +85,7 @@ public class RecommTaskHandler {
 		numOfRecomm=num;
 		session.close();
 		for(Student stu: stu_list){
-				fillRecommTask(stu,stu.getCourse(),numOfRecomm,-1);
+				fillRecommTask(stu,stu.getCourse(),numOfRecomm,-1,-1);
 		}
 	}
 	
@@ -89,16 +95,21 @@ public class RecommTaskHandler {
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
 		session.beginTransaction();
+		Query q=session.createQuery("delete from SKC_A2");
+		q.executeUpdate();
+		
+		
 		for(Student stu : stu_list){
 			for(KnowledgeComponent kc : kc_list){
 				SKC_A2 skc=new SKC_A2();
 				skc.setStudent(stu);
 				skc.setKc(kc);
 				skc.setNumber(0);
+				session.beginTransaction();
 				session.save(skc);
+				session.getTransaction().commit();
 			}
-		}
-		session.getTransaction().commit();
+		}	
 		session.close();
 	}
 	
@@ -134,6 +145,7 @@ public class RecommTaskHandler {
 				stu_a2.setStudent(stu);
 				stu_a2.setTask(task);
 				stu_a2.setUtility(utility);
+				stu_a2.setTimestamp(-1);
 				session.beginTransaction();
 				session.save(stu_a2);
 				session.getTransaction().commit();
@@ -150,6 +162,7 @@ public class RecommTaskHandler {
 		stu_a2.setStudent(stu);
 		stu_a2.setTask(task);
 		stu_a2.setUtility(utility);
+		stu_a2.setTimestamp(-1);
 		session.beginTransaction();
 		session.save(stu_a2);
 		session.getTransaction().commit();
@@ -170,7 +183,7 @@ public class RecommTaskHandler {
 			return (1+master)*1.0/(total+1);
 	}
 	
-	public static void completeATask(Student stu, Course course, Task task, boolean correct){
+	public static void completeATask(Student stu, Course course, Task task, boolean correct, long timestamp){
 		SessionFactory sf=HibernateUtil.getSessionFactory();
 		Session session=sf.openSession();
 		Criteria cr=session.createCriteria(TK_A2.class);
@@ -216,15 +229,15 @@ public class RecommTaskHandler {
 		List<Object[]> result=sqlQuery.list();
 		
 		int curtaskid=(int) result.get(0)[0];
-		List<Integer> affected_taskid_list=new LinkedList<Integer>();
+		List<Task> affected_task_list=new LinkedList<Task>();
 		List<Double> utility_list=new LinkedList<Double>();
+		List<Long> ts_list=new LinkedList<Long>();
 		List<Integer> correctNum_list=new LinkedList<Integer>();
 		
 		for(Object[] tkc:result){
 			int tkcid=(int) tkc[0];
 			if(tkcid!=curtaskid){
-				double utility=calUtility(correctNum_list);
-				affected_taskid_list.add(curtaskid);
+				double utility=calUtility(correctNum_list);				
 				utility_list.add(utility);
 				correctNum_list.clear();
 				//update the utility in the database: STU_A2
@@ -234,6 +247,10 @@ public class RecommTaskHandler {
 				cr_tmp.add(Restrictions.eq("task",affected_task));
 				STU_A2 stu_a2=(STU_A2) cr_tmp.list().get(0);
 				stu_a2.setUtility(utility);
+				affected_task_list.add(stu_a2.getTask());			
+				if(task==affected_task)
+					stu_a2.setTimestamp(timestamp);
+				ts_list.add(stu_a2.getTimestamp());
 				session.beginTransaction();
 				session.save(stu_a2);
 				session.getTransaction().commit();
@@ -242,7 +259,6 @@ public class RecommTaskHandler {
 			correctNum_list.add((int) tkc[2]);
 		}
 		double utility_tmp=calUtility(correctNum_list);
-		affected_taskid_list.add(curtaskid);
 		utility_list.add(utility_tmp);
 		correctNum_list.clear();
 		//update the utility in the database: STU_A2
@@ -252,6 +268,10 @@ public class RecommTaskHandler {
 		cr_tmp.add(Restrictions.eq("task",affected_task));
 		STU_A2 stu_a2=(STU_A2) cr_tmp.list().get(0);
 		stu_a2.setUtility(utility_tmp);
+		if(task==affected_task)
+			stu_a2.setTimestamp(timestamp);
+		ts_list.add(stu_a2.getTimestamp());
+		affected_task_list.add(stu_a2.getTask());
 		session.beginTransaction();
 		session.save(stu_a2);
 		session.getTransaction().commit();
@@ -259,32 +279,50 @@ public class RecommTaskHandler {
 		Criteria cr_recomm=session.createCriteria(RecommTask_A2.class);
 		cr_recomm.add(Restrictions.eq("student", stu));
 		cr_recomm.addOrder(Order.desc("utility"));
+		cr_recomm.addOrder(Order.asc("timestamp"));
 		List<RecommTask_A2> recomm_list=cr_recomm.list();
 		int delnum=0;
 		double min_utility=recomm_list.get(recomm_list.size()-1).getUtility();
-		session.beginTransaction();
-		for(RecommTask_A2 recomm:recomm_list){
-			for(int i=0;i<affected_taskid_list.size();i++){
-				int affected_taskid=affected_taskid_list.get(i);
-				if(affected_taskid==recomm.getTask().getId()){
-					double utility=utility_list.get(i);
-					if(utility>=min_utility){
+		long recent_time=recomm_list.get(recomm_list.size()-1).getTimestamp();		
+		for(int i=0;i<affected_task_list.size();i++){
+			Task cur_affected_task=affected_task_list.get(i);
+			double utility=utility_list.get(i);
+			long ts=ts_list.get(i);
+			boolean inRecomm=false;
+			for(RecommTask_A2 recomm:recomm_list){
+				if(cur_affected_task==recomm.getTask()){
+					inRecomm=true;
+					if(utility>min_utility || (utility==min_utility && recomm.getTimestamp()<=recent_time)){
 						//update the utility in database
 						recomm.setUtility(utility);
 						session.save(recomm);
 					}
 					else{
 						//remove the recommended task 
+						session.beginTransaction();
 						session.delete(recomm);
+						session.getTransaction().commit();
 						delnum++;
 					}
 					break;
 				}
 			}
+			if(!inRecomm && utility>=min_utility || (utility==min_utility && ts<recent_time)){
+				RecommTask_A2 new_recomm=new RecommTask_A2();
+				new_recomm.setCourse(cur_affected_task.getCourse());
+				new_recomm.setStudent(stu);
+				new_recomm.setTask(cur_affected_task);
+				new_recomm.setTimestamp(ts);
+				new_recomm.setUtility(utility);
+				session.beginTransaction();
+				session.save(new_recomm);
+				session.getTransaction().commit();
+				delnum--;
+			}
 		}
-		session.getTransaction().commit();
+		
 		if(delnum>0){
-			fillRecommTask(stu,course,delnum,min_utility);
+			fillRecommTask(stu,course,delnum,min_utility,recent_time);
 		}
 		
 		

@@ -80,10 +80,12 @@ public class StudentTaskAPI {
 			Student student = StudentHandler.getByExternalId(sta.getExternal_student_id(), sta.getExternal_course_id());
 			Task task = TaskHandler.readByExtId(sta.getExternal_task_id(), sta.getExternal_course_id());
 			Course course=CourseHandler.getByExternalId(sta.getExternal_course_id());
+			long timestamp;
+			timestamp=1;
 			if(sta.getD_status().equals("correct"))
-				RecommTaskHandler.completeATask(student, course,task,true);
+				RecommTaskHandler.completeATask(student, course,task,true,timestamp);
 			else if(sta.getD_status().equals("incorrect"))
-				RecommTaskHandler.completeATask(student, course,task,false);
+				RecommTaskHandler.completeATask(student, course,task,false,timestamp);
 			
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_TASK_CREATED)).build();

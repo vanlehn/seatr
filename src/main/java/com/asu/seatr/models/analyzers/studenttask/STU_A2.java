@@ -45,6 +45,9 @@ public class STU_A2{
 
 	@Column(name = "utility")
 	private double utility;
+	
+	@Column(name ="timestamp")
+	private long timestamp;
 
 	public int getId() {
 		return id;
@@ -76,6 +79,14 @@ public class STU_A2{
 
 	public void setUtility(double utility) {
 		this.utility = utility;
+	}
+
+	public long getTimestamp() {
+		return timestamp;
+	}
+
+	public void setTimestamp(long timestamp) {
+		this.timestamp = timestamp;
 	}
 	
 	
