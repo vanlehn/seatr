@@ -61,7 +61,8 @@ public enum MyMessage {
 	TASK_ENTRY_ALREADY_PRESENT("task entry already present"), 
 	STUDENT_TASK_ANALYZER_NOT_FOUND("student task analyzer not found"), 
 	RECOMMENDATION_ERROR("Error while finding recommended tasks"),
-	ROUTE_NOT_FOUND("route not found");
+	ROUTE_NOT_FOUND("route not found"),
+	NOT_FOUND_IN_REQUEST("not found in request.");
 	
 	
 	public String value;
