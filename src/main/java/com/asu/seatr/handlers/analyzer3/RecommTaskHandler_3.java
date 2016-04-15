@@ -71,7 +71,7 @@ public class RecommTaskHandler_3 {
 				query2.setParameter("student", student);
 				query2.setMaxResults(numberOfTasks-taskList.size());
 				List<T_A3> tempTaskList = (List<T_A3>)query2.list();
-				if(tempTaskList.size()<1)
+				if(taskList.size() < 1 && tempTaskList.size() < 1)
 				{
 
 					/*String optionalTasks = "Select t_a3 from T_A3 t_a3 where t_a3.course = :course and t_a3.s_is_required = false "
