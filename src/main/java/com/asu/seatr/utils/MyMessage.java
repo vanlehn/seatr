@@ -71,7 +71,8 @@ public enum MyMessage {
 	TASK_ID_MISSING("task id missing"), 
 	FROM_ANALYZER_ID_MISSING("from analyzer id missing"),
 	TO_ANALYZER_ID_MISSING("to analyzer id missing"), 
-	KC_ID_MISSING("kc id missing");
+	KC_ID_MISSING("kc id missing"), 
+	SEQUENCE_NO_MISSING("sequence number missing when required is true");
 
 
 	public String value;

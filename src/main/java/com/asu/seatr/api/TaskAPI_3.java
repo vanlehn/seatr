@@ -85,12 +85,15 @@ public class TaskAPI_3 {
 			if(!Utilities.checkExists(taReader3.getExternal_task_id())) {
 				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
 			}
-			T_A3 t_a3 = new T_A3();
-			t_a3.createTask(taReader3.getExternal_task_id(), taReader3.getExternal_course_id(), 1);
+			if(taReader3.getS_is_required() && !Utilities.checkExists(taReader3.getS_sequence_no())) {
+				throw new TaskException(MyStatus.ERROR, MyMessage.SEQUENCE_NO_MISSING);
+			}
+			T_A3 t_a3 = new T_A3();									
+			
 			t_a3.setS_is_required(taReader3.getS_is_required());
 			t_a3.setS_sequence_no(taReader3.getS_sequence_no());
 			t_a3.setS_unit_no(taReader3.getS_unit_no());
-
+			t_a3.createTask(taReader3.getExternal_task_id(), taReader3.getExternal_course_id(), 1);
 			TaskAnalyzerHandler.save(t_a3);
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_CREATED)).build();
