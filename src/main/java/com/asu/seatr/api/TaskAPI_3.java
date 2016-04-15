@@ -134,6 +134,9 @@ public class TaskAPI_3 {
 			if(!Utilities.checkExists(taReader3.getExternal_task_id())) {
 				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
 			}
+			if(taReader3.getS_is_required() && !Utilities.checkExists(taReader3.getS_sequence_no())) {
+				throw new TaskException(MyStatus.ERROR, MyMessage.SEQUENCE_NO_MISSING);
+			}
 			T_A3 t_a3 = (T_A3)TaskAnalyzerHandler.readByExtId(T_A3.class, taReader3.getExternal_task_id(), taReader3.getExternal_course_id());
 			if(Utilities.checkExists(taReader3.getS_is_required())) {
 				t_a3.setS_is_required(taReader3.getS_is_required());
