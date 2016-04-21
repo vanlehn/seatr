@@ -47,6 +47,43 @@ public class StudentHandler {
 		return student;
 	}
 
+	public static List<Student> getByExternalCourse_id(String external_course_id) throws CourseException
+	{
+		Course course = CourseHandler.getByExternalId(external_course_id);
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		List<Student> studentList;
+		try{
+			Criteria cr = session.createCriteria(Student.class);
+			cr.add(Restrictions.eq("course", course));
+
+			studentList = (List<Student>)cr.list();
+		}
+		finally
+		{
+			session.close();
+		}
+		return studentList;
+		
+	}
+	public static List<Student> getByCourse(Course course)
+	{
+		SessionFactory sf = HibernateUtil.getSessionFactory();
+		Session session = sf.openSession();
+		List<Student> studentList;
+		try{
+			Criteria cr = session.createCriteria(Student.class);
+			cr.add(Restrictions.eq("course", course));
+
+			studentList = (List<Student>)cr.list();
+		}
+		finally
+		{
+			session.close();
+		}
+		return studentList;
+		
+	}
 	public static Student save(Student student) {
 		SessionFactory sf = HibernateUtil.getSessionFactory();
 		Session session = sf.openSession();
