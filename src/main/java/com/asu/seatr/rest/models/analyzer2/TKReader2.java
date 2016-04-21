@@ -1,9 +1,11 @@
 package com.asu.seatr.rest.models.analyzer2;
 
+import java.io.Serializable;
+
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 import com.asu.seatr.rest.models.interfaces.TKReaderI;
 
-public class TKReader2 implements TKReaderI{
+public class TKReader2 implements TKReaderI,Serializable {
 
 	private boolean replace;
 	private TKAReader2[] tkaReader;
@@ -25,8 +27,8 @@ public class TKReader2 implements TKReaderI{
 		return tkaReader;
 	}
 
-	@Override
-	public void setTkaReader(TKAReaderI[] tkaReader) {
+	
+	public void setTkaReader(TKAReader2[] tkaReader) {
 		// TODO Auto-generated method stub
 		this.tkaReader = (TKAReader2[]) tkaReader;
 	}

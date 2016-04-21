@@ -1,8 +1,10 @@
 package com.asu.seatr.rest.models.analyzer2;
 
+import java.io.Serializable;
+
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 
-public class TKAReader2 implements TKAReaderI{
+public class TKAReader2 implements TKAReaderI,Serializable {
 
 	private String external_course_id;
 	private String external_kc_id;

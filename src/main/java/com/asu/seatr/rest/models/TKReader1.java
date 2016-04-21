@@ -27,7 +27,7 @@ public class TKReader1 implements TKReaderI{
 		return tkaReader;
 	}
 
-	@Override
+	
 	public void setTkaReader(TKAReaderI[] tkaReader) {
 		// TODO Auto-generated method stub
 		this.tkaReader = tkaReader;
