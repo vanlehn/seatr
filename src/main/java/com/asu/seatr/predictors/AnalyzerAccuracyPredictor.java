@@ -16,7 +16,9 @@ import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
+import com.asu.seatr.models.analyzers.studenttask.ST_A2;
 import com.asu.seatr.models.analyzers.studenttask.ST_A3;
+import com.asu.seatr.models.analyzers.task_kc.TK_A2;
 import com.asu.seatr.models.analyzers.task_kc.TK_A3;
 import com.asu.seatr.persistence.HibernateUtil;
 
@@ -26,7 +28,7 @@ public class AnalyzerAccuracyPredictor {
 	{
 		try {
 			int threshold = 3;
-			String external_course_id = "";
+			String external_course_id = "37";
 			String analyzer_id = "";
 			Course course = CourseHandler.getByExternalId(external_course_id);
 			List<Student> studentListForCourse = StudentHandler.getByCourse(course);
@@ -48,24 +50,25 @@ public class AnalyzerAccuracyPredictor {
 			Session session = sf.openSession();
 			session.beginTransaction();
 			
-			String studentTasksQuery = "Select * from ST_A3 where studentTask in (Select id from StudentTask where task in (Select id from task where course = :course))";
+			String studentTasksQuery = "from ST_A2 where studentTask in (Select id from StudentTask where task in (Select id from Task where course = :course))";
 			Query query = session.createQuery(studentTasksQuery);
 			query.setParameter("course", course);
-			List<ST_A3> studentTaskList = (List<ST_A3>)query.list();
+			List<ST_A2> studentTaskList = (List<ST_A2>)query.list();
 			
-			ListIterator<ST_A3> studentTaskListIterator = studentTaskList.listIterator();
+			ListIterator<ST_A2> studentTaskListIterator = studentTaskList.listIterator();
 			while(studentTaskListIterator.hasNext())
 			{
-				ST_A3 st_a3 = studentTaskListIterator.next();
-				StudentTask studentTask = st_a3.getStudentTask();
-				List<TK_A3> tkList = studentTask.getTask().getTK_A3();
-				ListIterator<TK_A3> tkListIterator = tkList.listIterator();
+				int predictedCorrectness=-1;
+				ST_A2 st_a2 = studentTaskListIterator.next();
+				StudentTask studentTask = st_a2.getStudentTask();
+				List<TK_A2> tkList = studentTask.getTask().getTK_A2();
+				ListIterator<TK_A2> tkListIterator = tkList.listIterator();
 				HashMap<Integer,Integer> kcMastery = studentKcMastery.get(studentTask.getStudent().getId());
 				while(tkListIterator.hasNext())
 				{
 					Integer kcId = tkListIterator.next().getKc().getId();
 					int masteryLevel = kcMastery.get(kcId);
-					if(st_a3.getD_is_answered())
+					if(st_a2.getD_status().equals("correct"))
 					{
 						++masteryLevel;
 					}
@@ -80,7 +83,22 @@ public class AnalyzerAccuracyPredictor {
 							--masteryLevel;
 						}
 					}
+					if(masteryLevel < threshold)
+					{
+						predictedCorrectness = 0;
+					}
+					else
+					{
+						if(predictedCorrectness!=0)
+						{
+							predictedCorrectness = 1;
+						}
+					}
 					kcMastery.put(kcId, masteryLevel);
+				}
+				if(predictedCorrectness == -1)
+				{
+					predictedCorrectness = 0;
 				}
 				studentKcMastery.put(studentTask.getStudent().getId(),kcMastery);
 			}

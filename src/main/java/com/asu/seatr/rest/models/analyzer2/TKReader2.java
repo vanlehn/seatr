@@ -6,6 +6,7 @@ import com.asu.seatr.rest.models.interfaces.TKReaderI;
 public class TKReader2 implements TKReaderI{
 
 	private boolean replace;
+	private String external_course_id;
 	private TKAReader2[] tkaReader;
 	@Override
 	public boolean getReplace() {
@@ -19,16 +20,24 @@ public class TKReader2 implements TKReaderI{
 		this.replace = replace;
 	}
 
-	@Override
-	public TKAReaderI[] getTkaReader() {
+	
+	public TKAReader2[] getTkaReader() {
 		// TODO Auto-generated method stub
 		return tkaReader;
 	}
 
-	@Override
-	public void setTkaReader(TKAReaderI[] tkaReader) {
+	
+	public void setTkaReader(TKAReader2[] tkaReader) {
 		// TODO Auto-generated method stub
-		this.tkaReader = (TKAReader2[]) tkaReader;
+		this.tkaReader =  tkaReader;
+	}
+	
+	public String getExternal_course_id() {
+		return external_course_id;
+	}
+
+	public void setExternal_course_id(String external_course_id) {
+		this.external_course_id = external_course_id;
 	}
 
 }

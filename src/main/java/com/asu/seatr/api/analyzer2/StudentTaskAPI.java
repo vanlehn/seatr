@@ -107,6 +107,7 @@ public class StudentTaskAPI {
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
+			e.printStackTrace();
 			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();

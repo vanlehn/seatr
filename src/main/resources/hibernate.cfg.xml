@@ -48,6 +48,7 @@
 		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A1" />
 		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A3" />
 		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A1" />
+		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A3" />
 		<mapping class="com.asu.seatr.models.analyzers.kc.K_A1" />
 		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_A1" />
 		

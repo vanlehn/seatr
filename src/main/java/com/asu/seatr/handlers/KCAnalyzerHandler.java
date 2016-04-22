@@ -161,4 +161,41 @@ public class KCAnalyzerHandler {
 			return null;
 		}
 	}
+	/**
+	 * 
+	 * @param analyzerName Analyzer name like A1, A2
+	 * @param course 
+	 * @param commit a true indicates that you want to commit the transaction in this function itself
+	 * 				 a false indicates that you may want to rollback the transaction later on, so the session is returned
+	 * 				 Do remember to handle the session(commit/rollback) if commit is false
+	 * @return		 session if commit is false
+	 * 				 null if commit is true
+	 */
+	public static Session hqlDeleteByCourse(String analyzerName, Course course,boolean commit)
+	{
+		try
+		{
+			SessionFactory sf = HibernateUtil.getSessionFactory();
+			Session session = sf.openSession();
+			session.beginTransaction();
+			String hql = "select T from Task T where T.course = :course";
+			Query query = session.createQuery(hql).setParameter("course", course);
+			List<Task> taskList = query.list();
+			if(taskList == null || taskList.isEmpty()){return null;}
+			hql = "delete from TK_" + analyzerName + " tk where tk.task in :taskList";
+			session.createQuery(hql).setParameterList("taskList", taskList).executeUpdate();
+			if(commit)
+			{
+				session.getTransaction().commit();
+				session.close();
+				return null;
+			}
+			return session;
+		}
+		catch(QuerySyntaxException e)
+		{
+			System.out.println("Table Not Mapped");
+			return null;
+		}
+	}
 }
