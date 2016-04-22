@@ -1,9 +1,11 @@
 package com.asu.seatr.rest.models.analyzer2;
 
+import java.io.Serializable;
+
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 import com.asu.seatr.rest.models.interfaces.TKReaderI;
 
-public class TKReader2 implements TKReaderI{
+public class TKReader2 implements TKReaderI,Serializable {
 
 	private boolean replace;
 	private String external_course_id;

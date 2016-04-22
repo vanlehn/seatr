@@ -27,7 +27,10 @@ public class TKReader1 implements TKReaderI{
 	}
 
 
+
 	public void setTkaReader(TKAReader1[] tkaReader) {
+
+
 		// TODO Auto-generated method stub
 		this.tkaReader = tkaReader;
 	}
