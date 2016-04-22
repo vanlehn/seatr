@@ -221,7 +221,8 @@ public class RecommTaskHandler {
 		String sql="select tk_a2.task_id as task_id,skc_a2.kc_id as kc_id,skc_a2.n_in_a_row as number "
 				+ "from tk_a2,skc_a2 where tk_a2.kc_id=skc_a2.kc_id and "
 				+ "skc_a2.student_id="+stu.getId()+" and "
-				+ "tk_a2.task_id in (select task_id from tk_a2 where kc_id in "+kcidSet+")";
+				+ "tk_a2.task_id in (select task_id from tk_a2 where kc_id in "+kcidSet+")"
+				+ "order by task_id";
 		SQLQuery sqlQuery=session.createSQLQuery(sql);
 		sqlQuery.addScalar("task_id", IntegerType.INSTANCE);
 		sqlQuery.addScalar("kc_id", IntegerType.INSTANCE);
