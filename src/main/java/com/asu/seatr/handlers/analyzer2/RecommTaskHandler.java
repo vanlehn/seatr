@@ -31,13 +31,23 @@ import com.asu.seatr.models.analyzers.studenttask.RecommTask_A2;
 import com.asu.seatr.models.analyzers.studenttask.STU_A2;
 import com.asu.seatr.models.analyzers.task_kc.TK_A2;
 import com.asu.seatr.persistence.HibernateUtil;
+import com.asu.seatr.utils.SessionFactoryUtil;
+import com.asu.seatr.utils.Utilities;
 
 public class RecommTaskHandler {
 	public static int numOfRecomm=1;
 	public static int n_in_a_row=3;
 	
 	private static void fillRecommTask(Student stu,Course course, int numToFilled,double maxUtility,long recent_time){
-		SessionFactory sf=HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session=sf.openSession();
 		String utility_cr=" ";
 		String time_cr=" ";
@@ -73,7 +83,15 @@ public class RecommTaskHandler {
 	}
 	
 	public static void initRecommTasks(int num){
-		SessionFactory sf=HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session=sf.openSession();
 		session.beginTransaction();
 		Query q=session.createQuery("delete from RecommTask_A2");
@@ -92,7 +110,15 @@ public class RecommTaskHandler {
 	public static void initStudentKC(){  //create student kc for each student kc pair
 		List<Student> stu_list=StudentHandler.readAll();
 		List<KnowledgeComponent> kc_list=KnowledgeComponentHandler.readAll();
-		SessionFactory sf=HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session=sf.openSession();
 		session.beginTransaction();
 		Query q=session.createQuery("delete from SKC_A2");
@@ -117,7 +143,15 @@ public class RecommTaskHandler {
 		//init utlity for each task: init STU_A2
 		String sql="select skc_a2.student_id as student_id, tk_a2.task_id as task_id,skc_a2.kc_id as kc_id,skc_a2.n_in_a_row as number "
 				+ "from tk_a2,skc_a2 where tk_a2.kc_id=skc_a2.kc_id order by student_id,task_id";
-		SessionFactory sf=HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session=sf.openSession();
 		SQLQuery sqlQuery=session.createSQLQuery(sql);
 		sqlQuery.addScalar("student_id", IntegerType.INSTANCE);
@@ -184,7 +218,15 @@ public class RecommTaskHandler {
 	}
 	
 	public static void completeATask(Student stu, Course course, Task task, boolean correct, long timestamp){
-		SessionFactory sf=HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session=sf.openSession();
 		Criteria cr=session.createCriteria(TK_A2.class);
 		cr.add(Restrictions.eq("task", task));

@@ -17,6 +17,8 @@ import com.asu.seatr.models.analyzers.task.T_A3;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.SessionFactoryUtil;
+import com.asu.seatr.utils.Utilities;
 
 public class RecommTaskHandler_3 {
 	static Logger log = Logger.getLogger(RecommTaskHandler_3.class);
@@ -38,7 +40,15 @@ public class RecommTaskHandler_3 {
 	public static List<String> getTasks(Course course,Student student, int numberOfTasks) throws RecommException
 	{
 		List<String> finalTaskList = new ArrayList<String>();
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		session.beginTransaction();
 		try

@@ -17,12 +17,22 @@ import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.studenttask.RecommTask_A1;
 import com.asu.seatr.persistence.HibernateUtil;
+import com.asu.seatr.utils.SessionFactoryUtil;
+import com.asu.seatr.utils.Utilities;
 
 public class RecommTaskHandler {
 	public static int numOfRecomm=3;
 
 	private static void fillRecommTask(Student stu,Course course, int numToFilled){
-		SessionFactory sf=HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session=sf.openSession();
 		try{
 			String sql="select task.id from task where course_id="+course.getId()+" and task.id not in "
@@ -53,7 +63,15 @@ public class RecommTaskHandler {
 	}
 
 	public static void initRecommTasks(int num){
-		SessionFactory sf=HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session=sf.openSession();
 		session.beginTransaction();
 		Query q=session.createQuery("delete from RecommTask_A1");
@@ -70,7 +88,15 @@ public class RecommTaskHandler {
 	}
 
 	public static void completeATask(Student stu, Course course, Task task){
-		SessionFactory sf=HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session=sf.openSession();
 		Criteria cr=session.createCriteria(RecommTask_A1.class);
 		cr.add(Restrictions.eq("student", stu));

@@ -14,12 +14,22 @@ import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.SessionFactoryUtil;
+import com.asu.seatr.utils.Utilities;
 
 public class KnowledgeComponentHandler {
 
 
 	public static KnowledgeComponent save(KnowledgeComponent kc) {
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		session.beginTransaction();
 
@@ -32,7 +42,15 @@ public class KnowledgeComponentHandler {
 
 	public static KnowledgeComponent getByInternalId(int id) throws KCException
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		KnowledgeComponent kc = (KnowledgeComponent)session.get(KnowledgeComponent.class, id);
 		session.close();
@@ -46,7 +64,15 @@ public class KnowledgeComponentHandler {
 	public static List<KnowledgeComponent> getByExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(KnowledgeComponent.class);
 		cr.add(Restrictions.eq("course", course));
@@ -61,7 +87,15 @@ public class KnowledgeComponentHandler {
 		{
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(KnowledgeComponent.class);
 		cr.add(Restrictions.eq("course", course));
@@ -76,7 +110,15 @@ public class KnowledgeComponentHandler {
 		{
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(KnowledgeComponent.class);
 		cr.add(Restrictions.eq("external_id", external_kc_id));
@@ -96,7 +138,15 @@ public class KnowledgeComponentHandler {
 	public static KnowledgeComponent readByExtId(String external_kc_id, String external_course_id) throws CourseException, KCException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(KnowledgeComponent.class);
 		cr.add(Restrictions.eq("external_id", external_kc_id));
@@ -114,7 +164,15 @@ public class KnowledgeComponentHandler {
 	@SuppressWarnings("unchecked")
 	public static List<KnowledgeComponent> readAll()
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(KnowledgeComponent.class);
 		List<KnowledgeComponent> kcList = (List<KnowledgeComponent>)cr.list();
@@ -124,7 +182,15 @@ public class KnowledgeComponentHandler {
 
 	public static KnowledgeComponent update(KnowledgeComponent kc)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.merge(kc);
@@ -134,7 +200,15 @@ public class KnowledgeComponentHandler {
 	}
 	public static void delete(KnowledgeComponent kc)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.delete(kc);

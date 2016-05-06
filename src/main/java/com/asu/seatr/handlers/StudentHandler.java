@@ -19,12 +19,22 @@ import com.asu.seatr.models.Student;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.SessionFactoryUtil;
+import com.asu.seatr.utils.Utilities;
 
 public class StudentHandler {
 
 	public static Student getByExternalId(String external_student_id, String external_course_id) throws StudentException, CourseException{
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		List<Student> studentList;
 		try{
@@ -50,7 +60,15 @@ public class StudentHandler {
 	public static List<Student> getByExternalCourse_id(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		List<Student> studentList;
 		try{
@@ -68,7 +86,15 @@ public class StudentHandler {
 	}
 	public static List<Student> getByCourse(Course course)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		List<Student> studentList;
 		try{
@@ -85,7 +111,15 @@ public class StudentHandler {
 		
 	}
 	public static Student save(Student student) {
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		session.beginTransaction();
 
@@ -98,7 +132,15 @@ public class StudentHandler {
 
 	public static Student read(int id)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Student student = (Student)session.get(Student.class, id);
 		session.close();
@@ -125,7 +167,15 @@ public class StudentHandler {
 	 */
 	public static List<Student> readAll()
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		List<Student> records = session.createQuery("from " + DatabaseConstants.STUDENT_TABLE_NAME).list();
 		session.close();
@@ -134,7 +184,15 @@ public class StudentHandler {
 
 	public static Student update(Student student)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.merge(student);
@@ -144,7 +202,15 @@ public class StudentHandler {
 	}
 	public static void delete(Student student)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.delete(student);

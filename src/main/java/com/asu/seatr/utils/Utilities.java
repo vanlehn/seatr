@@ -4,6 +4,7 @@ import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 
 public class Utilities {
 
+	private static boolean isJUnitTest;
 	public static Boolean checkExists(String st) {
 		if(st == null || st.equals("")) {
 			return false;
@@ -47,5 +48,14 @@ public class Utilities {
 		}
 
 	}
+
+	public static boolean isJUnitTest() {
+		return isJUnitTest;
+	}
+
+	public static void setJUnitTest(boolean pIsJUnitTest) {
+		isJUnitTest = pIsJUnitTest;
+	}
+	
 
 }

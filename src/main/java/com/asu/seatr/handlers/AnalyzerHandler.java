@@ -12,11 +12,21 @@ import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.SessionFactoryUtil;
+import com.asu.seatr.utils.Utilities;
 
 public class AnalyzerHandler {
 	public static Analyzer getByName(String name) throws AnalyzerException{
 
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		try
 		{
@@ -36,7 +46,15 @@ public class AnalyzerHandler {
 	}
 
 	public static Analyzer getById(int id) throws AnalyzerException{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		try{
 			Analyzer analyzer=session.get(Analyzer.class, id);

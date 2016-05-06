@@ -18,12 +18,22 @@ import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.SessionFactoryUtil;
+import com.asu.seatr.utils.Utilities;
 
 public class TaskKCAnalyzerHandler {
 
 
 	public static TaskKCAnalyzerI save(TaskKCAnalyzerI tkc) {
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		try
 		{
@@ -50,7 +60,15 @@ public class TaskKCAnalyzerHandler {
 	{
 		if(session == null)
 		{	
-			SessionFactory sf = HibernateUtil.getSessionFactory();
+			SessionFactory sf;
+			if(Utilities.isJUnitTest())
+			{
+				sf = SessionFactoryUtil.getSessionFactory();
+			}
+			else
+			{	
+				sf = HibernateUtil.getSessionFactory();
+			}
 			session = sf.openSession();
 			session.beginTransaction();
 		}
@@ -71,7 +89,15 @@ public class TaskKCAnalyzerHandler {
 
 	public static void batchSaveOrUpdate(List<TaskKCAnalyzerI> tkcArray)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 
 
 		for(TaskKCAnalyzerI tkc: tkcArray)
@@ -94,7 +120,15 @@ public class TaskKCAnalyzerHandler {
 	}
 	public static TaskKCAnalyzerI readById(int id)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		TaskKCAnalyzerI t_kcAnalyzer = (TaskKCAnalyzerI)session.get(TaskKCAnalyzerI.class, id);
 		session.close();
@@ -103,7 +137,15 @@ public class TaskKCAnalyzerHandler {
 	@SuppressWarnings("unchecked")
 	public static List<TaskKCAnalyzerI> readAll(Class typeParameterClass)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		List<TaskKCAnalyzerI> t_kcAnalyzerList = (List<TaskKCAnalyzerI>)cr.list();
@@ -113,7 +155,15 @@ public class TaskKCAnalyzerHandler {
 
 	public static TaskKCAnalyzerI update(TaskKCAnalyzerI t_kcAnalyzer)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		try
 		{
@@ -129,7 +179,15 @@ public class TaskKCAnalyzerHandler {
 	}
 	public static void delete(TaskKCAnalyzerI kcAnalyzer)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		try
 		{
@@ -145,7 +203,15 @@ public class TaskKCAnalyzerHandler {
 
 	public static void batchDelete(List<TaskKCAnalyzerI> kcAnalyzerList)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		try
 		{
@@ -166,7 +232,15 @@ public class TaskKCAnalyzerHandler {
 	{
 		Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
 		KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("task_id", task));
@@ -186,7 +260,15 @@ public class TaskKCAnalyzerHandler {
 
 		List<KnowledgeComponent> kcList = KnowledgeComponentHandler.getByExtCourseId(external_course_id);
 		List<TaskKCAnalyzerI> t_kcAnalyzerList = new ArrayList<TaskKCAnalyzerI>();
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		for(KnowledgeComponent kc: kcList) {
 			Criteria cr = session.createCriteria(typeParameterClass);		
@@ -214,7 +296,15 @@ public class TaskKCAnalyzerHandler {
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("task_id", task));

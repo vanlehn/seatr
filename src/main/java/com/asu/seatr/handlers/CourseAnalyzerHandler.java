@@ -14,12 +14,22 @@ import com.asu.seatr.models.interfaces.CourseAnalyzerI;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.SessionFactoryUtil;
+import com.asu.seatr.utils.Utilities;
 
 public class CourseAnalyzerHandler {
 
 
 	public static List<CourseAnalyzerI> readByExtId(Class typeParameterClass, String external_course_id) throws CourseException {
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		List<CourseAnalyzerI> result;
 		try{
@@ -46,7 +56,15 @@ public class CourseAnalyzerHandler {
 	}
 
 	public static CourseAnalyzerI save(CourseAnalyzerI courseAnalyzer) throws CourseException {
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		session.beginTransaction();
 		try {
@@ -64,7 +82,15 @@ public class CourseAnalyzerHandler {
 
 	public static CourseAnalyzerI read(int id)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		CourseAnalyzerI courseAnalyzer;
 		try{
@@ -79,7 +105,15 @@ public class CourseAnalyzerHandler {
 
 	public static List<CourseAnalyzerI> readAll(String tableName)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		List<CourseAnalyzerI> records = session.createQuery("from " + tableName).list();
 		session.close();
@@ -88,7 +122,15 @@ public class CourseAnalyzerHandler {
 
 	public static CourseAnalyzerI update(CourseAnalyzerI courseAnalyzer)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		try{
 			session.beginTransaction();
@@ -102,7 +144,15 @@ public class CourseAnalyzerHandler {
 	}
 	public static void delete(CourseAnalyzerI courseAnalyzer)
 	{
-		SessionFactory sf = HibernateUtil.getSessionFactory();
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
 		Session session = sf.openSession();
 		try
 		{
