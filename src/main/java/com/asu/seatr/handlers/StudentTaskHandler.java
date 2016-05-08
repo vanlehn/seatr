@@ -21,6 +21,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class StudentTaskHandler {
 
 	public static StudentTask save(StudentTask studentTask) {

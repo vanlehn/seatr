@@ -20,6 +20,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class RecommTaskHandler_3 {
 	static Logger log = Logger.getLogger(RecommTaskHandler_3.class);
 

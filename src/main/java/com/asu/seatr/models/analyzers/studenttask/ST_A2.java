@@ -90,20 +90,17 @@ public class ST_A2 implements StudentTaskAnalyzerI{
 
 	@Override
 	public void deleteStudentTask(String external_student_id, String external_course_id, int task_id) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void updateStudentTask(String external_student_id, String external_course_id, String external_task_id,
 			int analyzer_id) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public StudentTask getStudentTask(String external_student_id, String external_course_id, int task_id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 	

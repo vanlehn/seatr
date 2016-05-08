@@ -1,7 +1,5 @@
 package com.asu.seatr.rest.models.interfaces;
 
-import com.asu.seatr.rest.models.analyzer1.TKAReader1;
-
 public interface TKReaderI {
 
 	public boolean getReplace();

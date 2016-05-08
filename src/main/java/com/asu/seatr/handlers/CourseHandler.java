@@ -19,6 +19,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class CourseHandler {
 	public static void save(Course course) {
 		SessionFactory sf;

@@ -22,6 +22,7 @@ import com.asu.seatr.exceptions.StudentTaskException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.StudentTask;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class StudentTaskAnalyzerHandler {
 
 	/*

@@ -20,6 +20,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TaskAnalyzerHandler {
 
 
@@ -75,7 +76,6 @@ public class TaskAnalyzerHandler {
 		session.close();
 		return taskAnalyzer;
 	}
-	@SuppressWarnings("unchecked")
 
 	public static TaskAnalyzerI readByExtId(Class typeParameterClass, String external_task_id, String external_course_id) throws CourseException, TaskException
 	{
@@ -127,7 +127,6 @@ public class TaskAnalyzerHandler {
 		return taskAnalyzerList;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<TaskAnalyzerI> readAll(Class typeParameterClass)
 	{
 		SessionFactory sf;

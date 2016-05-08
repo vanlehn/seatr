@@ -2,23 +2,18 @@ package com.asu.seatr.handlers.analyzer2;
 
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Random;
 
 import org.hibernate.Criteria;
-import org.hibernate.FetchMode;
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Order;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
 
-import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskHandler;
@@ -34,6 +29,7 @@ import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class RecommTaskHandler {
 	public static int numOfRecomm=1;
 	public static int n_in_a_row=3;
@@ -59,7 +55,6 @@ public class RecommTaskHandler {
 				+ "from stu_a2, task "
 				+ "where stu_a2.task_id=task.id and stu_a2.student_id="+stu.getId()+" and task.course_id="+course.getId()+utility_cr+time_cr
 				+ "order by utility desc, timestamp asc";
-		Criteria cr=session.createCriteria(STU_A2.class);
 		SQLQuery sqlQuery=session.createSQLQuery(sql);
 		sqlQuery.addScalar("tid", IntegerType.INSTANCE);
 		sqlQuery.addScalar("utility", DoubleType.INSTANCE);

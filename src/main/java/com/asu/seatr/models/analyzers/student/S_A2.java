@@ -1,6 +1,5 @@
 package com.asu.seatr.models.analyzers.student;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -43,13 +42,11 @@ public class S_A2 implements StudentAnalyzerI{
 
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
 		return this.id;
 	}
 
 	@Override
 	public void setId(int id) {
-		// TODO Auto-generated method stub
 		this.id = id;
 	}
 
@@ -75,25 +72,16 @@ public class S_A2 implements StudentAnalyzerI{
 
 	@Override
 	public void deleteStudent(String student_ext_id, String external_course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void updateStudent(String student_ext_id, String external_course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
+	public void updateStudent(String student_ext_id, String external_course_id, int analyzer_id) {		
 		
 	}
 
 	@Override
-	public Student getStudent(String external_student_id, String external_course_id, int analyzer_id) {
-		
-		/*
-		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);		
-		this.student = student;
-		this.course = student.getCourse();
-		return student;
-		*/
+	public Student getStudent(String external_student_id, String external_course_id, int analyzer_id) {		
 		return null;
 	}
 

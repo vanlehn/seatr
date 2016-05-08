@@ -1,11 +1,6 @@
 package com.asu.seatr.api.analyzer3;
 
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
-
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -19,19 +14,15 @@ import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.hibernate.exception.ConstraintViolationException;
 
-
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseHandler;
-
-
 import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
 import com.asu.seatr.models.Course;
-
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.kc.K_A3;
@@ -39,7 +30,6 @@ import com.asu.seatr.models.analyzers.task_kc.TK_A3;
 import com.asu.seatr.rest.models.analyzer3.KAReader3;
 import com.asu.seatr.rest.models.analyzer3.TKAReader3;
 import com.asu.seatr.rest.models.analyzer3.TKReader3;
-import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -140,7 +130,6 @@ public class KCAPI_3 {
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED)).build();
 			} catch (CourseException e) {
-			// TODO Auto-generated catch block
 				if(session != null)
 				{
 					session.getTransaction().rollback();
@@ -151,7 +140,6 @@ public class KCAPI_3 {
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch (TaskException e) {
-			// TODO Auto-generated catch block
 			if(session != null)
 			{
 				session.getTransaction().rollback();
@@ -164,7 +152,6 @@ public class KCAPI_3 {
 		
 		  catch(KCException e)
 		{
-				// TODO Auto-generated catch block
 				if(session != null)
 				{
 					session.getTransaction().rollback();

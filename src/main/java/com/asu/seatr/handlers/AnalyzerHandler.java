@@ -15,6 +15,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class AnalyzerHandler {
 	public static Analyzer getByName(String name) throws AnalyzerException{
 

@@ -18,6 +18,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class UserCourseHandler {
 
 
@@ -85,7 +86,6 @@ public class UserCourseHandler {
 		return userList.get(0);
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<UserCourse> readAll()
 	{
 		SessionFactory sf;

@@ -2,6 +2,7 @@ package com.asu.seatr.utils;
 
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 
+@SuppressWarnings({ "rawtypes" })
 public class Utilities {
 
 	private static boolean isJUnitTest;

@@ -17,14 +17,10 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 
 import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.RecommException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
-import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskHandler;
-import com.asu.seatr.handlers.analyzer1.RecommTaskHandler;
-import com.asu.seatr.handlers.analyzer3.RecommTaskHandler_3;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;

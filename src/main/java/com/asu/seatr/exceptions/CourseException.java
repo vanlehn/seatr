@@ -3,6 +3,7 @@ package com.asu.seatr.exceptions;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
 
+@SuppressWarnings("serial")
 public class CourseException extends AbstractMyException {
 
 	public CourseException(MyStatus status, MyMessage message) {

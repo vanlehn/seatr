@@ -22,6 +22,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class StudentHandler {
 
 	public static Student getByExternalId(String external_student_id, String external_course_id) throws StudentException, CourseException{

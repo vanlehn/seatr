@@ -1,6 +1,5 @@
 package com.asu.seatr.models.analyzers.task_kc;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -36,13 +35,11 @@ public class TK_A3 implements TaskKCAnalyzerI{
 
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
 	@Override
 	public void setId(int id) {
-		// TODO Auto-generated method stub
 		
 	}
 	

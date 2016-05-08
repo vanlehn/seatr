@@ -24,6 +24,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TaskHandler {
 
 
@@ -149,7 +150,6 @@ public class TaskHandler {
 		return task;
 	}
 
-	@SuppressWarnings("unchecked")
 	public static List<Task> readAll()
 	{
 		SessionFactory sf;

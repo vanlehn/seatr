@@ -18,8 +18,6 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.TaskException;
-import com.asu.seatr.handlers.StudentAnalyzerHandler;
-import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.models.analyzers.task.T_A2;
 import com.asu.seatr.rest.models.analyzer2.TAReader2;
@@ -38,7 +36,7 @@ public class TaskAPI {
 			)
 	{
 		try{
-			T_A2 ta2 = (T_A2)TaskAnalyzerHandler.readByExtId(T_A2.class, external_task_id, external_course_id);
+			TaskAnalyzerHandler.readByExtId(T_A2.class, external_task_id, external_course_id);
 			TAReader2 result = new TAReader2();
 			result.setExternal_task_id(external_task_id);
 			result.setExternal_course_id(external_course_id);

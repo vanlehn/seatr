@@ -109,19 +109,16 @@ public class C_A1 implements CourseAnalyzerI{
 
 	@Override
 	public void updateCourse(String external_course_id, String description) throws CourseException {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void deleteCourse(String external_course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public Course getCourse(String external_course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

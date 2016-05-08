@@ -45,6 +45,7 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;;
 
+@SuppressWarnings({ "rawtypes", "deprecation" })
 @PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI_1.class
 	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, CourseHandler.class,KCAnalyzerHandler.class,Session.class,Transaction.class})
 @RunWith(PowerMockRunner.class)
@@ -287,8 +288,7 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(KCAnalyzerHandler.hqlBatchDeleteByCourse(Mockito.anyString(), Matchers.anyListOf(Course.class), Mockito.anyBoolean())).thenReturn(mockedSession);
 
 
-		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
-		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
+		PowerMockito.mockStatic(KnowledgeComponentHandler.class);	
 		PowerMockito.when(KnowledgeComponentHandler.readByExtId(Mockito.anyString(), Mockito.anyString()))
 		.thenThrow(new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND));
 
@@ -352,7 +352,6 @@ public class KCAPITest extends JerseyTest {
 
 
 		PowerMockito.mockStatic(KnowledgeComponentHandler.class);
-		KnowledgeComponent kc = Mockito.mock(KnowledgeComponent.class);
 		PowerMockito.when(KnowledgeComponentHandler.readByExtId(Mockito.anyString(), Mockito.anyString()))
 		.thenThrow(new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND));
 
@@ -420,7 +419,6 @@ public class KCAPITest extends JerseyTest {
 		PowerMockito.when(KnowledgeComponentHandler.readByExtId(Mockito.anyString(), Mockito.anyString())).thenReturn(kc);
 
 		PowerMockito.mockStatic(TaskHandler.class);
-		Task task = Mockito.mock(Task.class);
 		PowerMockito.when(TaskHandler.readByExtId(Mockito.anyString(),Mockito.anyString()))
 		.thenThrow(new TaskException(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND));
 

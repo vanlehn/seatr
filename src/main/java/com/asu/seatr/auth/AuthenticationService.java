@@ -111,7 +111,6 @@ public class AuthenticationService {
 		try {
 			System.out.println(encrypt("super123duper432seatr"));
 		} catch (UnsupportedEncodingException | GeneralSecurityException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

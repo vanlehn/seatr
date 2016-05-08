@@ -60,13 +60,11 @@ public class T_A3 implements TaskAnalyzerI{
 
 	@Override
 	public int getId() {
-		// TODO Auto-generated method stub
 		return id;
 	}
 
 	@Override
 	public void setId(int id) {
-		// TODO Auto-generated method stub
 		this.id = id;
 
 	}
@@ -105,7 +103,6 @@ public class T_A3 implements TaskAnalyzerI{
 
 	@Override
 	public void createTask(String external_task_id, String external_course_id, int analyzer_id) throws CourseException, TaskException {
-		// TODO Auto-generated method stub
 		Course course = CourseHandler.getByExternalId(external_course_id);
 
 		if(course == null) {
@@ -131,19 +128,16 @@ public class T_A3 implements TaskAnalyzerI{
 
 	@Override
 	public void deleteTask(String task_ext_id, String course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public void updateTask(String task_ext_id, String course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
 
 	}
 
 	@Override
 	public Task getTask(String task_ext_id, String course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

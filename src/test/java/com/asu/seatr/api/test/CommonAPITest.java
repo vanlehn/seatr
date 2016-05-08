@@ -42,6 +42,7 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 @PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI_1.class
 	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, Handler.class,
 	CourseAnalyzerMapHandler.class, Utilities.class})
@@ -55,6 +56,7 @@ public class CommonAPITest extends JerseyTest{
 		return new ResourceConfig(CommonAPI.class);
 	}
 
+	
 	@Test
 	public void copyKCMapTest_Sucess() throws Exception {
 		PowerMockito.mockStatic(CourseAnalyzerMapHandler.class);

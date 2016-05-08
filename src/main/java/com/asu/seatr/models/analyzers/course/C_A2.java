@@ -1,6 +1,5 @@
 package com.asu.seatr.models.analyzers.course;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -89,19 +88,16 @@ public class C_A2 implements CourseAnalyzerI{
 
 	@Override
 	public void updateCourse(String external_course_id, String description) throws CourseException {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public void deleteCourse(String external_course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
 	public Course getCourse(String external_course_id, int analyzer_id) {
-		// TODO Auto-generated method stub
 		return null;
 	}
 

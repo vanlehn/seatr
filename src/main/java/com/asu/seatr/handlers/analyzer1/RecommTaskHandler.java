@@ -20,6 +20,7 @@ import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class RecommTaskHandler {
 	public static int numOfRecomm=3;
 

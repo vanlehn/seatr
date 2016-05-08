@@ -38,6 +38,7 @@ import com.asu.seatr.utils.MyStatus;
 	CourseAnalyzerHandler.class})
 @RunWith(PowerMockRunner.class)
 
+@SuppressWarnings("deprecation")
 public class CourseAPITest extends JerseyTest {
 
 	private static String ANALYZER1_URL = "analyzer/1/courses/";

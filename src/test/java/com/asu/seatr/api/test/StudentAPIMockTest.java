@@ -33,6 +33,7 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
+@SuppressWarnings("deprecation")
 @PrepareForTest({S_A1.class, StudentAnalyzerHandler.class, StudentAPI_1.class})
 @RunWith(PowerMockRunner.class)
 public class StudentAPIMockTest extends JerseyTest {

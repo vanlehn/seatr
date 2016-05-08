@@ -21,6 +21,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings("unchecked")
 public class CourseAnalyzerMapHandler {
 
 	public static CourseAnalyzerMap save(CourseAnalyzerMap courseAnalyzer) {

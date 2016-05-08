@@ -21,6 +21,7 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class TaskKCAnalyzerHandler {
 
 
@@ -134,7 +135,6 @@ public class TaskKCAnalyzerHandler {
 		session.close();
 		return t_kcAnalyzer;
 	}
-	@SuppressWarnings("unchecked")
 	public static List<TaskKCAnalyzerI> readAll(Class typeParameterClass)
 	{
 		SessionFactory sf;

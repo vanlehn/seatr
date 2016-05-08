@@ -1,5 +1,9 @@
 package com.asu.seatr.api.analyzer1.test;
 
+import static org.junit.Assert.assertEquals;
+
+import java.util.List;
+
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Application;
@@ -7,42 +11,23 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.glassfish.jersey.server.ResourceConfig;
-import org.glassfish.jersey.server.model.Resource;
 import org.glassfish.jersey.test.JerseyTest;
 import org.glassfish.jersey.test.TestProperties;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 
 import com.asu.seatr.api.AdminAPI;
 import com.asu.seatr.api.CommonAPI;
-import com.asu.seatr.api.RecommenderAPI;
 import com.asu.seatr.api.analyzer1.CourseAPI_1;
 import com.asu.seatr.api.analyzer1.RecommenderAPI_1;
 import com.asu.seatr.api.analyzer1.StudentAPI_1;
 import com.asu.seatr.api.analyzer1.TaskAPI_1;
-import com.asu.seatr.api.analyzer2.CourseAPI;
-import com.asu.seatr.exceptions.CourseException;
-import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.Handler;
-import com.asu.seatr.models.CourseAnalyzerMap;
-import com.asu.seatr.models.Student;
-import com.asu.seatr.models.Task;
-import com.asu.seatr.models.UserCourse;
-import com.asu.seatr.models.analyzers.student.S_A1;
-import com.asu.seatr.models.analyzers.task.T_A1;
-import com.asu.seatr.rest.models.UserReader;
 import com.asu.seatr.rest.models.analyzer1.CAReader1;
-import com.asu.seatr.rest.models.analyzer1.SAReader1;
-import com.asu.seatr.rest.models.analyzer1.STAReader1;
 import com.asu.seatr.rest.models.analyzer1.TAReader1;
 import com.asu.seatr.utils.Utilities;
 
-import static org.junit.Assert.assertEquals;
-
-import java.util.List;
-
 public class RecommenderAPITest extends JerseyTest {
-
+	
 	private static String RECOMMENDER1_URL = "analyzer/1/gettasks/";
 	private static String GETTASKS_1_URL = "analyzer/1/gettasks/";
 	private static String CREATE_COURSE_1_URL = "analyzer/1/courses/";
@@ -60,7 +45,7 @@ public class RecommenderAPITest extends JerseyTest {
 	public void emptyCourseId() {
 		Utilities.setJUnitTest(true);
 		try {
-			final List<String> resList = target(GETTASKS_1_URL).queryParam("external_student_id", "1")
+			target(GETTASKS_1_URL).queryParam("external_student_id", "1")
 					.queryParam("external_course_id", "").queryParam("number_of_tasks", "5").request().get(List.class);
 		} catch (WebApplicationException e) {
 

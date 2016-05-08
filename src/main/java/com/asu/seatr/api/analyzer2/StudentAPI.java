@@ -14,7 +14,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import org.apache.log4j.BasicConfigurator;
 import org.apache.log4j.Logger;
 import org.hibernate.exception.ConstraintViolationException;
 
@@ -43,9 +42,8 @@ public class StudentAPI {
 		
 		logger.info("studentapi called");
 		
-			S_A2 sa2 = null;
 			try {
-				sa2 = (S_A2)StudentAnalyzerHandler.readByExtId(S_A2.class, external_student_id, external_course_id).get(0);
+				StudentAnalyzerHandler.readByExtId(S_A2.class, external_student_id, external_course_id).get(0);
 			} catch (CourseException e) {
 				Response rb = Response.status(Status.NOT_FOUND)
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
