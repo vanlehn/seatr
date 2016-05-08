@@ -1,14 +1,14 @@
-package com.asu.seatr.rest.models;
+package com.asu.seatr.rest.models.analyzer1;
 
 import com.asu.seatr.rest.models.interfaces.STAReaderI;
 
-public class STAReader3 implements STAReaderI {
+public class STAReader1 implements STAReaderI {
 
 	private String external_task_id;
 	private String external_student_id;
 	private String external_course_id;
-	private Boolean d_is_answered;	
-	//private Integer d_current_n;
+	private String d_status; 
+	private Integer d_time_lastattempt;
 
 	@Override
 	public String getExternal_task_id() {
@@ -34,16 +34,17 @@ public class STAReader3 implements STAReaderI {
 	public void setExternal_course_id(String external_course_id) {
 		this.external_course_id = external_course_id;
 	}
-	public Boolean getD_is_answered() {
-		return d_is_answered;
+	public String getD_status() {
+		return d_status;
 	}
-	public void setD_is_answered(Boolean d_is_answered) {
-		this.d_is_answered = d_is_answered;
+	public void setD_status(String d_status) {
+		this.d_status = d_status;
 	}
-	//	public Integer getD_current_n() {
-	//		return d_current_n;
-	//	}
-	//	public void setD_current_n(Integer d_current_n) {
-	//		this.d_current_n = d_current_n;
-	//	}
+	public Integer getD_time_lastattempt() {
+		return d_time_lastattempt;
+	}
+	public void setD_time_lastattempt(Integer d_time_lastattempt) {
+		this.d_time_lastattempt = d_time_lastattempt;
+	}
+
 }

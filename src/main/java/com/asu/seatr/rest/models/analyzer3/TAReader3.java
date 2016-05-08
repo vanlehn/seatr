@@ -1,4 +1,4 @@
-package com.asu.seatr.rest.models;
+package com.asu.seatr.rest.models.analyzer3;
 
 import com.asu.seatr.rest.models.interfaces.TaskReaderI;
 

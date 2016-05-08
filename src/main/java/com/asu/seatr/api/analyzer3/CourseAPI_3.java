@@ -1,4 +1,4 @@
-package com.asu.seatr.api;
+package com.asu.seatr.api.analyzer3;
 
 import java.util.StringTokenizer;
 
@@ -24,7 +24,7 @@ import com.asu.seatr.exceptions.UserException;
 import com.asu.seatr.handlers.CourseAnalyzerHandler;
 import com.asu.seatr.handlers.UserCourseHandler;
 import com.asu.seatr.models.analyzers.course.C_A3;
-import com.asu.seatr.rest.models.CAReader3;
+import com.asu.seatr.rest.models.analyzer3.CAReader3;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;

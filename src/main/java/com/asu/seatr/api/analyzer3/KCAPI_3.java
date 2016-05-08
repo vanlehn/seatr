@@ -1,4 +1,4 @@
-package com.asu.seatr.api;
+package com.asu.seatr.api.analyzer3;
 
 
 import java.util.HashSet;
@@ -34,14 +34,11 @@ import com.asu.seatr.models.Course;
 
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.analyzers.kc.K_A1;
-import com.asu.seatr.models.analyzers.task_kc.TK_A1;
-
-import com.asu.seatr.rest.models.KAReader1;
-import com.asu.seatr.rest.models.TKAReader1;
-import com.asu.seatr.rest.models.TKReader1;
-
-
+import com.asu.seatr.models.analyzers.kc.K_A3;
+import com.asu.seatr.models.analyzers.task_kc.TK_A3;
+import com.asu.seatr.rest.models.analyzer3.KAReader3;
+import com.asu.seatr.rest.models.analyzer3.TKAReader3;
+import com.asu.seatr.rest.models.analyzer3.TKReader3;
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
@@ -49,16 +46,16 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
 
-@Path("analyzer/1/kc")
-public class KCAPI {
+@Path("analyzer/3/kc")
+public class KCAPI_3 {
 
-	static Logger logger = Logger.getLogger(KCAPI.class);
+	static Logger logger = Logger.getLogger(KCAPI_3.class);
 
 	@Path("/createkc")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createKC1(KAReader1 kaReader)
+	public Response createKC3(KAReader3 kaReader)
 	{		
 		try {
 			if(!Utilities.checkExists(kaReader.getExternal_course_id())) {
@@ -68,10 +65,10 @@ public class KCAPI {
 				throw new KCException(MyStatus.ERROR, MyMessage.KC_ID_MISSING);
 			}						
 
-			K_A1 ka1 = new K_A1();
-			ka1.createKC(kaReader.getExternal_kc_id(), kaReader.getExternal_course_id());
-			ka1.setS_unit(kaReader.getS_unit());
-			KCAnalyzerHandler.save(ka1);
+			K_A3 ka3 = new K_A3();
+			ka3.createKC(kaReader.getExternal_kc_id(), kaReader.getExternal_course_id());
+			ka3.setS_unit(kaReader.getS_unit());
+			KCAnalyzerHandler.save(ka3);
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_CREATED)).build();
 		} catch (CourseException e) {
@@ -102,7 +99,7 @@ public class KCAPI {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response mapKcToTask(TKReader1 tkReader)
+	public Response mapKcToTask(TKReader3 tkReader)
 	{
 		Session session = null;
 		try {
@@ -112,27 +109,26 @@ public class KCAPI {
 			{
 				Handler.hqlTruncate("TK_A1");
 			}*/
-			TKAReader1 tkReaderArray[] = tkReader.getTkaReader();
+			TKAReader3 tkReaderArray[] = tkReader.getTkaReader();
 			
 			if(replace)
 			{
 				Course course = CourseHandler.getByExternalId(external_course_id);
-				session = KCAnalyzerHandler.hqlDeleteByCourse("A1", course,false);
+				session = KCAnalyzerHandler.hqlDeleteByCourse("A3", course,false);
 			}
-			TK_A1 tk1Array[] = new TK_A1[tkReaderArray.length];
+			TK_A3 tk3Array[] = new TK_A3[tkReaderArray.length];
 			for(int i = 0; i<tkReaderArray.length;i++)
 			{
-				TK_A1 tk1 = new TK_A1();
-				TKAReader1 tkReader1 = tkReaderArray[i];
-				KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(tkReader1.getExternal_kc_id(), external_course_id);
+				TK_A3 tk3 = new TK_A3();
+				TKAReader3 tkReader3 = tkReaderArray[i];
+				KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(tkReader3.getExternal_kc_id(), external_course_id);
 				Task task;
-				task = TaskHandler.readByExtId(tkReader1.getExternal_task_id(), external_course_id);
-				tk1.setKc(kc);
-				tk1.setTask(task);
-				tk1.setS_min_mastery_level(tkReader1.getMin_mastery_level());
-				tk1Array[i] = tk1;
+				task = TaskHandler.readByExtId(tkReader3.getExternal_task_id(), external_course_id);
+				tk3.setKc(kc);
+				tk3.setTask(task);
+				tk3Array[i] = tk3;
 			}
-			session = TaskKCAnalyzerHandler.batchSave(tk1Array,false,session);
+			session = TaskKCAnalyzerHandler.batchSave(tk3Array,false,session);
 			if(session != null)
 			
 				{

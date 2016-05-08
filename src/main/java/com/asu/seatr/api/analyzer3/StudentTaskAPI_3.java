@@ -1,4 +1,4 @@
-package com.asu.seatr.api;
+package com.asu.seatr.api.analyzer3;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -17,7 +17,7 @@ import com.asu.seatr.exceptions.StudentTaskException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
 import com.asu.seatr.models.analyzers.studenttask.ST_A3;
-import com.asu.seatr.rest.models.STAReader3;
+import com.asu.seatr.rest.models.analyzer3.STAReader3;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;

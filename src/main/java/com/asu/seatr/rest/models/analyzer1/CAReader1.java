@@ -1,4 +1,4 @@
-package com.asu.seatr.rest.models;
+package com.asu.seatr.rest.models.analyzer1;
 
 public class CAReader1 {
 	private String external_course_id;

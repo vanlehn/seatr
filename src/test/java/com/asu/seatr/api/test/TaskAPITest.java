@@ -20,7 +20,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.TaskAPI_1;
+import com.asu.seatr.api.analyzer1.TaskAPI_1;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
@@ -28,7 +28,7 @@ import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.task.T_A1;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
-import com.asu.seatr.rest.models.TAReader1;
+import com.asu.seatr.rest.models.analyzer1.TAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;

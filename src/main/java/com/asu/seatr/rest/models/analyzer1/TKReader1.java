@@ -1,4 +1,4 @@
-package com.asu.seatr.rest.models;
+package com.asu.seatr.rest.models.analyzer1;
 
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 import com.asu.seatr.rest.models.interfaces.TKReaderI;

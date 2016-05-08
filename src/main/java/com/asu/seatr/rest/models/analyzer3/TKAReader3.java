@@ -1,12 +1,11 @@
-package com.asu.seatr.rest.models;
+package com.asu.seatr.rest.models.analyzer3;
 
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
 
-public class TKAReader1 implements TKAReaderI{
+public class TKAReader3 implements TKAReaderI{
 
 	private String external_kc_id;
 	private String external_task_id;
-	private Integer min_mastery_level;
 	
 	@Override
 	public String getExternal_kc_id() {
@@ -32,14 +31,6 @@ public class TKAReader1 implements TKAReaderI{
 	public void setExternal_task_id(String external_task_id) {
 		// TODO Auto-generated method stub
 		this.external_task_id = external_task_id;
-	}
-	
-	public Integer getMin_mastery_level() {
-		return min_mastery_level;
-	}
-
-	public void setMin_mastery_level(Integer min_mastery_level) {
-		this.min_mastery_level = min_mastery_level;
 	}
 
 }

@@ -1,4 +1,4 @@
-package com.asu.seatr.api;
+package com.asu.seatr.api.analyzer1;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -19,19 +19,19 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
-import com.asu.seatr.models.analyzers.task.T_A3;
-import com.asu.seatr.rest.models.TAReader3;
+import com.asu.seatr.models.analyzers.task.T_A1;
+import com.asu.seatr.rest.models.analyzer1.TAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
-@Path("analyzer/3/tasks")
-public class TaskAPI_3 {
-	static Logger logger = Logger.getLogger(TaskAPI_3.class);
+@Path("analyzer/1/tasks")
+public class TaskAPI_1 {
+	static Logger logger = Logger.getLogger(TaskAPI_1.class);
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public TAReader3 getTask(
+	public TAReader1 getTask(
 			@QueryParam("external_task_id") String external_task_id,
 			@QueryParam("external_course_id") String external_course_id
 			)
@@ -43,14 +43,11 @@ public class TaskAPI_3 {
 			if(!Utilities.checkExists(external_task_id)) {
 				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
 			}
-			T_A3 ta3 = (T_A3)TaskAnalyzerHandler.readByExtId(T_A3.class, external_task_id, external_course_id);
-			TAReader3 result = new TAReader3();
+			T_A1 tal = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id);
+			TAReader1 result = new TAReader1();
 			result.setExternal_task_id(external_task_id);
 			result.setExternal_course_id(external_course_id);
-			result.setS_is_required(ta3.getS_is_required());
-			result.setS_sequence_no(ta3.getS_sequence_no());
-			result.setS_unit_no(ta3.getS_unit_no());
-
+			result.setS_difficulty_level(tal.getS_difficulty_level());
 			return result;
 		}
 
@@ -65,7 +62,7 @@ public class TaskAPI_3 {
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e) {
-			logger.error("Exception while getting task - analyzer 3", e);			
+			logger.error("Exception while getting task - analyzer 1", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -76,25 +73,22 @@ public class TaskAPI_3 {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response createTask(TAReader3 taReader3)
+	public Response createTask(TAReader1 taReader1)
 	{
-		try {
-			if(!Utilities.checkExists(taReader3.getExternal_course_id())) {
+
+		try
+		{
+			if(!Utilities.checkExists(taReader1.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
 			}			
-			if(!Utilities.checkExists(taReader3.getExternal_task_id())) {
+			if(!Utilities.checkExists(taReader1.getExternal_task_id())) {
 				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
 			}
-			if(taReader3.getS_is_required() && !Utilities.checkExists(taReader3.getS_sequence_no())) {
-				throw new TaskException(MyStatus.ERROR, MyMessage.SEQUENCE_NO_MISSING);
-			}
-			T_A3 t_a3 = new T_A3();									
-			
-			t_a3.setS_is_required(taReader3.getS_is_required());
-			t_a3.setS_sequence_no(taReader3.getS_sequence_no());
-			t_a3.setS_unit_no(taReader3.getS_unit_no());
-			t_a3.createTask(taReader3.getExternal_task_id(), taReader3.getExternal_course_id(), 1);
-			TaskAnalyzerHandler.save(t_a3);
+			T_A1 t_a1 = new T_A1();
+			// Handle this better..
+			t_a1.createTask(taReader1.getExternal_task_id(), taReader1.getExternal_course_id(), 1);
+			t_a1.setS_difficulty_level(taReader1.getS_difficulty_level());
+			TaskAnalyzerHandler.save(t_a1);
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_CREATED)).build();
 		}
@@ -114,7 +108,7 @@ public class TaskAPI_3 {
 			throw new WebApplicationException(rb);
 		}
 		catch(Exception e){
-			logger.error("Exception while creating task - analyzer 3", e);
+			logger.error("Exception while creating task - analyzer 1", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
@@ -124,31 +118,22 @@ public class TaskAPI_3 {
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response updateTask(TAReader3 taReader3)
+	public Response updateTask(TAReader1 taReader1)
 	{
 		try
 		{
-			if(!Utilities.checkExists(taReader3.getExternal_course_id())) {
+			if(!Utilities.checkExists(taReader1.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
 			}			
-			if(!Utilities.checkExists(taReader3.getExternal_task_id())) {
+			if(!Utilities.checkExists(taReader1.getExternal_task_id())) {
 				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
 			}
-			if(taReader3.getS_is_required() && !Utilities.checkExists(taReader3.getS_sequence_no())) {
-				throw new TaskException(MyStatus.ERROR, MyMessage.SEQUENCE_NO_MISSING);
-			}
-			T_A3 t_a3 = (T_A3)TaskAnalyzerHandler.readByExtId(T_A3.class, taReader3.getExternal_task_id(), taReader3.getExternal_course_id());
-			if(Utilities.checkExists(taReader3.getS_is_required())) {
-				t_a3.setS_is_required(taReader3.getS_is_required());
-			}
-			if(Utilities.checkExists(taReader3.getS_sequence_no())) {
-				t_a3.setS_sequence_no(taReader3.getS_sequence_no());
-			}
-			if(Utilities.checkExists(taReader3.getS_unit_no())) {
-				t_a3.setS_unit_no(taReader3.getS_unit_no());
+			T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, taReader1.getExternal_task_id(), taReader1.getExternal_course_id());
+			if(Utilities.checkExists(taReader1.getS_difficulty_level())) {
+				t_a1.setS_difficulty_level(taReader1.getS_difficulty_level());
 			}
 
-			TaskAnalyzerHandler.update(t_a3);
+			TaskAnalyzerHandler.update(t_a1);
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_UPDATED))
 					.build();
@@ -166,7 +151,7 @@ public class TaskAPI_3 {
 		}
 
 		catch(Exception e){		
-			logger.error("Exception while updating task - analyzer 3", e);
+			logger.error("Exception while updating task - analyzer 1", e);
 			Response rb = Response.status(Status.NOT_FOUND)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST))
 					.build();
@@ -190,8 +175,9 @@ public class TaskAPI_3 {
 			if(!Utilities.checkExists(external_task_id)) {
 				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
 			}
-			T_A3 t_a3 = (T_A3)TaskAnalyzerHandler.readByExtId(T_A3.class, external_task_id, external_course_id);
-			TaskAnalyzerHandler.delete(t_a3);
+
+			T_A1 t_a1 = (T_A1)TaskAnalyzerHandler.readByExtId(T_A1.class, external_task_id, external_course_id);
+			TaskAnalyzerHandler.delete(t_a1);
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_ANALYZER_DELETED)).build();
 		}
@@ -207,7 +193,7 @@ public class TaskAPI_3 {
 			throw new WebApplicationException(rb);
 		}		
 		catch(Exception e){
-			logger.error("Exception while deleting task - analyzer 3", e);
+			logger.error("Exception while deleting task - analyzer 1", e);
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);

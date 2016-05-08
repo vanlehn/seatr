@@ -1,6 +1,6 @@
 package com.asu.seatr.rest.models.interfaces;
 
-import com.asu.seatr.rest.models.TKAReader1;
+import com.asu.seatr.rest.models.analyzer1.TKAReader1;
 
 public interface TKReaderI {
 

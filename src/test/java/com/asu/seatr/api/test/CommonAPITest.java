@@ -23,7 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.asu.seatr.api.CommonAPI;
-import com.asu.seatr.api.KCAPI;
+import com.asu.seatr.api.analyzer1.KCAPI_1;
 import com.asu.seatr.exceptions.AnalyzerException;
 import com.asu.seatr.exceptions.CourseAnalyzerMapException;
 import com.asu.seatr.exceptions.CourseException;
@@ -42,7 +42,7 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
-@PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI.class
+@PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI_1.class
 	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, Handler.class,
 	CourseAnalyzerMapHandler.class, Utilities.class})
 @RunWith(PowerMockRunner.class)

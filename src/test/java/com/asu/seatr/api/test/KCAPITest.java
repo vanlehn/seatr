@@ -25,7 +25,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.KCAPI;
+import com.asu.seatr.api.analyzer1.KCAPI_1;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
@@ -45,7 +45,7 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;;
 
-@PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI.class
+@PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI_1.class
 	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, CourseHandler.class,KCAnalyzerHandler.class,Session.class,Transaction.class})
 @RunWith(PowerMockRunner.class)
 public class KCAPITest extends JerseyTest {
@@ -56,7 +56,7 @@ public class KCAPITest extends JerseyTest {
 	@Override
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-		return new ResourceConfig(KCAPI.class);
+		return new ResourceConfig(KCAPI_1.class);
 	}
 
 	@Test

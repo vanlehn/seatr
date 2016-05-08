@@ -1,8 +1,8 @@
-package com.asu.seatr.rest.models;
+package com.asu.seatr.rest.models.analyzer3;
 
 import com.asu.seatr.rest.models.interfaces.KAReaderI;
 
-public class KAReader1 implements KAReaderI{
+public class KAReader3 implements KAReaderI{
 
 
 	private String external_kc_id;

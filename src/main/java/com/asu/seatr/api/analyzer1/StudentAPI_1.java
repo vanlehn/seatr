@@ -1,4 +1,4 @@
-package com.asu.seatr.api;
+package com.asu.seatr.api.analyzer1;
 
 
 import javax.ws.rs.Consumes;
@@ -21,7 +21,7 @@ import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.models.analyzers.student.S_A1;
-import com.asu.seatr.rest.models.SAReader1;
+import com.asu.seatr.rest.models.analyzer1.SAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;

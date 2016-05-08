@@ -1,4 +1,4 @@
-package com.asu.seatr.api;
+package com.asu.seatr.api.analyzer3;
 
 
 import javax.ws.rs.Consumes;
@@ -21,7 +21,7 @@ import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.models.analyzers.student.S_A3;
-import com.asu.seatr.rest.models.SAReader1;
+import com.asu.seatr.rest.models.analyzer3.SAReader3;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -35,7 +35,7 @@ public class StudentAPI_3 {
 
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public SAReader1 getStudent(
+	public SAReader3 getStudent(
 			@QueryParam("external_student_id") String external_student_id, 
 			@QueryParam("external_course_id") String external_course_id) {		
 
@@ -50,7 +50,7 @@ public class StudentAPI_3 {
 			}	
 
 			S_A3 sa1 = (S_A3)StudentAnalyzerHandler.readByExtId(S_A3.class, external_student_id, external_course_id).get(0);
-			SAReader1 result  = new SAReader1();
+			SAReader3 result  = new SAReader3();
 			result.setExternal_course_id(external_course_id);
 			result.setExternal_student_id(external_student_id);
 			result.setS_placement_score(sa1.getS_placement_score());
@@ -80,7 +80,7 @@ public class StudentAPI_3 {
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response createStudent(SAReader1 sa)
+	public Response createStudent(SAReader3 sa)
 	{
 		//input external student id, courseid ,properties
 		//populate student table
@@ -127,7 +127,7 @@ public class StudentAPI_3 {
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
-	public Response updateStudent(SAReader1 sa){
+	public Response updateStudent(SAReader3 sa){
 		try {
 			if(!Utilities.checkExists(sa.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);

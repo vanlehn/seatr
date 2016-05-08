@@ -22,13 +22,13 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.StudentAPI_1;
+import com.asu.seatr.api.analyzer1.StudentAPI_1;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.models.interfaces.StudentAnalyzerI;
-import com.asu.seatr.rest.models.SAReader1;
+import com.asu.seatr.rest.models.analyzer1.SAReader1;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
