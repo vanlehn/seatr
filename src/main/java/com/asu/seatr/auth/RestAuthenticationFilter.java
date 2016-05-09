@@ -44,6 +44,8 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 
 	}
 
+	// checks if it is a course create request
+	// checking directly with the URL, fails when the URL routes are changed
 	private boolean isCourseCreateRequest(ServletRequest request) {
 		String path = ((HttpServletRequest) request).getPathInfo();
 		String re1="(\\/analyzer\\/\\d+\\/courses)";
@@ -52,6 +54,8 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 		return m.find() && ((HttpServletRequest) request).getMethod().equals("POST");
 	}
 
+	// checks if its a superadmin request
+	// checking directly with the URL, fails when the URL routes are changed
 	private boolean isSuperAdminRequest(ServletRequest request) {
 		String path = ((HttpServletRequest) request).getPathInfo();
 		String re1="(\\/superadmin\\/users)";
@@ -83,8 +87,10 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 					external_course_id = null;
 				}
 				else if(((HttpServletRequest) request).getMethod().equals("GET") || ((HttpServletRequest) request).getMethod().equals("DELETE")) {
+					// if its a get or a delete request, get the course_id from URL paramters
 					external_course_id = request.getParameter("external_course_id");
 				} else {
+					// if its a POST or a PUT, get the course_id from request body
 					JSONObject requestParams = requestParamsToJSON(multiReadHttpServletRequest);
 					external_course_id = requestParams.get("external_course_id").toString();
 				}
@@ -121,6 +127,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 			} 	
 
 			if (authenticationStatus) {
+				// if the auth is a success
 				filter.doFilter(multiReadHttpServletRequest, response);
 			} else if (!exception){
 				if (response instanceof HttpServletResponse) {

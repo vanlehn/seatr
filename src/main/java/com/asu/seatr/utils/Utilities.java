@@ -1,6 +1,9 @@
 package com.asu.seatr.utils;
 
+import org.hibernate.SessionFactory;
+
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
+import com.asu.seatr.persistence.HibernateUtil;
 
 @SuppressWarnings({ "rawtypes" })
 public class Utilities {
@@ -56,6 +59,17 @@ public class Utilities {
 
 	public static void setJUnitTest(boolean pIsJUnitTest) {
 		isJUnitTest = pIsJUnitTest;
+	}
+	
+	public static SessionFactory getSessionFactory() {
+		SessionFactory sf;
+		if(isJUnitTest) {
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else {	
+			sf = HibernateUtil.getSessionFactory();
+		}
+		return sf;
 	}
 	
 

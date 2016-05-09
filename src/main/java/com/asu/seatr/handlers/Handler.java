@@ -4,8 +4,6 @@ import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
-import com.asu.seatr.persistence.HibernateUtil;
-import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
 /*
@@ -21,15 +19,7 @@ public class Handler {
 	 * @return number of affected entries
 	 */
 	public static int hqlTruncate(String myTable){
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		int result;
 		try

@@ -30,11 +30,14 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
+//Analyzer 3 specific routes
 @Path("/analyzer/3/courses")
 public class CourseAPI_3 {
 	public static final String AUTHENTICATION_HEADER = "Authorization";
 
 	static Logger logger = Logger.getLogger(CourseAPI_3.class);
+	
+	// Get course details of this analyzer given its external_course_id
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public CAReader3 getCourse(@QueryParam("external_course_id") String external_course_id){		
@@ -65,7 +68,10 @@ public class CourseAPI_3 {
 
 
 	}
-
+		
+	// create course
+	// Once the course is created, we need to add a record into the UserCourseMap so that
+	// the user who created the course will get access to the course
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -110,6 +116,7 @@ public class CourseAPI_3 {
 
 	}
 
+	// Update the course details for analyzer 3
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -150,6 +157,7 @@ public class CourseAPI_3 {
 	}
 
 
+	// Deletes only the analyzer 3 for the given external_course_id
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

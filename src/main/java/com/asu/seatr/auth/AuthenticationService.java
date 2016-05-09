@@ -87,10 +87,12 @@ public class AuthenticationService {
 
 		boolean authenticationStatus = false;
 
+		// if username or password is empty, fail 
 		if(username == null || username.equals("") || password == null || password.equals("")) {
 			throw new UserException(MyStatus.ERROR, MyMessage.AUTHENTICATION_FAILED);
 		}
 
+		// if it is a superadmin request and username is not superadmin, fail
 		if(isSuperAdminReq && !username.equals("superadmin")) {
 			authenticationStatus = false;
 			return authenticationStatus;
@@ -99,6 +101,8 @@ public class AuthenticationService {
 		User user = UserHandler.read(username);
 		authenticationStatus = user.getPassword().equals(encrypt(password));
 
+		// only when the user/pass combo match and its not a CourseCreate or SuperAdmin request, check 
+		// UserCourseMap whether the user has access to the course
 		if(authenticationStatus && !isCourseCreate && !isSuperAdminReq) {
 			UserCourseHandler.read(username, external_course_id);										
 		}
@@ -107,6 +111,7 @@ public class AuthenticationService {
 		return authenticationStatus;
 	}
 
+	// Use this to manually enter passwords into the database while creating a record for superadmin
 	public static void main(String args[]) {
 		try {
 			System.out.println(encrypt("super123duper432seatr"));

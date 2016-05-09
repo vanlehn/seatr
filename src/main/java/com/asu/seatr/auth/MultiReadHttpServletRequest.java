@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.commons.io.IOUtils;
 
+// This is a wrapper on HttpServletRequest, the difference is you can read the request body of this multiple times
 public class MultiReadHttpServletRequest extends HttpServletRequestWrapper {
 	private ByteArrayOutputStream cachedBytes;
 

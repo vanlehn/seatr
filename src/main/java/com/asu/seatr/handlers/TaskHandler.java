@@ -18,10 +18,8 @@ import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.interfaces.RecommTaskI;
-import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
-import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
@@ -29,15 +27,7 @@ public class TaskHandler {
 
 
 	public static Task save(Task task){
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{
@@ -55,15 +45,7 @@ public class TaskHandler {
 
 	public static Task read(int id)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Task task = (Task)session.get(Task.class, id);
 		session.close();
@@ -72,15 +54,7 @@ public class TaskHandler {
 	public static List<Task> readByExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Task.class);
 		cr.add(Restrictions.eq(Task.p_course, course));
@@ -95,15 +69,7 @@ public class TaskHandler {
 		if(course == null){
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);			
 		}
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Task.class);
 		cr.add(Restrictions.eq(Task.p_external_id, external_task_id));
@@ -120,15 +86,7 @@ public class TaskHandler {
 	public static Task readByExtId(String external_task_id, String external_course_id) throws CourseException, TaskException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		List<Task> taskList;
 		try
@@ -152,15 +110,7 @@ public class TaskHandler {
 
 	public static List<Task> readAll()
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(Task.class);
 		List<Task> taskList = (List<Task>)cr.list();
@@ -178,15 +128,7 @@ public class TaskHandler {
 		{
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("course", course));
@@ -199,15 +141,7 @@ public class TaskHandler {
 
 	public static Task update(Task task)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{
@@ -223,15 +157,7 @@ public class TaskHandler {
 	}
 	public static void delete(Task task)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{

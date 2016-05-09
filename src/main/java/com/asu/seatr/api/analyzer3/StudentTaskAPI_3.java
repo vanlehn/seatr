@@ -23,11 +23,15 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
+/* Student Tasks
+ * get,update and delete operations have been disabled because a single student can have multiple records of
+ * the same task associated with it.
+ */
 @Path("analyzer/3/studenttasks")
 public class StudentTaskAPI_3 {
 	static Logger logger = Logger.getLogger(StudentTaskAPI_3.class);
 
-	//create student task
+	//create student task - is a transaction API which records every student task request
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

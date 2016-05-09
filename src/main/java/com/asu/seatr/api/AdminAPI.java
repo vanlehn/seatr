@@ -24,6 +24,7 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
+// Route for user creation
 @Path("/superadmin")
 public class AdminAPI {
 

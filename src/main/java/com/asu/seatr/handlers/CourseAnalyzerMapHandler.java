@@ -15,25 +15,15 @@ import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
-import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
-import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
 @SuppressWarnings("unchecked")
 public class CourseAnalyzerMapHandler {
 
 	public static CourseAnalyzerMap save(CourseAnalyzerMap courseAnalyzer) {
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
 		try
@@ -51,15 +41,7 @@ public class CourseAnalyzerMapHandler {
 
 	public static CourseAnalyzerMap read(int id)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		CourseAnalyzerMap courseAnalyzer;
 		try{
@@ -74,15 +56,7 @@ public class CourseAnalyzerMapHandler {
 
 	public static List<CourseAnalyzerMap> readAll()
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		List<CourseAnalyzerMap> records = session.createQuery("from " + DatabaseConstants.COURSE_ANALYZER_TABLE_NAME).list();
 		session.close();
@@ -91,15 +65,7 @@ public class CourseAnalyzerMapHandler {
 	public static List<CourseAnalyzerMap> getAnalyzerIdFromExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
 		criteria.add(Restrictions.eq("course", course));
@@ -110,15 +76,7 @@ public class CourseAnalyzerMapHandler {
 
 	public static List<CourseAnalyzerMap> getAnalyzerIdFromCourse(Course course) throws CourseException
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria criteria = session.createCriteria(CourseAnalyzerMap.class);
 		criteria.add(Restrictions.eq("course", course));
@@ -131,15 +89,7 @@ public class CourseAnalyzerMapHandler {
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
 		Analyzer analyzer = AnalyzerHandler.getById(analyzer_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		List<CourseAnalyzerMap> courseAnalyzerMapList;
 		Session session = sf.openSession();
 		try
@@ -163,15 +113,7 @@ public class CourseAnalyzerMapHandler {
 	public static CourseAnalyzerMap getPrimaryAnalyzerIdFromExtCourseId(String external_course_id) throws CourseException
 	{
 		Course course = CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{
-			sf = HibernateUtil.getSessionFactory();	
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		
 		Session session = sf.openSession();
 		CourseAnalyzerMap  courseAnalyzerMap;
@@ -196,15 +138,7 @@ public class CourseAnalyzerMapHandler {
 
 	public static CourseAnalyzerMap getByCourseAndAnalyzer(String external_course_id, String analyzer_id) throws CourseException {
 		Course course=CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		List<CourseAnalyzerMap> ca_l;
 		try
@@ -227,15 +161,7 @@ public class CourseAnalyzerMapHandler {
 
 	public static void deactiveAllAnalyzers(String external_course_id) throws CourseException{
 		Course course=CourseHandler.getByExternalId(external_course_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{
@@ -254,15 +180,7 @@ public class CourseAnalyzerMapHandler {
 
 	public static CourseAnalyzerMap update(CourseAnalyzerMap courseAnalyzer)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{
@@ -278,15 +196,7 @@ public class CourseAnalyzerMapHandler {
 	}
 	public static void delete(CourseAnalyzerMap courseAnalyzer)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{

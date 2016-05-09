@@ -35,12 +35,13 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
-
+// Analyzer 1 specific routes for KC
 @Path("analyzer/1/kc")
 public class KCAPI_1 {
 
 	static Logger logger = Logger.getLogger(KCAPI_1.class);
 
+	// Route to create a KC 
 	@Path("/createkc")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -82,8 +83,6 @@ public class KCAPI_1 {
 	 * Created KC_TASK mapping entry in tk_a1 table
 	 * If replace is true, first all records are truncated and then mappings inserted
 	 * If replace is false, records are directly inserted in the table. Duplicate records not allowed.
-	 * @param tkReader
-	 * @return
 	 */
 	@Path("/mapkctask")
 	@POST

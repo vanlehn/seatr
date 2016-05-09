@@ -35,12 +35,13 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-
+//Analyzer 2 specific routes for KC
 @Path("analyzer/2/kc")
-public class KCAPI {
+public class KCAPI_2 {
 
-	static Logger logger = Logger.getLogger(KCAPI.class);
+	static Logger logger = Logger.getLogger(KCAPI_2.class);
 	
+	// Route to create a KC 
 	@Path("/createkc")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

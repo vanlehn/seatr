@@ -13,24 +13,14 @@ import org.hibernate.hql.internal.ast.QuerySyntaxException;
 import com.asu.seatr.constants.DatabaseConstants;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.models.Course;
-import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
-import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
 @SuppressWarnings("unchecked")
 public class CourseHandler {
 	public static void save(Course course) {
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try{
 			session.beginTransaction();
@@ -46,15 +36,7 @@ public class CourseHandler {
 
 	public static List<Course> readAll()
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		List<Course> records = session.createQuery("from " + DatabaseConstants.COURSE_TABLE_NAME).list();
 		session.close();
@@ -63,15 +45,7 @@ public class CourseHandler {
 
 	public static Course readById(int id)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Course course;
 		try{
@@ -86,15 +60,7 @@ public class CourseHandler {
 
 	public static void delete(Course course)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{
@@ -110,15 +76,7 @@ public class CourseHandler {
 
 	public static Course getByExternalId(String external_course_id) throws CourseException{
 
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session=sf.openSession();
 		Course course;
 		try
@@ -141,15 +99,7 @@ public class CourseHandler {
 	}
 
 	public static void updateCourseByExternalID(String external_id,Course course){
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session=sf.openSession();
 		try{
 			session.beginTransaction();
@@ -171,15 +121,7 @@ public class CourseHandler {
 		{
 			return null;
 		}
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{
@@ -209,15 +151,7 @@ public class CourseHandler {
 			return null;
 		}
 
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try
 		{

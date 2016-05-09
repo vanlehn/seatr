@@ -26,9 +26,13 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
+//Routes for Tasks for analyzer 3
 @Path("analyzer/3/tasks")
 public class TaskAPI_3 {
 	static Logger logger = Logger.getLogger(TaskAPI_3.class);
+	
+	// Get a task given external_task_id and external_course_id. 
+	// A task is unique within only a course. Hence, you've to give both
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public TAReader3 getTask(
@@ -72,7 +76,7 @@ public class TaskAPI_3 {
 
 		}
 	}
-	//create
+	//create a task
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -120,7 +124,7 @@ public class TaskAPI_3 {
 			throw new WebApplicationException(rb);
 		}
 	}
-	//update
+	//update a task for analyzer 3
 	@PUT
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -174,6 +178,7 @@ public class TaskAPI_3 {
 		}
 	}
 
+	// Delete record for task analyzer 3
 	@DELETE
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)

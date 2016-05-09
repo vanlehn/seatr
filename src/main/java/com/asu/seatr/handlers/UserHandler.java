@@ -10,10 +10,8 @@ import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.exceptions.UserException;
 import com.asu.seatr.models.User;
-import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyStatus;
-import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
 
 @SuppressWarnings("unchecked")
@@ -21,15 +19,7 @@ public class UserHandler {
 
 
 	public static User save(User user) throws UserException{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try {
 			session.beginTransaction();
@@ -46,15 +36,7 @@ public class UserHandler {
 
 	public static User read(int id)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		User user = (User)session.get(User.class, id);
 		session.close();
@@ -63,15 +45,7 @@ public class UserHandler {
 
 	public static User read(String username) throws UserException
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(User.class);
 		cr.add(Restrictions.eq("username", username));
@@ -85,15 +59,7 @@ public class UserHandler {
 
 	public static List<User> readAll()
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(User.class);
 		List<User> userList = (List<User>)cr.list();
@@ -103,15 +69,7 @@ public class UserHandler {
 
 	public static User update(User user)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.merge(user);
@@ -121,15 +79,7 @@ public class UserHandler {
 	}
 	public static void delete(User user)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.delete(user);

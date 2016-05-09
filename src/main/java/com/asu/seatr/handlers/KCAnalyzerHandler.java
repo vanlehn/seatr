@@ -26,15 +26,7 @@ public class KCAnalyzerHandler {
 
 
 	public static KCAnalyzerI save(KCAnalyzerI kcAnalyzer) {
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();	    
 		int id = (int)session.save(kcAnalyzer);
@@ -46,15 +38,7 @@ public class KCAnalyzerHandler {
 
 	public static KCAnalyzerI readById(int id)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		KCAnalyzerI kcAnalyzer = (KCAnalyzerI)session.get(KCAnalyzerI.class, id);
 		session.close();
@@ -62,15 +46,7 @@ public class KCAnalyzerHandler {
 	}
 	public static List<KCAnalyzerI> readAll(Class typeParameterClass)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
@@ -80,15 +56,7 @@ public class KCAnalyzerHandler {
 
 	public static KCAnalyzerI update(KCAnalyzerI kcAnalyzer)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.merge(kcAnalyzer);
@@ -98,15 +66,7 @@ public class KCAnalyzerHandler {
 	}
 	public static void delete(KCAnalyzerI kcAnalyzer)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.delete(kcAnalyzer);
@@ -116,15 +76,7 @@ public class KCAnalyzerHandler {
 	public static KCAnalyzerI readByExtId(Class typeParameterClass, String external_kc_id, String external_course_id) throws CourseException, KCException
 	{
 		KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(external_kc_id, external_course_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
@@ -139,15 +91,7 @@ public class KCAnalyzerHandler {
 	public static KCAnalyzerI readByInternalKCId(Class typeParameterClass, int kc_id) throws KCException
 	{
 		KnowledgeComponent kc = KnowledgeComponentHandler.getByInternalId(kc_id);
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
@@ -165,15 +109,7 @@ public class KCAnalyzerHandler {
 		{
 			throw new KCException(MyStatus.ERROR, MyMessage.KC_NOT_FOUND);
 		}
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("kc_id", kc));
@@ -204,15 +140,7 @@ public class KCAnalyzerHandler {
 		}
 		try
 		{
-			SessionFactory sf;
-			if(Utilities.isJUnitTest())
-			{
-				sf = SessionFactoryUtil.getSessionFactory();
-			}
-			else
-			{	
-				sf = HibernateUtil.getSessionFactory();
-			}
+			SessionFactory sf = Utilities.getSessionFactory();
 			Session session = sf.openSession();
 			session.beginTransaction();
 			String hql = "select T from Task T where T.course in :courseList";
@@ -249,15 +177,7 @@ public class KCAnalyzerHandler {
 	{
 		try
 		{
-			SessionFactory sf;
-			if(Utilities.isJUnitTest())
-			{
-				sf = SessionFactoryUtil.getSessionFactory();
-			}
-			else
-			{	
-				sf = HibernateUtil.getSessionFactory();
-			}
+			SessionFactory sf = Utilities.getSessionFactory();
 			Session session = sf.openSession();
 			session.beginTransaction();
 			String hql = "select T from Task T where T.course = :course";

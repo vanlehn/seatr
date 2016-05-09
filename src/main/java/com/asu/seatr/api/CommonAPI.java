@@ -53,6 +53,8 @@ public class CommonAPI {
 	//set shouldn't be get..
 	static Logger logger = Logger.getLogger(CommonAPI.class);
 
+	// Route to set a particular analyzer for a course as the "Active" analyzer
+	// The rest will be set to inactive
 	@Path("/courses/setanalyzer")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
@@ -114,6 +116,8 @@ public class CommonAPI {
 	}
 
 
+	// Route to delete a particular course along with all its analyzers
+	// TODO: When a new analyzer is added, remember to delete that as well
 	@Path("/courses")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -153,7 +157,8 @@ public class CommonAPI {
 		}
 	}
 
-
+	// Route to delete a student record along with all its analyzer 
+	// TODO: When a new analyzer is added, remember to delete that as well
 	@Path("/students")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -203,7 +208,8 @@ public class CommonAPI {
 		}	
 	}
 
-
+	// Route to delete a task along with all its analyzers
+	// TODO: When a new analyzer is added, remember to delete that as well
 	@Path("/tasks")
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -267,6 +273,8 @@ public class CommonAPI {
 		}
 	}
 
+	// This API copies the KC-Task mapping from one analyzer to another for a course
+	// TODO: When a new analyzer is added, add them to the switch case
 	@Path("/copykcmap")
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

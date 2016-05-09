@@ -10,17 +10,15 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.hql.internal.ast.QuerySyntaxException;
 
-import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
-import com.asu.seatr.persistence.HibernateUtil;
-import com.asu.seatr.utils.MyMessage;
-import com.asu.seatr.utils.MyStatus;
-import com.asu.seatr.utils.SessionFactoryUtil;
-import com.asu.seatr.utils.Utilities;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.StudentTaskException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.models.StudentTask;
+import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
+import com.asu.seatr.utils.MyMessage;
+import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.Utilities;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
 public class StudentTaskAnalyzerHandler {
@@ -46,15 +44,7 @@ public class StudentTaskAnalyzerHandler {
 
 	public static List<StudentTaskAnalyzerI> readOrderByTimestamp(Class typeParameterClass, 
 			String external_student_id, String external_course_id, String external_task_id) throws CourseException, StudentException, TaskException, StudentTaskException {
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 
@@ -77,15 +67,7 @@ public class StudentTaskAnalyzerHandler {
 	}
 
 	public static List<StudentTaskAnalyzerI> readByCriteria(Class typeParameterClass, HashMap<String, Object> eqRestrictions) {
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.allEq(eqRestrictions));
@@ -96,15 +78,7 @@ public class StudentTaskAnalyzerHandler {
 
 
 	public static StudentTaskAnalyzerI save(StudentTaskAnalyzerI studentTaskAnalyzer) {
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		try{
 			session.beginTransaction();
@@ -122,15 +96,7 @@ public class StudentTaskAnalyzerHandler {
 
 	public static StudentTaskAnalyzerI read(int id)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		StudentTaskAnalyzerI studentTaskAnalyzer = (StudentTaskAnalyzerI)session.get(StudentTaskAnalyzerI.class, id);
 		session.close();
@@ -139,15 +105,7 @@ public class StudentTaskAnalyzerHandler {
 
 	public static List<StudentTaskAnalyzerI> readAll(String tableName)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		List<StudentTaskAnalyzerI> records = session.createQuery("from " + tableName).list();
 		session.close();
@@ -156,15 +114,7 @@ public class StudentTaskAnalyzerHandler {
 
 	public static StudentTaskAnalyzerI update(StudentTaskAnalyzerI studentTaskAnalyzer)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.update(studentTaskAnalyzer);
@@ -175,15 +125,7 @@ public class StudentTaskAnalyzerHandler {
 	}
 	public static void delete(StudentTaskAnalyzerI studentTaskAnalyzer)
 	{
-		SessionFactory sf;
-		if(Utilities.isJUnitTest())
-		{
-			sf = SessionFactoryUtil.getSessionFactory();
-		}
-		else
-		{	
-			sf = HibernateUtil.getSessionFactory();
-		}
+		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		session.beginTransaction();
 		session.delete(studentTaskAnalyzer);
@@ -199,15 +141,7 @@ public class StudentTaskAnalyzerHandler {
 			{
 				studentTaskIdList.add(studentTask.getId());
 			}
-			SessionFactory sf;
-			if(Utilities.isJUnitTest())
-			{
-				sf = SessionFactoryUtil.getSessionFactory();
-			}
-			else
-			{	
-				sf = HibernateUtil.getSessionFactory();
-			}
+			SessionFactory sf = Utilities.getSessionFactory();
 			Session session = sf.openSession();
 			session.beginTransaction();
 			String hql = "delete from ST_" + analyzerName + " st where st.id in :studentTaskIdList";

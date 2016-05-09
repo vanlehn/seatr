@@ -27,12 +27,13 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
+// Analyzer 1 specific routes for Student APIs
 @Path("analyzer/1/students")
 public class StudentAPI_1 {
 
 	static Logger logger = Logger.getLogger(StudentAPI_1.class);
 
-
+	// Gets information about a Student for Analyzer 1
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public SAReader1 getStudent(
@@ -72,6 +73,7 @@ public class StudentAPI_1 {
 
 	}
 
+	// Create a student
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -107,6 +109,7 @@ public class StudentAPI_1 {
 			throw new WebApplicationException(rb);
 		} 
 		catch(ConstraintViolationException cve) {
+			// if a student is already present this is thrown by create
 			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_ALREADY_PRESENT)).build();
 			throw new WebApplicationException(rb);
@@ -120,6 +123,9 @@ public class StudentAPI_1 {
 
 	}
 
+	// update student details
+	// Logic here and everywhere is that, when an attribute which is not required is not present in the 
+	// request body, then that attribute is not set to empty. The values of only those that are present are changed
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -163,7 +169,7 @@ public class StudentAPI_1 {
 
 	}
 
-
+	// Delete student analyzer record for that student
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

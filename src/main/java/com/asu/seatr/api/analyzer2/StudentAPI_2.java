@@ -26,12 +26,13 @@ import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
+//Analyzer 2 specific routes for Student APIs
 @Path("analyzer/2/students")
-public class StudentAPI {
+public class StudentAPI_2 {
 
-	static Logger logger = Logger.getLogger(StudentAPI.class);
+	static Logger logger = Logger.getLogger(StudentAPI_2.class);
 	
-	
+	// Gets information about a Student for Analyzer 2
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public SAReader2 getStudent(
@@ -69,6 +70,7 @@ public class StudentAPI {
 				
 	}
 	
+	// Create a student
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -110,6 +112,9 @@ public class StudentAPI {
 		
 	}
 	
+	// update student details
+	// Logic here and everywhere is that, when an attribute which is not required is not present in the 
+	// request body, then that attribute is not set to empty. The values of only those that are present are changed
 	@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
@@ -139,7 +144,7 @@ public class StudentAPI {
 		
 	}
 	
-
+	// Delete student analyzer record for that student
 	@DELETE
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)

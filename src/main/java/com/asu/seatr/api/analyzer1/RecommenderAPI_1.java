@@ -36,8 +36,6 @@ public class RecommenderAPI_1 {
 
 	static Logger logger = Logger.getLogger(RecommenderAPI_1.class);
 
-
-
 	@Path("analyzer/1/gettasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
