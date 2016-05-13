@@ -21,6 +21,7 @@ import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.models.analyzers.task.T_A1;
 import com.asu.seatr.rest.models.analyzer1.TAReader1;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -39,6 +40,7 @@ public class TaskAPI_1 {
 			@QueryParam("external_course_id") String external_course_id
 			)
 	{
+		Long requestTimestamp = System.currentTimeMillis();
 		try{
 			if(!Utilities.checkExists(external_course_id)) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -71,6 +73,12 @@ public class TaskAPI_1 {
 			throw new WebApplicationException(rb);
 
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 	//create a task
 	@POST
@@ -78,7 +86,7 @@ public class TaskAPI_1 {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response createTask(TAReader1 taReader1)
 	{
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try
 		{
 			if(!Utilities.checkExists(taReader1.getExternal_course_id())) {
@@ -116,6 +124,12 @@ public class TaskAPI_1 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 	//update a task attribute for analyzer 1
 	@PUT
@@ -123,6 +137,7 @@ public class TaskAPI_1 {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateTask(TAReader1 taReader1)
 	{
+		Long requestTimestamp = System.currentTimeMillis();
 		try
 		{
 			if(!Utilities.checkExists(taReader1.getExternal_course_id())) {
@@ -160,6 +175,12 @@ public class TaskAPI_1 {
 					.build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 
 	// Delete record from task analyzer 1
@@ -171,7 +192,7 @@ public class TaskAPI_1 {
 			@QueryParam("external_task_id") String external_task_id
 			)
 	{
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(external_course_id)) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -201,6 +222,12 @@ public class TaskAPI_1 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 	}
 

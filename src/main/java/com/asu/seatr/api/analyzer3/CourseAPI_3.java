@@ -25,6 +25,7 @@ import com.asu.seatr.handlers.CourseAnalyzerHandler;
 import com.asu.seatr.handlers.UserCourseHandler;
 import com.asu.seatr.models.analyzers.course.C_A3;
 import com.asu.seatr.rest.models.analyzer3.CAReader3;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -40,7 +41,8 @@ public class CourseAPI_3 {
 	// Get course details of this analyzer given its external_course_id
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public CAReader3 getCourse(@QueryParam("external_course_id") String external_course_id){		
+	public CAReader3 getCourse(@QueryParam("external_course_id") String external_course_id){	
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(external_course_id)) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -64,6 +66,12 @@ public class CourseAPI_3 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 
 
 
@@ -77,6 +85,7 @@ public class CourseAPI_3 {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createCourse(CAReader3 reader, @HeaderParam(AUTHENTICATION_HEADER) String authHeader){
 
+		Long requestTimestamp = System.currentTimeMillis();
 		try{
 			if(!Utilities.checkExists(reader.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -112,6 +121,12 @@ public class CourseAPI_3 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 
 
 	}
@@ -121,6 +136,7 @@ public class CourseAPI_3 {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateCourse(CAReader3 reader){
+		Long requestTimestamp = System.currentTimeMillis();
 		try{
 			if(!Utilities.checkExists(reader.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -154,6 +170,12 @@ public class CourseAPI_3 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 
 
@@ -162,6 +184,8 @@ public class CourseAPI_3 {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteCourseAnalyzer1(@QueryParam("external_course_id") String external_course_id) {
+		
+		Long requestTimestamp = System.currentTimeMillis();
 
 		try {
 			if(!Utilities.checkExists(external_course_id)) {
@@ -180,6 +204,12 @@ public class CourseAPI_3 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 	}
 

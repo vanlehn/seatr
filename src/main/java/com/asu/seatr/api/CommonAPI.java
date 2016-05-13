@@ -43,6 +43,7 @@ import com.asu.seatr.models.analyzers.task.T_A1;
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 import com.asu.seatr.rest.models.TKCAReader;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -62,7 +63,7 @@ public class CommonAPI {
 			@QueryParam("external_course_id") String ext_c_id, 
 			@QueryParam("analyzer_id") String a_id, 
 			@QueryParam("active") Boolean active){
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(ext_c_id)) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -113,6 +114,14 @@ public class CommonAPI {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
+		
+		}
 	}
 
 
@@ -123,6 +132,7 @@ public class CommonAPI {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delCourse(@QueryParam("external_course_id") String external_course_id){
+		Long requestTimestamp = System.currentTimeMillis();
 		C_A1 c_a1;
 		// delete all course analyzers and then delete the course record
 		try {
@@ -155,6 +165,14 @@ public class CommonAPI {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
+		
+		}
 	}
 
 	// Route to delete a student record along with all its analyzer 
@@ -166,7 +184,7 @@ public class CommonAPI {
 	public Response deleteStudent(
 			@QueryParam("external_student_id") String external_student_id, 
 			@QueryParam("external_course_id") String external_course_id){
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(external_course_id)) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -205,7 +223,15 @@ public class CommonAPI {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
-		}	
+		}
+		finally
+		{
+
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
+		
+		}
 	}
 
 	// Route to delete a task along with all its analyzers
@@ -219,7 +245,7 @@ public class CommonAPI {
 			@QueryParam("external_task_id") String external_task_id
 			)
 	{
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(external_course_id)) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -271,6 +297,14 @@ public class CommonAPI {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
+		
+		}
 	}
 
 	// This API copies the KC-Task mapping from one analyzer to another for a course
@@ -281,7 +315,7 @@ public class CommonAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response copyKCMap(TKCAReader reader)  
 	{		
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 
 			if(!Utilities.checkExists(reader.getExternal_course_id())){
@@ -354,7 +388,15 @@ public class CommonAPI {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
-		}		
+		}
+		finally
+		{
+
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
+		
+		}
 
 	}
 

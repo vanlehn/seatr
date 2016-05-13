@@ -26,9 +26,11 @@ import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.studenttask.ST_A2;
 import com.asu.seatr.rest.models.analyzer2.STAReader2;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.Utilities;
 
 /*Student Tasks for analyzer 2
  * get,update and delete operations have been disabled because a single student can have multiple records of
@@ -76,6 +78,7 @@ public class StudentTaskAPI_2 {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createStudentTask(STAReader2 sta){
 		
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			ST_A2 sta2 = new ST_A2();
 			sta2.createStudentTask(sta.getExternal_student_id(),sta.getExternal_course_id(),sta.getExternal_task_id(), 1);
@@ -117,6 +120,12 @@ public class StudentTaskAPI_2 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 		
 	}	

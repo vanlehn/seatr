@@ -30,6 +30,7 @@ import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 import com.asu.seatr.rest.models.analyzer1.KAReader1;
 import com.asu.seatr.rest.models.analyzer1.TKAReader1;
 import com.asu.seatr.rest.models.analyzer1.TKReader1;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -47,7 +48,8 @@ public class KCAPI_1 {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createKC1(KAReader1 kaReader)
-	{		
+	{	
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(kaReader.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -77,6 +79,14 @@ public class KCAPI_1 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
+		
+		}
 	}
 
 	/**
@@ -90,6 +100,7 @@ public class KCAPI_1 {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response mapKcToTask(TKReader1 tkReader)
 	{
+		Long requestTimestamp = System.currentTimeMillis();
 		Session session = null;
 		try {
 			boolean replace = tkReader.getReplace();
@@ -184,6 +195,14 @@ public class KCAPI_1 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
+		
 		}
 		
 	}

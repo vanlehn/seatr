@@ -1,5 +1,10 @@
 package com.asu.seatr.utils;
 
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.Writer;
+import java.net.Socket;
+
 import org.hibernate.SessionFactory;
 
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
@@ -72,5 +77,45 @@ public class Utilities {
 		return sf;
 	}
 	
+	public static void writeToGraphite(String metric,Long responseTime,Long timestamp)
+	{
+			if(!isJUnitTest)
+			{
+				Socket socket = null;
+				Writer writer = null;
+				try
+				{
+					socket = new Socket("localhost", 2003);
+					writer = new OutputStreamWriter(socket.getOutputStream());
+					String sentMessage = metric + " " + responseTime + " " + timestamp + "\n";
+			        System.out.println(sentMessage);
+			        writer.write(sentMessage);
+			        writer.flush();
+			        
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+				finally
+				{
+					try
+					{
+						if(socket != null)
+						{
+							socket.close();
+						}
+						if(writer != null)
+						{
+							writer.close();
+						}
+					}
+					catch(IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+	}
 
 }

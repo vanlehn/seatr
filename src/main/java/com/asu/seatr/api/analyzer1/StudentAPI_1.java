@@ -22,6 +22,7 @@ import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
 import com.asu.seatr.models.analyzers.student.S_A1;
 import com.asu.seatr.rest.models.analyzer1.SAReader1;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -39,7 +40,7 @@ public class StudentAPI_1 {
 	public SAReader1 getStudent(
 			@QueryParam("external_student_id") String external_student_id, 
 			@QueryParam("external_course_id") String external_course_id) {				
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(external_course_id)) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -70,6 +71,14 @@ public class StudentAPI_1 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
+		
+		}
 
 	}
 
@@ -82,7 +91,7 @@ public class StudentAPI_1 {
 		//input external student id, courseid ,properties
 		//populate student table
 		//retrieve the analyzer name using courseid, like a1,a2,or a3...
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(sa.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -120,6 +129,12 @@ public class StudentAPI_1 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 
 	}
 
@@ -130,6 +145,7 @@ public class StudentAPI_1 {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateStudent(SAReader1 sa){
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(sa.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -166,6 +182,12 @@ public class StudentAPI_1 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 
 	}
 
@@ -176,7 +198,7 @@ public class StudentAPI_1 {
 	public Response deleteStudent1Analyzer(
 			@QueryParam("external_student_id") String external_student_id, 
 			@QueryParam("external_course_id") String external_course_id){	
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(external_course_id)) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -203,6 +225,12 @@ public class StudentAPI_1 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 	}
 

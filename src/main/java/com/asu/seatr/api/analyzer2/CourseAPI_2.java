@@ -25,9 +25,11 @@ import com.asu.seatr.handlers.CourseAnalyzerHandler;
 import com.asu.seatr.handlers.UserCourseHandler;
 import com.asu.seatr.models.analyzers.course.C_A2;
 import com.asu.seatr.rest.models.analyzer2.CAReader2;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.Utilities;
 
 //Analyzer 2 specific routes
 @Path("/analyzer/2/courses")
@@ -40,6 +42,7 @@ public class CourseAPI_2 {
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public CAReader2 getCourse(@QueryParam("external_course_id") String external_course_id){
+		Long requestTimestamp = System.currentTimeMillis();
 		C_A2 ca2 = null;
 		try {
 			ca2 = (C_A2)CourseAnalyzerHandler.readByExtId(C_A2.class, external_course_id).get(0);
@@ -53,6 +56,12 @@ public class CourseAPI_2 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 		
 			CAReader2 reader=new CAReader2();
@@ -70,6 +79,7 @@ public class CourseAPI_2 {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createCourse(CAReader2 reader, @HeaderParam(AUTHENTICATION_HEADER) String authHeader){
 		
+		Long requestTimestamp = System.currentTimeMillis();
 		C_A2 ca2 = new C_A2();
 		StringTokenizer tokenizer = AuthenticationService.getUsernameAndPassword(authHeader);
 		String username = tokenizer.nextToken();
@@ -98,6 +108,12 @@ public class CourseAPI_2 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 								
 			
 	}
@@ -107,6 +123,7 @@ public class CourseAPI_2 {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateCourse(CAReader2 reader){
+		Long requestTimestamp = System.currentTimeMillis();
 		try{
 			
 			C_A2 ca1 = (C_A2) CourseAnalyzerHandler.readByExtId(C_A2.class, reader.getExternal_course_id()).get(0);
@@ -125,6 +142,12 @@ public class CourseAPI_2 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 	
 	// Deletes only the analyzer 2 for the given external_course_id
@@ -133,6 +156,7 @@ public class CourseAPI_2 {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response deleteCourseAnalyzer1(@QueryParam("external_course_id") String external_course_id) {
 		
+		Long requestTimestamp = System.currentTimeMillis();
 		C_A2 c_a2;
 		// delete all course analyzers and then delete the course record
 		try {
@@ -149,6 +173,12 @@ public class CourseAPI_2 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 	}
 	

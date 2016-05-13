@@ -21,6 +21,7 @@ import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.analyzer3.RecommTaskHandler_3;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -40,6 +41,7 @@ public class RecommenderAPI_3 {
 			@QueryParam("number_of_tasks") Integer number_of_tasks
 			)
 	{
+		Long requestTimestamp = System.currentTimeMillis();
 		try
 		{
 			if(!Utilities.checkExists(external_course_id)) {
@@ -79,6 +81,12 @@ public class RecommenderAPI_3 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 	}
 }

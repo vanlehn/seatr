@@ -19,6 +19,7 @@ import com.asu.seatr.exceptions.UserException;
 import com.asu.seatr.handlers.UserHandler;
 import com.asu.seatr.models.User;
 import com.asu.seatr.rest.models.UserReader;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -35,7 +36,7 @@ public class AdminAPI {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createUsers(UserReader userReader) {
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if (!Utilities.checkExists(userReader.getUsername())) {
 				throw new UserException(MyStatus.ERROR, MyMessage.USERNAME_MISSING);
@@ -63,6 +64,12 @@ public class AdminAPI {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
 		}
 
 	}	

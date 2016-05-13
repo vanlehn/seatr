@@ -30,6 +30,7 @@ import com.asu.seatr.models.analyzers.task_kc.TK_A3;
 import com.asu.seatr.rest.models.analyzer3.KAReader3;
 import com.asu.seatr.rest.models.analyzer3.TKAReader3;
 import com.asu.seatr.rest.models.analyzer3.TKReader3;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
@@ -48,6 +49,7 @@ public class KCAPI_3 {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createKC3(KAReader3 kaReader)
 	{		
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			if(!Utilities.checkExists(kaReader.getExternal_course_id())) {
 				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
@@ -77,6 +79,12 @@ public class KCAPI_3 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 
 	/**
@@ -93,6 +101,7 @@ public class KCAPI_3 {
 	public Response mapKcToTask(TKReader3 tkReader)
 	{
 		Session session = null;
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			boolean replace = tkReader.getReplace();
 			String external_course_id  = tkReader.getExternal_course_id();
@@ -185,6 +194,12 @@ public class KCAPI_3 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 		
 	}

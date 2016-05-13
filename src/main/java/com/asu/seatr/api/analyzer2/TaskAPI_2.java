@@ -21,9 +21,11 @@ import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.models.analyzers.task.T_A2;
 import com.asu.seatr.rest.models.analyzer2.TAReader2;
+import com.asu.seatr.utils.Constants;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
+import com.asu.seatr.utils.Utilities;
 
 //Routes for Tasks for analyzer 2
 @Path("analyzer/2/tasks")
@@ -39,6 +41,7 @@ public class TaskAPI_2 {
 	@QueryParam("external_course_id") String external_course_id
 			)
 	{
+		Long requestTimestamp = System.currentTimeMillis();
 		try{
 			TaskAnalyzerHandler.readByExtId(T_A2.class, external_task_id, external_course_id);
 			TAReader2 result = new TAReader2();
@@ -64,6 +67,12 @@ public class TaskAPI_2 {
 			throw new WebApplicationException(rb);
 			
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 	//create a  task
 	@POST
@@ -73,7 +82,7 @@ public class TaskAPI_2 {
 	{
 		
 			T_A2 t_a2 = new T_A2(); 
-
+		Long requestTimestamp = System.currentTimeMillis();
 		try
 			{
 			// Handle this better..
@@ -103,6 +112,12 @@ public class TaskAPI_2 {
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 	//update a task attribute for analyzer 2
 	@PUT
@@ -110,6 +125,7 @@ public class TaskAPI_2 {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public Response updateTask(TAReader2 taReader2)
 	{
+		Long requestTimestamp = System.currentTimeMillis();
 		try
 		{
 			T_A2 t_a2 = (T_A2)TaskAnalyzerHandler.readByExtId(T_A2.class, taReader2.getExternal_task_id(), taReader2.getExternal_course_id());
@@ -137,6 +153,12 @@ public class TaskAPI_2 {
 					.build();
 			throw new WebApplicationException(rb);
 		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
 	}
 	
 	// Delete record from task analyzer 2
@@ -149,6 +171,7 @@ public class TaskAPI_2 {
 			)
 	{
 
+		Long requestTimestamp = System.currentTimeMillis();
 		try {
 			T_A2 t_a2 = (T_A2)TaskAnalyzerHandler.readByExtId(T_A2.class, external_task_id, external_course_id);
 			TaskAnalyzerHandler.delete(t_a2);
@@ -171,6 +194,12 @@ public class TaskAPI_2 {
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
 	}
 	
