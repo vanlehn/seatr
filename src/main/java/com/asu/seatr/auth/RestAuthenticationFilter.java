@@ -64,6 +64,13 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 		return m.find();
 
 	}
+	private boolean isHelloRequest(ServletRequest request){
+		String path = ((HttpServletRequest) request).getPathInfo();
+		String re1="(\\/hello)";
+		Pattern p = Pattern.compile(re1,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+		Matcher m = p.matcher(path);
+		return m.find();
+	}
 
 	@Override
 	public void doFilter(ServletRequest request, ServletResponse response,
@@ -72,7 +79,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 
 		boolean isCourseCreate = isCourseCreateRequest(request) && ((HttpServletRequest) request).getMethod().equals("POST"); 
 		boolean isSuperAdmin = isSuperAdminRequest(request);		
-
+		boolean isHello = isHelloRequest(request);
 		if (request instanceof HttpServletRequest) {
 			//HttpServletRequest httpServletRequest = (HttpServletRequest) request;
 			MultiReadHttpServletRequest multiReadHttpServletRequest = new MultiReadHttpServletRequest((HttpServletRequest)request);
@@ -89,16 +96,22 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 				else if(((HttpServletRequest) request).getMethod().equals("GET") || ((HttpServletRequest) request).getMethod().equals("DELETE")) {
 					// if its a get or a delete request, get the course_id from URL paramters
 					external_course_id = request.getParameter("external_course_id");
-				} else {
+				} else if(!isHello){
 					// if its a POST or a PUT, get the course_id from request body
 					JSONObject requestParams = requestParamsToJSON(multiReadHttpServletRequest);
 					external_course_id = requestParams.get("external_course_id").toString();
 				}
-
+				if(isHello)
+				{
+					authenticationStatus = true;
+				}
+				else
+				{
 				AuthenticationService authenticationService = new AuthenticationService();
 
 				authenticationStatus = authenticationService
 						.authenticate(authCredentials, external_course_id, isCourseCreate, isSuperAdmin);
+				}
 
 			} catch (UserException e) {
 				exception = true;
