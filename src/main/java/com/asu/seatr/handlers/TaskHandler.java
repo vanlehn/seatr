@@ -133,7 +133,7 @@ public class TaskHandler {
 		Criteria cr = session.createCriteria(typeParameterClass);
 		cr.add(Restrictions.eq("course", course));
 		cr.add(Restrictions.eq("student", stu));
-		cr.add(Restrictions.gt("utility", 0.0));
+		//cr.add(Restrictions.gt("utility", 0.0));
 		List<RecommTaskI> taskList = (List<RecommTaskI>)cr.list();
 		session.close();
 		return taskList;
