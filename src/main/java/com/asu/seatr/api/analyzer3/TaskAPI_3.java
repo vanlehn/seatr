@@ -175,12 +175,12 @@ public class TaskAPI_3 {
 		}
 
 		catch(CourseException e) {
-			Response rb = Response.status(Status.OK).
+			Response rb = Response.status(Status.NOT_FOUND).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
 		catch(TaskException e) {
-			Response rb = Response.status(Status.OK).
+			Response rb = Response.status(Status.NOT_FOUND).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
@@ -224,12 +224,12 @@ public class TaskAPI_3 {
 		}
 
 		catch(CourseException e) {
-			Response rb = Response.status(Status.OK).
+			Response rb = Response.status(Status.NOT_FOUND).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}
 		catch(TaskException e) {
-			Response rb = Response.status(Status.OK).
+			Response rb = Response.status(Status.NOT_FOUND).
 					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);
 		}		
