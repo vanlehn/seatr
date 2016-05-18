@@ -36,11 +36,7 @@ public class StudentAPI_1_Test extends JerseyTest {
 	public void init() {
 		Utilities.setJUnitTest(true);
 		try {
-			Handler.hqlTruncate("S_A1");
-			Handler.hqlTruncate("Student");
-			Handler.hqlTruncate("C_A1");
-			Handler.hqlTruncate("UserCourse");
-			Handler.hqlTruncate("Course");
+			Utilities.clearDatabase();
 		} finally {
 			Utilities.setJUnitTest(false);
 		}

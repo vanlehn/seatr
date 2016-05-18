@@ -56,16 +56,7 @@ public class Recommender_3_API_test extends JerseyTest{
 	{
 		System.out.println("initialization started.....");
 		Utilities.setJUnitTest(true);
-		Handler.hqlTruncate("CourseAnalyzerMap");
-		Handler.hqlTruncate("ST_A3");
-		Handler.hqlTruncate("StudentTask");
-		Handler.hqlTruncate("T_A3");
-		Handler.hqlTruncate("Task");
-		Handler.hqlTruncate("S_A3");
-		Handler.hqlTruncate("Student");
-		Handler.hqlTruncate("C_A3");
-		Handler.hqlTruncate("UserCourse");
-		Handler.hqlTruncate("Course");
+		Utilities.clearDatabase();
 		Utilities.setJUnitTest(false);
 	}
 	@Test(expected=WebApplicationException.class)

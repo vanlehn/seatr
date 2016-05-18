@@ -7,6 +7,7 @@ import java.net.Socket;
 
 import org.hibernate.SessionFactory;
 
+import com.asu.seatr.handlers.Handler;
 import com.asu.seatr.models.analyzers.task_kc.TK_A1;
 import com.asu.seatr.persistence.HibernateUtil;
 
@@ -116,6 +117,28 @@ public class Utilities {
 					}
 				}
 			}
+	}
+	public static void clearDatabase()
+	{
+		Handler.hqlTruncate("RecommTask_A1");
+		Handler.hqlTruncate("CourseAnalyzerMap");
+		Handler.hqlTruncate("ST_A1");
+		Handler.hqlTruncate("ST_A2");
+		Handler.hqlTruncate("ST_A3");
+		Handler.hqlTruncate("StudentTask");
+		Handler.hqlTruncate("T_A1");
+		Handler.hqlTruncate("T_A2");
+		Handler.hqlTruncate("T_A3");
+		Handler.hqlTruncate("Task");
+		Handler.hqlTruncate("S_A1");
+		Handler.hqlTruncate("S_A2");
+		Handler.hqlTruncate("S_A3");
+		Handler.hqlTruncate("Student");
+		Handler.hqlTruncate("C_A1");
+		Handler.hqlTruncate("C_A2");
+		Handler.hqlTruncate("C_A3");
+		Handler.hqlTruncate("UserCourse");
+		Handler.hqlTruncate("Course");
 	}
 
 }

@@ -35,9 +35,7 @@ public class CourseAPI_3_Test extends JerseyTest{
 		Utilities.setJUnitTest(true);
 		try
 		{
-			Handler.hqlTruncate("C_A3");
-			Handler.hqlTruncate("UserCourse");
-			Handler.hqlTruncate("Course");
+			Utilities.clearDatabase();
 		}
 		finally
 		{

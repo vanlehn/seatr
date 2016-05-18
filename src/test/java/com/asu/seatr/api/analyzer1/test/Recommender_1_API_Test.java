@@ -57,17 +57,8 @@ public class Recommender_1_API_Test extends JerseyTest {
 	{
 		System.out.println("initialization started.....");
 		Utilities.setJUnitTest(true);
-		Handler.hqlTruncate("RecommTask_A1");
-		Handler.hqlTruncate("CourseAnalyzerMap");
-		Handler.hqlTruncate("ST_A1");
-		Handler.hqlTruncate("StudentTask");
-		Handler.hqlTruncate("T_A1");
-		Handler.hqlTruncate("Task");
-		Handler.hqlTruncate("S_A1");
-		Handler.hqlTruncate("Student");
-		Handler.hqlTruncate("C_A1");
-		Handler.hqlTruncate("UserCourse");
-		Handler.hqlTruncate("Course");
+		Utilities.clearDatabase();
+
 		Utilities.setJUnitTest(false);
 	}
 	@Test(expected=WebApplicationException.class)
@@ -681,6 +672,8 @@ public class Recommender_1_API_Test extends JerseyTest {
 					.queryParam("external_course_id", "1").queryParam("number_of_tasks", "5").request().get(List.class);
 
 			assertEquals("0 tasks returned for course", 0, resList.size());
+			
+
 		} 
 		catch (WebApplicationException e) {
 			assertEquals("no tasks and no primary analyzer present for course", Status.NOT_FOUND.getStatusCode(),

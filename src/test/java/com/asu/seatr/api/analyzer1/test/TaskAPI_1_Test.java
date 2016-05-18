@@ -36,11 +36,7 @@ public class TaskAPI_1_Test extends JerseyTest {
 	public void init() {
 		Utilities.setJUnitTest(true);
 		try {
-			Handler.hqlTruncate("T_A1");
-			Handler.hqlTruncate("Task");
-			Handler.hqlTruncate("C_A1");
-			Handler.hqlTruncate("UserCourse");
-			Handler.hqlTruncate("Course");
+			Utilities.clearDatabase();
 		} finally {
 			Utilities.setJUnitTest(false);
 		}
