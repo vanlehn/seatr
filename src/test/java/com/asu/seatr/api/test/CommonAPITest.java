@@ -23,7 +23,7 @@ import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
 import com.asu.seatr.api.CommonAPI;
-import com.asu.seatr.api.analyzer1.KCAPI_1;
+import com.asu.seatr.api.analyzer.unansweredtasks.KCAPI_UnansweredTasks;
 import com.asu.seatr.exceptions.AnalyzerException;
 import com.asu.seatr.exceptions.CourseAnalyzerMapException;
 import com.asu.seatr.exceptions.CourseException;
@@ -34,8 +34,8 @@ import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
-import com.asu.seatr.models.analyzers.kc.K_A1;
-import com.asu.seatr.models.analyzers.task_kc.TK_A1;
+import com.asu.seatr.models.analyzers.kc.KC_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
 import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
@@ -43,8 +43,8 @@ import com.asu.seatr.utils.MyStatus;
 import com.asu.seatr.utils.Utilities;
 
 @SuppressWarnings({ "rawtypes", "unchecked" })
-@PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI_1.class
-	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, Handler.class,
+@PrepareForTest({KC_UnansweredTasks.class, KCAnalyzerHandler.class, KCAPI_UnansweredTasks.class
+	, KnowledgeComponentHandler.class, TaskHandler.class, TaskKC_UnansweredTasks.class, TaskKCAnalyzerHandler.class, Handler.class,
 	CourseAnalyzerMapHandler.class, Utilities.class})
 @RunWith(PowerMockRunner.class)
 public class CommonAPITest extends JerseyTest{
@@ -64,10 +64,10 @@ public class CommonAPITest extends JerseyTest{
 		.thenReturn(null);
 
 		PowerMockito.mockStatic(Utilities.class);
-		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TK_A1.class);
+		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TaskKC_UnansweredTasks.class);
 
 		List<TaskKCAnalyzerI> taskKCList = new ArrayList<TaskKCAnalyzerI>();
-		TK_A1 tka1 = new TK_A1();
+		TaskKC_UnansweredTasks tka1 = new TaskKC_UnansweredTasks();
 		taskKCList.add(tka1);
 
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
@@ -97,10 +97,10 @@ public class CommonAPITest extends JerseyTest{
 		.thenThrow(new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND));
 
 		PowerMockito.mockStatic(Utilities.class);
-		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TK_A1.class);
+		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TaskKC_UnansweredTasks.class);
 
 		List<TaskKCAnalyzerI> taskKCList = new ArrayList<TaskKCAnalyzerI>();
-		TK_A1 tka1 = new TK_A1();
+		TaskKC_UnansweredTasks tka1 = new TaskKC_UnansweredTasks();
 		taskKCList.add(tka1);
 
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
@@ -130,10 +130,10 @@ public class CommonAPITest extends JerseyTest{
 		.thenThrow(new AnalyzerException(MyStatus.ERROR, MyMessage.ANALYZER_NOT_FOUND));
 
 		PowerMockito.mockStatic(Utilities.class);
-		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TK_A1.class);
+		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TaskKC_UnansweredTasks.class);
 
 		List<TaskKCAnalyzerI> taskKCList = new ArrayList<TaskKCAnalyzerI>();
-		TK_A1 tka1 = new TK_A1();
+		TaskKC_UnansweredTasks tka1 = new TaskKC_UnansweredTasks();
 		taskKCList.add(tka1);
 
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
@@ -163,10 +163,10 @@ public class CommonAPITest extends JerseyTest{
 		.thenThrow(new CourseAnalyzerMapException(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_MAP_NOT_FOUND));
 
 		PowerMockito.mockStatic(Utilities.class);
-		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TK_A1.class);
+		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TaskKC_UnansweredTasks.class);
 
 		List<TaskKCAnalyzerI> taskKCList = new ArrayList<TaskKCAnalyzerI>();
-		TK_A1 tka1 = new TK_A1();
+		TaskKC_UnansweredTasks tka1 = new TaskKC_UnansweredTasks();
 		taskKCList.add(tka1);
 
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);
@@ -196,10 +196,10 @@ public class CommonAPITest extends JerseyTest{
 		.thenReturn(null);
 
 		PowerMockito.mockStatic(Utilities.class);
-		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TK_A1.class);
+		PowerMockito.when(Utilities.getTKClass(Mockito.anyInt())).thenReturn(TaskKC_UnansweredTasks.class);
 
 		List<TaskKCAnalyzerI> taskKCList = new ArrayList<TaskKCAnalyzerI>();
-		TK_A1 tka1 = new TK_A1();
+		TaskKC_UnansweredTasks tka1 = new TaskKC_UnansweredTasks();
 		taskKCList.add(tka1);
 
 		PowerMockito.mockStatic(TaskKCAnalyzerHandler.class);

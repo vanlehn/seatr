@@ -39,32 +39,32 @@
 		<mapping class="com.asu.seatr.models.User" />
 		<mapping class="com.asu.seatr.models.UserCourse" />
 
-		<mapping class="com.asu.seatr.models.analyzers.student.S_A1" />
-		<mapping class="com.asu.seatr.models.analyzers.task.T_A1" />
-		<mapping class="com.asu.seatr.models.analyzers.course.C_A1" />
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A1" />
-		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A1" />
-		<mapping class="com.asu.seatr.models.analyzers.kc.K_A1" />
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_A1" />
+		<mapping class="com.asu.seatr.models.analyzers.student.Student_UnansweredTasks" />
+		<mapping class="com.asu.seatr.models.analyzers.task.Task_UnansweredTasks" />
+		<mapping class="com.asu.seatr.models.analyzers.course.Course_UnansweredTasks" />
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.StudentTask_UnansweredTasks" />
+		<mapping class="com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks" />
+		<mapping class="com.asu.seatr.models.analyzers.kc.KC_UnansweredTasks" />
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_UnansweredTasks" />
 		
-		<mapping class="com.asu.seatr.models.analyzers.course.C_A3" />
-		<mapping class="com.asu.seatr.models.analyzers.student.S_A3" />
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A3" />
-		<mapping class="com.asu.seatr.models.analyzers.task.T_A3" />
-		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A3" />
-		<mapping class="com.asu.seatr.models.analyzers.kc.K_A3" />
+		<mapping class="com.asu.seatr.models.analyzers.course.Course_Required_Optional" />
+		<mapping class="com.asu.seatr.models.analyzers.student.Student_Required_Optional" />
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.StudentTask_Required_Optional" />
+		<mapping class="com.asu.seatr.models.analyzers.task.Task_Required_Optional" />
+		<mapping class="com.asu.seatr.models.analyzers.task_kc.TaskKC_Required_Optional" />
+		<mapping class="com.asu.seatr.models.analyzers.kc.KC_Required_Optional" />
 		
 		
 		
-		<mapping class="com.asu.seatr.models.analyzers.student.S_A2"/>
-		<mapping class="com.asu.seatr.models.analyzers.task.T_A2"/>
-		<mapping class="com.asu.seatr.models.analyzers.course.C_A2"/>
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.ST_A2"/>
-		<mapping class="com.asu.seatr.models.analyzers.task_kc.TK_A2"/>
-		<mapping class="com.asu.seatr.models.analyzers.kc.K_A2"/>
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_A2"/>
-		<mapping class="com.asu.seatr.models.analyzers.studenttask.STU_A2"/>
-		<mapping class="com.asu.seatr.models.analyzers.student.SKC_A2"/>
+		<mapping class="com.asu.seatr.models.analyzers.student.Student_N_In_A_Row"/>
+		<mapping class="com.asu.seatr.models.analyzers.task.Task_N_In_A_Row"/>
+		<mapping class="com.asu.seatr.models.analyzers.course.Course_N_In_A_Row"/>
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.StudentTask_N_In_A_Row"/>
+		<mapping class="com.asu.seatr.models.analyzers.task_kc.TaskKC_N_In_A_Row"/>
+		<mapping class="com.asu.seatr.models.analyzers.kc.KC_N_In_A_Row"/>
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_N_In_A_Row"/>
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.STU_N_In_A_Row"/>
+		<mapping class="com.asu.seatr.models.analyzers.student.SKC_N_In_A_Row"/>
 
 
 	</session-factory>

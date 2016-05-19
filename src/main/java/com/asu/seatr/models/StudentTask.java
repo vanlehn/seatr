@@ -14,8 +14,8 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.models.analyzers.studenttask.ST_A1;
-import com.asu.seatr.models.analyzers.studenttask.ST_A3;
+import com.asu.seatr.models.analyzers.studenttask.StudentTask_UnansweredTasks;
+import com.asu.seatr.models.analyzers.studenttask.StudentTask_Required_Optional;
 
 @Entity
 @Table(name = "student_task")
@@ -38,10 +38,10 @@ public class StudentTask {
 	private Long timestamp;
 
 	@OneToMany(mappedBy = "studentTask", cascade=CascadeType.ALL)
-	private List<ST_A1> ST_A1;
+	private List<StudentTask_UnansweredTasks> ST_A1;
 
 	@OneToMany(mappedBy = "studentTask", cascade=CascadeType.ALL)
-	private List<ST_A3> ST_A3;
+	private List<StudentTask_Required_Optional> ST_A3;
 
 
 	public int getId() {
@@ -68,10 +68,10 @@ public class StudentTask {
 	public void setTimestamp(Long timestamp) {
 		this.timestamp = timestamp;
 	}
-	public List<ST_A1> getST_A1() {
+	public List<StudentTask_UnansweredTasks> getST_A1() {
 		return ST_A1;
 	}
-	public void setST_A1(List<ST_A1> sT_A1) {
+	public void setST_A1(List<StudentTask_UnansweredTasks> sT_A1) {
 		ST_A1 = sT_A1;
 	}
 

@@ -20,21 +20,21 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.analyzer1.TaskAPI_1;
+import com.asu.seatr.api.analyzer.unansweredtasks.TaskAPI_UnansweredTasks;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.analyzers.task.T_A1;
+import com.asu.seatr.models.analyzers.task.Task_UnansweredTasks;
 import com.asu.seatr.models.interfaces.TaskAnalyzerI;
-import com.asu.seatr.rest.models.analyzer1.TAReader1;
+import com.asu.seatr.rest.models.analyzer.unansweredtasks.TAReader_UnansweredTasks;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 
-@PrepareForTest({TaskAnalyzerHandler.class,T_A1.class,TaskAPI_1.class,TaskHandler.class})
+@PrepareForTest({TaskAnalyzerHandler.class,Task_UnansweredTasks.class,TaskAPI_UnansweredTasks.class,TaskHandler.class})
 @RunWith(PowerMockRunner.class)
 public class TaskAPITest extends JerseyTest
 {
@@ -44,18 +44,18 @@ public class TaskAPITest extends JerseyTest
 	@Override
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-		return new ResourceConfig(TaskAPI_1.class);
+		return new ResourceConfig(TaskAPI_UnansweredTasks.class);
 	}
 
 	@Test
 	public void getTaskTestSuccess() throws CourseException, TaskException
 	{
-		T_A1 ta1 = new T_A1();
+		Task_UnansweredTasks ta1 = new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
 		PowerMockito.when(TaskAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString(), Mockito.anyString())).thenReturn(ta1);
-		final TAReader1 tareader = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(TAReader1.class);
+		final TAReader_UnansweredTasks tareader = target(ANALYZER1_URL).queryParam("external_task_id", 10).queryParam("external_course_id", 20).request().get(TAReader_UnansweredTasks.class);
 		assertEquals(new String("20"),tareader.getExternal_course_id());
 		assertEquals(new String("10"), tareader.getExternal_task_id());
 		assertEquals(new Integer(10), tareader.getS_difficulty_level());
@@ -63,7 +63,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void getTaskTest_FailsWithCourseNotFound() throws CourseException, TaskException
 	{
-		T_A1 ta1 = new T_A1();
+		Task_UnansweredTasks ta1 = new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -77,7 +77,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void getTaskTest_FailsWithTaskNotFound() throws CourseException, TaskException
 	{
-		T_A1 ta1 = new T_A1();
+		Task_UnansweredTasks ta1 = new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -90,7 +90,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void getTaskTest_FailsWithTaskAnalyzerNotFound() throws CourseException, TaskException
 	{
-		T_A1 ta1 = new T_A1();
+		Task_UnansweredTasks ta1 = new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -104,8 +104,8 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void createTaskTestSuccess() throws Exception
 	{
-		T_A1 ta1 = Mockito.mock(T_A1.class);
-		PowerMockito.whenNew(T_A1.class).withNoArguments().thenReturn(ta1);
+		Task_UnansweredTasks ta1 = Mockito.mock(Task_UnansweredTasks.class);
+		PowerMockito.whenNew(Task_UnansweredTasks.class).withNoArguments().thenReturn(ta1);
 		//Mockito.stubVoid(ta1).toReturn().on().createTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		Mockito.doNothing().when(ta1).createTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -116,7 +116,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("s_difficulty_level", "10");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(T_A1.class).withNoArguments();
+		PowerMockito.verifyNew(Task_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_CREATED), 
 				resp.readEntity(String.class));
@@ -124,8 +124,8 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void createTaskTest_FailsWithPropertyNull() throws Exception
 	{
-		T_A1 ta1 = Mockito.mock(T_A1.class);
-		PowerMockito.whenNew(T_A1.class).withNoArguments().thenReturn(ta1);
+		Task_UnansweredTasks ta1 = Mockito.mock(Task_UnansweredTasks.class);
+		PowerMockito.whenNew(Task_UnansweredTasks.class).withNoArguments().thenReturn(ta1);
 		//Mockito.stubVoid(ta1).toReturn().on().createTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		Mockito.doThrow(new TaskException(MyStatus.ERROR,MyMessage.TASK_PROPERTY_NULL)).when(ta1).createTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -136,7 +136,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("s_difficulty_level", "10");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(T_A1.class).withNoArguments();
+		PowerMockito.verifyNew(Task_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_PROPERTY_NULL), 
 				resp.readEntity(String.class));
@@ -144,8 +144,8 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void createTaskTest_FailsWithCourseNotFound() throws Exception
 	{
-		T_A1 ta1 = Mockito.mock(T_A1.class);
-		PowerMockito.whenNew(T_A1.class).withNoArguments().thenReturn(ta1);
+		Task_UnansweredTasks ta1 = Mockito.mock(Task_UnansweredTasks.class);
+		PowerMockito.whenNew(Task_UnansweredTasks.class).withNoArguments().thenReturn(ta1);
 		//Mockito.stubVoid(ta1).toReturn().on().createTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		Mockito.doThrow(new CourseException(MyStatus.ERROR,MyMessage.COURSE_NOT_FOUND)).when(ta1).createTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -156,7 +156,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("s_difficulty_level", "10");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(T_A1.class).withNoArguments();
+		PowerMockito.verifyNew(Task_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -164,8 +164,8 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void createTaskTest_FailsWithTaskAnalyzerAlreadyPresent() throws Exception
 	{
-		T_A1 ta1 = Mockito.mock(T_A1.class);
-		PowerMockito.whenNew(T_A1.class).withNoArguments().thenReturn(ta1);
+		Task_UnansweredTasks ta1 = Mockito.mock(Task_UnansweredTasks.class);
+		PowerMockito.whenNew(Task_UnansweredTasks.class).withNoArguments().thenReturn(ta1);
 		//Mockito.stubVoid(ta1).toReturn().on().createTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		Mockito.doNothing().when(ta1).createTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -176,7 +176,7 @@ public class TaskAPITest extends JerseyTest
 		data.put("s_difficulty_level", "10");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(T_A1.class).withNoArguments();
+		PowerMockito.verifyNew(Task_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_ANALYZER_ALREADY_PRESENT), 
 				resp.readEntity(String.class));
@@ -185,7 +185,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void updateTaskTestSuccess() throws CourseException, TaskException
 	{
-		T_A1 ta1 = new T_A1();
+		Task_UnansweredTasks ta1 = new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -203,7 +203,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void updateTaskTest_FailsWithCourseNotFound() throws CourseException, TaskException
 	{
-		T_A1 ta1 = new T_A1();
+		Task_UnansweredTasks ta1 = new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -220,7 +220,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void updateTaskTest_FailsWithTaskNotFound() throws CourseException, TaskException
 	{
-		T_A1 ta1 = new T_A1();
+		Task_UnansweredTasks ta1 = new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -237,7 +237,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void updateTaskTest_FailsWithTaskAnalyzerNotFound() throws CourseException, TaskException
 	{
-		T_A1 ta1 = new T_A1();
+		Task_UnansweredTasks ta1 = new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -255,7 +255,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void deleteTask1AnalyzerTestSuccess() throws Exception
 	{
-		T_A1 ta1= new T_A1();
+		Task_UnansweredTasks ta1= new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -269,7 +269,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void deleteTask1AnalyzerTest_FailWithCourseNotFound() throws Exception
 	{
-		T_A1 ta1= new T_A1();
+		Task_UnansweredTasks ta1= new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -283,7 +283,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void deleteTask1AnalyzerTest_FailWithTaskNotFound() throws Exception
 	{
-		T_A1 ta1= new T_A1();
+		Task_UnansweredTasks ta1= new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -297,7 +297,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void deleteTask1AnalyzerTest_FailWithTaskAnalyzerNotFound() throws Exception
 	{
-		T_A1 ta1= new T_A1();
+		Task_UnansweredTasks ta1= new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		PowerMockito.mockStatic(TaskAnalyzerHandler.class);
@@ -312,7 +312,7 @@ public class TaskAPITest extends JerseyTest
 	@Test
 	public void deleteTask() throws Exception
 	{
-		T_A1 ta1= new T_A1();
+		Task_UnansweredTasks ta1= new Task_UnansweredTasks();
 		ta1.setId(1);
 		ta1.setS_difficulty_level(10);
 		Task task = new Task();

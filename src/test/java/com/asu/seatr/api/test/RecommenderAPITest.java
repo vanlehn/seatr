@@ -28,20 +28,20 @@ import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
-import com.asu.seatr.handlers.analyzer3.RecommTaskHandler_3;
+import com.asu.seatr.handlers.analyzer.required_optional.RecommTaskHandler_Required_Optional;
 import com.asu.seatr.models.Analyzer;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.analyzers.studenttask.RecommTask_A1;
+import com.asu.seatr.models.analyzers.studenttask.RecommTask_UnansweredTasks;
 import com.asu.seatr.models.interfaces.RecommTaskI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 @PrepareForTest({StudentHandler.class,CourseAnalyzerMapHandler.class,TaskHandler.class,TaskAnalyzerHandler.class, CourseHandler.class,
-	RecommTaskHandler_3.class})
+	RecommTaskHandler_Required_Optional.class})
 @RunWith(PowerMockRunner.class)
 public class RecommenderAPITest extends JerseyTest{
 
@@ -114,7 +114,7 @@ public class RecommenderAPITest extends JerseyTest{
 		PowerMockito.when(CourseAnalyzerMapHandler.getPrimaryAnalyzerIdFromExtCourseId(Mockito.anyString())).thenReturn(cam);
 		PowerMockito.mockStatic(TaskHandler.class);
 		List<RecommTaskI> recommTaskList = new ArrayList<RecommTaskI>();
-		RecommTask_A1 ta1 = new RecommTask_A1();
+		RecommTask_UnansweredTasks ta1 = new RecommTask_UnansweredTasks();
 		ta1.setId(1);
 		Task task = new Task();
 		task.setExternal_id("10");
@@ -168,7 +168,7 @@ public class RecommenderAPITest extends JerseyTest{
 		course.setId(1);
 		PowerMockito.mockStatic(CourseHandler.class);
 		PowerMockito.mockStatic(StudentHandler.class);
-		PowerMockito.mockStatic(RecommTaskHandler_3.class);
+		PowerMockito.mockStatic(RecommTaskHandler_Required_Optional.class);
 
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenReturn(student);
 		PowerMockito.when(CourseHandler.getByExternalId(Mockito.anyString())).thenReturn(course);
@@ -178,7 +178,7 @@ public class RecommenderAPITest extends JerseyTest{
 		l.add("1");
 		l.add("2");
 		l.add("3");
-		PowerMockito.when(RecommTaskHandler_3.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
+		PowerMockito.when(RecommTaskHandler_Required_Optional.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
 				Mockito.anyInt())).thenReturn(l);
 
 		final List<String> resp = target(GETTASKS_3_URL).queryParam("external_student_id",1).queryParam("external_course_id", 35).
@@ -200,7 +200,7 @@ public class RecommenderAPITest extends JerseyTest{
 		course.setId(1);
 		PowerMockito.mockStatic(CourseHandler.class);
 		PowerMockito.mockStatic(StudentHandler.class);
-		PowerMockito.mockStatic(RecommTaskHandler_3.class);
+		PowerMockito.mockStatic(RecommTaskHandler_Required_Optional.class);
 
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenReturn(student);
 		PowerMockito.when(CourseHandler.getByExternalId(Mockito.anyString())).thenThrow(new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND));
@@ -210,7 +210,7 @@ public class RecommenderAPITest extends JerseyTest{
 		l.add("1");
 		l.add("2");
 		l.add("3");
-		PowerMockito.when(RecommTaskHandler_3.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
+		PowerMockito.when(RecommTaskHandler_Required_Optional.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
 				Mockito.anyInt())).thenReturn(l);
 
 		try {
@@ -233,7 +233,7 @@ public class RecommenderAPITest extends JerseyTest{
 		course.setId(1);
 		PowerMockito.mockStatic(CourseHandler.class);
 		PowerMockito.mockStatic(StudentHandler.class);
-		PowerMockito.mockStatic(RecommTaskHandler_3.class);
+		PowerMockito.mockStatic(RecommTaskHandler_Required_Optional.class);
 
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenThrow(new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND));
 		PowerMockito.when(CourseHandler.getByExternalId(Mockito.anyString())).thenReturn(course);
@@ -243,7 +243,7 @@ public class RecommenderAPITest extends JerseyTest{
 		l.add("1");
 		l.add("2");
 		l.add("3");
-		PowerMockito.when(RecommTaskHandler_3.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
+		PowerMockito.when(RecommTaskHandler_Required_Optional.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
 				Mockito.anyInt())).thenReturn(l);
 
 		try {
@@ -266,7 +266,7 @@ public class RecommenderAPITest extends JerseyTest{
 		course.setId(1);
 		PowerMockito.mockStatic(CourseHandler.class);
 		PowerMockito.mockStatic(StudentHandler.class);
-		PowerMockito.mockStatic(RecommTaskHandler_3.class);
+		PowerMockito.mockStatic(RecommTaskHandler_Required_Optional.class);
 
 		PowerMockito.when(StudentHandler.getByExternalId(Mockito.anyString(), Mockito.anyString())).thenReturn(student);
 		PowerMockito.when(CourseHandler.getByExternalId(Mockito.anyString())).thenReturn(course);
@@ -276,7 +276,7 @@ public class RecommenderAPITest extends JerseyTest{
 		l.add("1");
 		l.add("2");
 		l.add("3");
-		PowerMockito.when(RecommTaskHandler_3.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
+		PowerMockito.when(RecommTaskHandler_Required_Optional.getTasks((Course)Mockito.anyObject(), (Student)Mockito.anyObject(), 
 				Mockito.anyInt())).thenThrow(new RecommException(MyStatus.ERROR, MyMessage.RECOMMENDATION_ERROR));
 
 		try {

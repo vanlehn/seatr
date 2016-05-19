@@ -15,8 +15,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.models.analyzers.student.S_A1;
-import com.asu.seatr.models.analyzers.student.S_A3;
+import com.asu.seatr.models.analyzers.student.Student_UnansweredTasks;
+import com.asu.seatr.models.analyzers.student.Student_Required_Optional;
 
 @Entity
 @Table(name = "student", uniqueConstraints = @UniqueConstraint(columnNames = {"external_id","course_id"}))
@@ -37,10 +37,10 @@ public class Student {
 	private List<StudentTask> StudentTask;
 
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
-	private List<S_A1> S_A1;
+	private List<Student_UnansweredTasks> S_A1;
 
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
-	private List<S_A3> S_A3;
+	private List<Student_Required_Optional> S_A3;
 
 	public int getId() {
 		return id;
@@ -66,10 +66,10 @@ public class Student {
 	public void setStudentTask(List<StudentTask> studentTask) {
 		StudentTask = studentTask;
 	}
-	public List<S_A1> getS_A1() {
+	public List<Student_UnansweredTasks> getS_A1() {
 		return S_A1;
 	}
-	public void setS_A1(List<S_A1> s_A1) {
+	public void setS_A1(List<Student_UnansweredTasks> s_A1) {
 		S_A1 = s_A1;
 	}	
 }

@@ -8,7 +8,7 @@ import java.net.Socket;
 import org.hibernate.SessionFactory;
 
 import com.asu.seatr.handlers.Handler;
-import com.asu.seatr.models.analyzers.task_kc.TK_A1;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
 import com.asu.seatr.persistence.HibernateUtil;
 
 @SuppressWarnings({ "rawtypes" })
@@ -34,7 +34,8 @@ public class Utilities {
 	}
 
 	public static String getTKTableNameByAnalyzerId(Integer analyzer_id) {
-		String tka = "TK_A";
+		String tka = "TaskKC_";
+		//write code to get analyzer name from id and append the analyzer name here
 		return tka + analyzer_id.toString();
 	}
 
@@ -53,7 +54,7 @@ public class Utilities {
 	public static Class getTKClass(Integer from_analyzer_id) {
 
 		switch(from_analyzer_id) {
-		case 1: return TK_A1.class;
+		case 1: return TaskKC_UnansweredTasks.class;
 		default: return null;
 		}
 
@@ -120,23 +121,23 @@ public class Utilities {
 	}
 	public static void clearDatabase()
 	{
-		Handler.hqlTruncate("RecommTask_A1");
+		Handler.hqlTruncate("RecommTask_UnansweredTasks");
 		Handler.hqlTruncate("CourseAnalyzerMap");
-		Handler.hqlTruncate("ST_A1");
-		Handler.hqlTruncate("ST_A2");
-		Handler.hqlTruncate("ST_A3");
+		Handler.hqlTruncate("StudentTask_UnansweredTasks");
+		Handler.hqlTruncate("StudentTask_N_In_A_Row");
+		Handler.hqlTruncate("StudentTask_Required_Optional");
 		Handler.hqlTruncate("StudentTask");
-		Handler.hqlTruncate("T_A1");
-		Handler.hqlTruncate("T_A2");
-		Handler.hqlTruncate("T_A3");
+		Handler.hqlTruncate("Task_UnansweredTasks");
+		Handler.hqlTruncate("Task_N_In_A_Row");
+		Handler.hqlTruncate("Task_Required_Optional");
 		Handler.hqlTruncate("Task");
-		Handler.hqlTruncate("S_A1");
-		Handler.hqlTruncate("S_A2");
-		Handler.hqlTruncate("S_A3");
+		Handler.hqlTruncate("Student_UnansweredTasks");
+		Handler.hqlTruncate("Student_N_In_A_Row");
+		Handler.hqlTruncate("Student_Required_Optional");
 		Handler.hqlTruncate("Student");
-		Handler.hqlTruncate("C_A1");
-		Handler.hqlTruncate("C_A2");
-		Handler.hqlTruncate("C_A3");
+		Handler.hqlTruncate("Course_UnansweredTasks");
+		Handler.hqlTruncate("Course_N_In_A_Row");
+		Handler.hqlTruncate("Course_Required_Optional");
 		Handler.hqlTruncate("UserCourse");
 		Handler.hqlTruncate("Course");
 	}

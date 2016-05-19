@@ -15,8 +15,8 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.models.analyzers.kc.K_A1;
-import com.asu.seatr.models.analyzers.task_kc.TK_A1;
+import com.asu.seatr.models.analyzers.kc.KC_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
 
 @Entity
 @Table(name = "kc", uniqueConstraints = @UniqueConstraint(columnNames = {"external_id","course_id"}))
@@ -34,10 +34,10 @@ public class KnowledgeComponent {
 	private Course course;
 
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
-	private List<K_A1> K_A1;
+	private List<KC_UnansweredTasks> K_A1;
 
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
-	private List<TK_A1> TK_A1;
+	private List<TaskKC_UnansweredTasks> TK_A1;
 
 	public int getId() {
 		return id;
@@ -63,19 +63,19 @@ public class KnowledgeComponent {
 		this.course = course;
 	}
 
-	public List<K_A1> getK_A1() {
+	public List<KC_UnansweredTasks> getK_A1() {
 		return K_A1;
 	}
 
-	public void setK_A1(List<K_A1> k_A1) {
+	public void setK_A1(List<KC_UnansweredTasks> k_A1) {
 		K_A1 = k_A1;
 	}
 
-	public List<TK_A1> getTK_A1() {
+	public List<TaskKC_UnansweredTasks> getTK_A1() {
 		return TK_A1;
 	}
 
-	public void setTK_A1(List<TK_A1> tK_A1) {
+	public void setTK_A1(List<TaskKC_UnansweredTasks> tK_A1) {
 		TK_A1 = tK_A1;
 	}
 

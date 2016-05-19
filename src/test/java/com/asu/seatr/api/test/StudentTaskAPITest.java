@@ -20,19 +20,19 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.analyzer1.StudentTaskAPI_1;
+import com.asu.seatr.api.analyzer.unansweredtasks.StudentTaskAPI_UnansweredTasks;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.StudentTaskAnalyzerHandler;
-import com.asu.seatr.models.analyzers.studenttask.ST_A1;
+import com.asu.seatr.models.analyzers.studenttask.StudentTask_UnansweredTasks;
 import com.asu.seatr.models.interfaces.StudentTaskAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
 
-@PrepareForTest({StudentTaskAnalyzerHandler.class,ST_A1.class,StudentTaskAPI_1.class})
+@PrepareForTest({StudentTaskAnalyzerHandler.class,StudentTask_UnansweredTasks.class,StudentTaskAPI_UnansweredTasks.class})
 @RunWith(PowerMockRunner.class)
 public class StudentTaskAPITest extends JerseyTest
 {
@@ -41,14 +41,14 @@ public class StudentTaskAPITest extends JerseyTest
 	@Override
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-		return new ResourceConfig(StudentTaskAPI_1.class);
+		return new ResourceConfig(StudentTaskAPI_UnansweredTasks.class);
 	}
 
 	@Test
 	public void createStudentTaskTestSuccess() throws Exception
 	{
-		ST_A1 st_a1 = Mockito.mock(ST_A1.class);
-		PowerMockito.whenNew(ST_A1.class).withNoArguments().thenReturn(st_a1);
+		StudentTask_UnansweredTasks st_a1 = Mockito.mock(StudentTask_UnansweredTasks.class);
+		PowerMockito.whenNew(StudentTask_UnansweredTasks.class).withNoArguments().thenReturn(st_a1);
 		Mockito.doNothing().when(st_a1).createStudentTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(StudentTaskAnalyzerHandler.class);
 		PowerMockito.when(StudentTaskAnalyzerHandler.save((StudentTaskAnalyzerI)Mockito.anyObject())).thenReturn(st_a1);
@@ -60,7 +60,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("d_time_lastattempt", "83681");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
+		PowerMockito.verifyNew(StudentTask_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_TASK_CREATED), 
 				resp.readEntity(String.class));
@@ -68,8 +68,8 @@ public class StudentTaskAPITest extends JerseyTest
 	@Test
 	public void createStudentTaskTest_FailWithCourseNotFound() throws Exception
 	{
-		ST_A1 st_a1 = Mockito.mock(ST_A1.class);
-		PowerMockito.whenNew(ST_A1.class).withNoArguments().thenReturn(st_a1);
+		StudentTask_UnansweredTasks st_a1 = Mockito.mock(StudentTask_UnansweredTasks.class);
+		PowerMockito.whenNew(StudentTask_UnansweredTasks.class).withNoArguments().thenReturn(st_a1);
 		Mockito.doThrow(new CourseException(MyStatus.ERROR,MyMessage.COURSE_NOT_FOUND)).when(st_a1).createStudentTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(StudentTaskAnalyzerHandler.class);
 		PowerMockito.when(StudentTaskAnalyzerHandler.save((StudentTaskAnalyzerI)Mockito.anyObject())).thenReturn(st_a1);
@@ -81,7 +81,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("d_time_lastattempt", "83681");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
+		PowerMockito.verifyNew(StudentTask_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -89,8 +89,8 @@ public class StudentTaskAPITest extends JerseyTest
 	@Test
 	public void createStudentTaskTest_FailWithTaskNotFound() throws Exception
 	{
-		ST_A1 st_a1 = Mockito.mock(ST_A1.class);
-		PowerMockito.whenNew(ST_A1.class).withNoArguments().thenReturn(st_a1);
+		StudentTask_UnansweredTasks st_a1 = Mockito.mock(StudentTask_UnansweredTasks.class);
+		PowerMockito.whenNew(StudentTask_UnansweredTasks.class).withNoArguments().thenReturn(st_a1);
 		Mockito.doThrow(new TaskException(MyStatus.ERROR,MyMessage.TASK_NOT_FOUND)).when(st_a1).createStudentTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(StudentTaskAnalyzerHandler.class);
 		PowerMockito.when(StudentTaskAnalyzerHandler.save((StudentTaskAnalyzerI)Mockito.anyObject())).thenReturn(st_a1);
@@ -102,7 +102,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("d_time_lastattempt", "83681");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
+		PowerMockito.verifyNew(StudentTask_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.TASK_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -110,8 +110,8 @@ public class StudentTaskAPITest extends JerseyTest
 	@Test
 	public void createStudentTaskTest_FailWithStudentNotFound() throws Exception
 	{
-		ST_A1 st_a1 = Mockito.mock(ST_A1.class);
-		PowerMockito.whenNew(ST_A1.class).withNoArguments().thenReturn(st_a1);
+		StudentTask_UnansweredTasks st_a1 = Mockito.mock(StudentTask_UnansweredTasks.class);
+		PowerMockito.whenNew(StudentTask_UnansweredTasks.class).withNoArguments().thenReturn(st_a1);
 		Mockito.doThrow(new StudentException(MyStatus.ERROR,MyMessage.STUDENT_NOT_FOUND)).when(st_a1).createStudentTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(StudentTaskAnalyzerHandler.class);
 		PowerMockito.when(StudentTaskAnalyzerHandler.save((StudentTaskAnalyzerI)Mockito.anyObject())).thenReturn(st_a1);
@@ -123,7 +123,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("d_time_lastattempt", "83681");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
+		PowerMockito.verifyNew(StudentTask_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -131,8 +131,8 @@ public class StudentTaskAPITest extends JerseyTest
 	@Test
 	public void createStudentTaskTest_FailWithStudentTaskPropertyNull() throws Exception
 	{
-		ST_A1 st_a1 = Mockito.mock(ST_A1.class);
-		PowerMockito.whenNew(ST_A1.class).withNoArguments().thenReturn(st_a1);
+		StudentTask_UnansweredTasks st_a1 = Mockito.mock(StudentTask_UnansweredTasks.class);
+		PowerMockito.whenNew(StudentTask_UnansweredTasks.class).withNoArguments().thenReturn(st_a1);
 		Mockito.doThrow(new TaskException(MyStatus.ERROR,MyMessage.STUDENT_TASK_PROPERTY_NULL)).when(st_a1).createStudentTask(Mockito.anyString(), Mockito.anyString(), Mockito.anyString(), Mockito.anyInt());
 		PowerMockito.mockStatic(StudentTaskAnalyzerHandler.class);
 		PowerMockito.when(StudentTaskAnalyzerHandler.save((StudentTaskAnalyzerI)Mockito.anyObject())).thenReturn(st_a1);
@@ -144,7 +144,7 @@ public class StudentTaskAPITest extends JerseyTest
 		data.put("d_time_lastattempt", "83681");
 		final Response resp  = target(ANALYZER1_URL)
 				.request().post(Entity.json(data), Response.class);
-		PowerMockito.verifyNew(ST_A1.class).withNoArguments();
+		PowerMockito.verifyNew(StudentTask_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.STUDENT_TASK_PROPERTY_NULL), 
 				resp.readEntity(String.class));

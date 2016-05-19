@@ -12,9 +12,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.models.analyzers.course.C_A1;
-import com.asu.seatr.models.analyzers.student.S_A1;
-import com.asu.seatr.models.analyzers.task.T_A1;
+import com.asu.seatr.models.analyzers.course.Course_UnansweredTasks;
+import com.asu.seatr.models.analyzers.student.Student_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task.Task_UnansweredTasks;
 @Entity
 @Table( name="course")
 
@@ -47,13 +47,13 @@ public class Course {
 	private List<Task> Task;
 
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
-	private List<C_A1> C_A1;
+	private List<Course_UnansweredTasks> C_A1;
 
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
-	private List<S_A1> S_A1;
+	private List<Student_UnansweredTasks> S_A1;
 
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
-	private List<T_A1> T_A1;
+	private List<Task_UnansweredTasks> T_A1;
 
 
 
@@ -106,22 +106,22 @@ public class Course {
 	public void setTask(List<Task> task) {
 		Task = task;
 	}
-	public List<C_A1> getC_A1() {
+	public List<Course_UnansweredTasks> getC_A1() {
 		return C_A1;
 	}
-	public void setC_A1(List<C_A1> c_A1) {
+	public void setC_A1(List<Course_UnansweredTasks> c_A1) {
 		C_A1 = c_A1;
 	}
-	public List<S_A1> getS_A1() {
+	public List<Student_UnansweredTasks> getS_A1() {
 		return S_A1;
 	}
-	public void setS_A1(List<S_A1> s_A1) {
+	public void setS_A1(List<Student_UnansweredTasks> s_A1) {
 		S_A1 = s_A1;
 	}
-	public List<T_A1> getT_A1() {
+	public List<Task_UnansweredTasks> getT_A1() {
 		return T_A1;
 	}
-	public void setT_A1(List<T_A1> t_A1) {
+	public void setT_A1(List<Task_UnansweredTasks> t_A1) {
 		T_A1 = t_A1;
 	}	
 

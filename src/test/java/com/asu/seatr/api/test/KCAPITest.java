@@ -25,7 +25,7 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.analyzer1.KCAPI_1;
+import com.asu.seatr.api.analyzer.unansweredtasks.KCAPI_UnansweredTasks;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.exceptions.TaskException;
@@ -37,8 +37,8 @@ import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.analyzers.kc.K_A1;
-import com.asu.seatr.models.analyzers.task_kc.TK_A1;
+import com.asu.seatr.models.analyzers.kc.KC_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
 import com.asu.seatr.models.interfaces.KCAnalyzerI;
 import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 import com.asu.seatr.utils.MyMessage;
@@ -46,8 +46,8 @@ import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;;
 
 @SuppressWarnings({ "rawtypes", "deprecation" })
-@PrepareForTest({K_A1.class, KCAnalyzerHandler.class, KCAPI_1.class
-	, KnowledgeComponentHandler.class, TaskHandler.class, TK_A1.class, TaskKCAnalyzerHandler.class, CourseHandler.class,KCAnalyzerHandler.class,Session.class,Transaction.class})
+@PrepareForTest({KC_UnansweredTasks.class, KCAnalyzerHandler.class, KCAPI_UnansweredTasks.class
+	, KnowledgeComponentHandler.class, TaskHandler.class, TaskKC_UnansweredTasks.class, TaskKCAnalyzerHandler.class, CourseHandler.class,KCAnalyzerHandler.class,Session.class,Transaction.class})
 @RunWith(PowerMockRunner.class)
 public class KCAPITest extends JerseyTest {
 
@@ -57,14 +57,14 @@ public class KCAPITest extends JerseyTest {
 	@Override
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-		return new ResourceConfig(KCAPI_1.class);
+		return new ResourceConfig(KCAPI_UnansweredTasks.class);
 	}
 
 	@Test
 	public void createKCTest_Success() throws Exception {
-		K_A1 ka1 = Mockito.mock(K_A1.class);
+		KC_UnansweredTasks ka1 = Mockito.mock(KC_UnansweredTasks.class);
 		Mockito.stubVoid(ka1).toReturn().on().createKC(Mockito.anyString(), Mockito.anyString());
-		PowerMockito.whenNew(K_A1.class).withNoArguments().thenReturn(ka1);
+		PowerMockito.whenNew(KC_UnansweredTasks.class).withNoArguments().thenReturn(ka1);
 		PowerMockito.mockStatic(KCAnalyzerHandler.class);
 		PowerMockito.when(KCAnalyzerHandler.save((KCAnalyzerI)Mockito.anyObject())).thenReturn(ka1);
 
@@ -76,7 +76,7 @@ public class KCAPITest extends JerseyTest {
 		final Response resp  = target(ANALYZER1_CREATEKC_URL)
 				.request().post(Entity.json(data), Response.class);
 
-		PowerMockito.verifyNew(K_A1.class).withNoArguments();
+		PowerMockito.verifyNew(KC_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_CREATED), 
 				resp.readEntity(String.class));
@@ -85,10 +85,10 @@ public class KCAPITest extends JerseyTest {
 
 	@Test
 	public void createKCTest_FailsWithCourseNotFound() throws Exception {
-		K_A1 ka1 = Mockito.mock(K_A1.class);
+		KC_UnansweredTasks ka1 = Mockito.mock(KC_UnansweredTasks.class);
 		Mockito.stubVoid(ka1).toThrow(new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND))
 		.on().createKC(Mockito.anyString(), Mockito.anyString());
-		PowerMockito.whenNew(K_A1.class).withNoArguments().thenReturn(ka1);		
+		PowerMockito.whenNew(KC_UnansweredTasks.class).withNoArguments().thenReturn(ka1);		
 		PowerMockito.mockStatic(KCAnalyzerHandler.class);
 		PowerMockito.when(KCAnalyzerHandler.save((KCAnalyzerI)Mockito.anyObject())).thenReturn(ka1);
 
@@ -100,7 +100,7 @@ public class KCAPITest extends JerseyTest {
 		final Response resp  = target(ANALYZER1_CREATEKC_URL)
 				.request().post(Entity.json(data), Response.class);
 
-		PowerMockito.verifyNew(K_A1.class).withNoArguments();
+		PowerMockito.verifyNew(KC_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND), 
 				resp.readEntity(String.class));
@@ -109,10 +109,10 @@ public class KCAPITest extends JerseyTest {
 
 	@Test
 	public void createKCTest_FailsWithKCAlreadyPresent() throws Exception {
-		K_A1 ka1 = Mockito.mock(K_A1.class);
+		KC_UnansweredTasks ka1 = Mockito.mock(KC_UnansweredTasks.class);
 		Mockito.stubVoid(ka1).toThrow(new KCException(MyStatus.ERROR, MyMessage.KC_ALREADY_PRESENT))
 		.on().createKC(Mockito.anyString(), Mockito.anyString());
-		PowerMockito.whenNew(K_A1.class).withNoArguments().thenReturn(ka1);		
+		PowerMockito.whenNew(KC_UnansweredTasks.class).withNoArguments().thenReturn(ka1);		
 		PowerMockito.mockStatic(KCAnalyzerHandler.class);
 		PowerMockito.when(KCAnalyzerHandler.save((KCAnalyzerI)Mockito.anyObject())).thenReturn(ka1);
 
@@ -124,7 +124,7 @@ public class KCAPITest extends JerseyTest {
 		final Response resp  = target(ANALYZER1_CREATEKC_URL)
 				.request().post(Entity.json(data), Response.class);
 
-		PowerMockito.verifyNew(K_A1.class).withNoArguments();
+		PowerMockito.verifyNew(KC_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.KC_ALREADY_PRESENT), 
 				resp.readEntity(String.class));
@@ -133,10 +133,10 @@ public class KCAPITest extends JerseyTest {
 
 	@Test
 	public void createKCTest_FailsWithKCPropertyNull() throws Exception {
-		K_A1 ka1 = Mockito.mock(K_A1.class);
+		KC_UnansweredTasks ka1 = Mockito.mock(KC_UnansweredTasks.class);
 		Mockito.stubVoid(ka1).toThrow(new KCException(MyStatus.ERROR, MyMessage.KC_PROPERTY_NULL))
 		.on().createKC(Mockito.anyString(), Mockito.anyString());
-		PowerMockito.whenNew(K_A1.class).withNoArguments().thenReturn(ka1);		
+		PowerMockito.whenNew(KC_UnansweredTasks.class).withNoArguments().thenReturn(ka1);		
 		PowerMockito.mockStatic(KCAnalyzerHandler.class);
 		PowerMockito.when(KCAnalyzerHandler.save((KCAnalyzerI)Mockito.anyObject())).thenReturn(ka1);
 
@@ -148,7 +148,7 @@ public class KCAPITest extends JerseyTest {
 		final Response resp  = target(ANALYZER1_CREATEKC_URL)
 				.request().post(Entity.json(data), Response.class);
 
-		PowerMockito.verifyNew(K_A1.class).withNoArguments();
+		PowerMockito.verifyNew(KC_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.KC_PROPERTY_NULL), 
 				resp.readEntity(String.class));
@@ -157,8 +157,8 @@ public class KCAPITest extends JerseyTest {
 
 	@Test
 	public void mapKcTaskTest_with_Replace_true_Success() throws Exception {
-		TK_A1 tka1 = Mockito.mock(TK_A1.class);
-		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
+		TaskKC_UnansweredTasks tka1 = Mockito.mock(TaskKC_UnansweredTasks.class);
+		PowerMockito.whenNew(TaskKC_UnansweredTasks.class).withNoArguments().thenReturn(tka1);
 
 		//Integer affectedRows = new Integer(2);
 		//PowerMockito.mockStatic(Handler.class);
@@ -219,8 +219,8 @@ public class KCAPITest extends JerseyTest {
 
 	@Test
 	public void mapKcTaskTest_with_Replace_false_Success() throws Exception {
-		TK_A1 tka1 = Mockito.mock(TK_A1.class);
-		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
+		TaskKC_UnansweredTasks tka1 = Mockito.mock(TaskKC_UnansweredTasks.class);
+		PowerMockito.whenNew(TaskKC_UnansweredTasks.class).withNoArguments().thenReturn(tka1);
 
 		Session mockedSession = Mockito.mock(Session.class);
 		Transaction mockedTransaction = Mockito.mock(Transaction.class);
@@ -272,8 +272,8 @@ public class KCAPITest extends JerseyTest {
 
 	@Test
 	public void mapKcTaskTest_FailsWithCourseNotFound() throws Exception {
-		TK_A1 tka1 = Mockito.mock(TK_A1.class);
-		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
+		TaskKC_UnansweredTasks tka1 = Mockito.mock(TaskKC_UnansweredTasks.class);
+		PowerMockito.whenNew(TaskKC_UnansweredTasks.class).withNoArguments().thenReturn(tka1);
 
 		//Integer affectedRows = new Integer(2);
 		//PowerMockito.mockStatic(Handler.class);
@@ -335,8 +335,8 @@ public class KCAPITest extends JerseyTest {
 
 	@Test
 	public void mapKcTaskTest_FailsWithKCNotFound() throws Exception {
-		TK_A1 tka1 = Mockito.mock(TK_A1.class);
-		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
+		TaskKC_UnansweredTasks tka1 = Mockito.mock(TaskKC_UnansweredTasks.class);
+		PowerMockito.whenNew(TaskKC_UnansweredTasks.class).withNoArguments().thenReturn(tka1);
 
 		//Integer affectedRows = new Integer(2);
 		//PowerMockito.mockStatic(Handler.class);
@@ -398,8 +398,8 @@ public class KCAPITest extends JerseyTest {
 
 	@Test
 	public void mapKcTaskTest_FailsWithTaskNotFound() throws Exception {
-		TK_A1 tka1 = Mockito.mock(TK_A1.class);
-		PowerMockito.whenNew(TK_A1.class).withNoArguments().thenReturn(tka1);
+		TaskKC_UnansweredTasks tka1 = Mockito.mock(TaskKC_UnansweredTasks.class);
+		PowerMockito.whenNew(TaskKC_UnansweredTasks.class).withNoArguments().thenReturn(tka1);
 
 		//Integer affectedRows = new Integer(2);
 		//PowerMockito.mockStatic(Handler.class);

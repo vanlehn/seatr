@@ -37,10 +37,10 @@ import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.Task;
-import com.asu.seatr.models.analyzers.course.C_A1;
-import com.asu.seatr.models.analyzers.student.S_A1;
-import com.asu.seatr.models.analyzers.task.T_A1;
-import com.asu.seatr.models.analyzers.task_kc.TK_A1;
+import com.asu.seatr.models.analyzers.course.Course_UnansweredTasks;
+import com.asu.seatr.models.analyzers.student.Student_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task.Task_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
 import com.asu.seatr.models.interfaces.TaskKCAnalyzerI;
 import com.asu.seatr.rest.models.TKCAReader;
 import com.asu.seatr.utils.Constants;
@@ -133,7 +133,7 @@ public class CommonAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response delCourse(@QueryParam("external_course_id") String external_course_id){
 		Long requestTimestamp = System.currentTimeMillis();
-		C_A1 c_a1;
+		Course_UnansweredTasks c_a1;
 		// delete all course analyzers and then delete the course record
 		try {
 			if(!Utilities.checkExists(external_course_id)) {
@@ -142,7 +142,7 @@ public class CommonAPI {
 
 			try {
 
-				c_a1 = (C_A1)CourseAnalyzerHandler.readByExtId(C_A1.class, external_course_id).get(0);
+				c_a1 = (Course_UnansweredTasks)CourseAnalyzerHandler.readByExtId(Course_UnansweredTasks.class, external_course_id).get(0);
 				CourseAnalyzerHandler.delete(c_a1);
 				//delete all analyzers here
 			} catch(CourseException c) {
@@ -193,9 +193,9 @@ public class CommonAPI {
 				throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ID_MISSING);
 			}
 
-			S_A1 s_a1;
+			Student_UnansweredTasks s_a1;
 			try {
-				s_a1 = (S_A1) StudentAnalyzerHandler.readByExtId (S_A1.class, external_student_id, external_course_id).get(0);			
+				s_a1 = (Student_UnansweredTasks) StudentAnalyzerHandler.readByExtId (Student_UnansweredTasks.class, external_student_id, external_course_id).get(0);			
 				//delete all other analyzers here			
 				StudentAnalyzerHandler.delete(s_a1);
 			} catch(StudentException s) {
@@ -257,8 +257,8 @@ public class CommonAPI {
 			try
 			{
 
-				T_A1 t_a1 = (T_A1) TaskAnalyzerHandler.readByExtId
-						(T_A1.class, external_task_id, external_course_id);
+				Task_UnansweredTasks t_a1 = (Task_UnansweredTasks) TaskAnalyzerHandler.readByExtId
+						(Task_UnansweredTasks.class, external_task_id, external_course_id);
 				//delete all other analyzers here			
 				TaskAnalyzerHandler.delete(t_a1);
 			}
@@ -358,7 +358,7 @@ public class CommonAPI {
 			switch(reader.getTo_analyzer_id()) {
 			case 1: 
 				for (TaskKCAnalyzerI taskKC: taskKCFromList) {
-					TK_A1 tka = new TK_A1();
+					TaskKC_UnansweredTasks tka = new TaskKC_UnansweredTasks();
 					tka.setKc(taskKC.getKc());
 					tka.setTask(taskKC.getTask());
 					taskKCToList.add(tka);

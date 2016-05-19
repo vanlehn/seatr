@@ -144,7 +144,7 @@ public class StudentTaskAnalyzerHandler {
 			SessionFactory sf = Utilities.getSessionFactory();
 			Session session = sf.openSession();
 			session.beginTransaction();
-			String hql = "delete from ST_" + analyzerName + " st where st.id in :studentTaskIdList";
+			String hql = "delete from StudentTask_" + analyzerName + " st where st.id in :studentTaskIdList";
 			session.createQuery(hql).setParameterList("studentTaskIdList", studentTaskIdList).executeUpdate();
 			session.getTransaction().commit();
 			session.close();

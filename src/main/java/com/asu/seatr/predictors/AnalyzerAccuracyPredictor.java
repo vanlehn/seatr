@@ -20,8 +20,8 @@ import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Student;
 import com.asu.seatr.models.StudentTask;
-import com.asu.seatr.models.analyzers.studenttask.ST_A2;
-import com.asu.seatr.models.analyzers.task_kc.TK_A2;
+import com.asu.seatr.models.analyzers.studenttask.StudentTask_N_In_A_Row;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_N_In_A_Row;
 import com.asu.seatr.persistence.HibernateUtil;
 import com.asu.seatr.utils.SessionFactoryUtil;
 import com.asu.seatr.utils.Utilities;
@@ -45,12 +45,13 @@ public class AnalyzerAccuracyPredictor {
 			List<Student> studentListForCourse = StudentHandler.getByCourse(course);
 			List<KnowledgeComponent> kcListForCourse = KnowledgeComponentHandler.getByCourse(course);
 
-			String firstLine[] = new String[4 + kcListForCourse.size()];
+			String firstLine[] = new String[5 + kcListForCourse.size()];
 			firstLine[0] = "Student id";
 			firstLine[1] = "Task id";
 			firstLine[2] = "Status";
 			firstLine[3] = "Predicted Correctness";
-			int tempIndex = 4;
+			firstLine[4] = "TimeStamp";
+			int tempIndex = 5;
 			ListIterator<KnowledgeComponent> ki = kcListForCourse.listIterator();
 			while (ki.hasNext()) {
 				firstLine[tempIndex] = "K_" + ki.next().getExternal_id();
@@ -58,14 +59,17 @@ public class AnalyzerAccuracyPredictor {
 			}
 			writer.writeNext(firstLine);
 
-			HashMap<Integer, HashMap<Integer, Integer>> studentKcMastery = new HashMap<Integer, HashMap<Integer, Integer>>();
+			HashMap<Integer, HashMap<Integer, KCData>> studentKcMastery = new HashMap<Integer, HashMap<Integer, KCData>>();
 			ListIterator<Student> studentListIterator = studentListForCourse.listIterator();
 			while (studentListIterator.hasNext()) {
-				HashMap<Integer, Integer> kcMastery = new HashMap<Integer, Integer>();
+				HashMap<Integer, KCData> kcMastery = new HashMap<Integer, KCData>();
 				ListIterator<KnowledgeComponent> kcListIterator = kcListForCourse.listIterator();
 				while (kcListIterator.hasNext()) {
-					kcMastery.put(kcListIterator.next().getId(), 0);
+					KCData kd = new KCData();
+					kd.setMasteryLevel(0);
+					kcMastery.put(kcListIterator.next().getId(), kd);
 				}
+
 				studentKcMastery.put(studentListIterator.next().getId(), kcMastery);
 			}
 
@@ -78,32 +82,26 @@ public class AnalyzerAccuracyPredictor {
 			Session session = sf.openSession();
 			session.beginTransaction();
 
-			String studentTasksQuery = "from ST_A2 where studentTask in (Select id from StudentTask where task in (Select id from Task where course = :course))";
+			String studentTasksQuery = "from StudentTask_N_In_A_Row where studentTask in (Select id from StudentTask where task in (Select id from Task where course = :course))";
 			Query query = session.createQuery(studentTasksQuery);
 			query.setParameter("course", course);
 			@SuppressWarnings("unchecked")
-			List<ST_A2> studentTaskList = (List<ST_A2>) query.list();
+			List<StudentTask_N_In_A_Row> studentTaskList = (List<StudentTask_N_In_A_Row>) query.list();
 
-			ListIterator<ST_A2> studentTaskListIterator = studentTaskList.listIterator();
+			ListIterator<StudentTask_N_In_A_Row> studentTaskListIterator = studentTaskList.listIterator();
 			while (studentTaskListIterator.hasNext()) {
 				int predictedCorrectness = -1;
-				ST_A2 st_a2 = studentTaskListIterator.next();
+				StudentTask_N_In_A_Row st_a2 = studentTaskListIterator.next();
 				StudentTask studentTask = st_a2.getStudentTask();
-				List<TK_A2> tkList = studentTask.getTask().getTK_A2();
-				ListIterator<TK_A2> tkListIterator = tkList.listIterator();
-				HashMap<Integer, Integer> kcMastery = studentKcMastery.get(studentTask.getStudent().getId());
-				System.out.println(st_a2.getId());
+				List<TaskKC_N_In_A_Row> tkList = studentTask.getTask().getTK_A2();
+				ListIterator<TaskKC_N_In_A_Row> tkListIterator = tkList.listIterator();
+				HashMap<Integer, KCData> kcMastery = studentKcMastery.get(studentTask.getStudent().getId());
 
-				if (studentTask.getId() == 196) {
-					System.out.println("student task come here");
-				}
-				if (studentTask.getStudent().getId() == 2916) {
-					System.out.println("come here");
-				}
 				while (tkListIterator.hasNext()) {
 					Integer kcId = tkListIterator.next().getKc().getId();
-					int masteryLevel = kcMastery.get(kcId);
-					if (st_a2.getD_status().equals("correct")) {
+					KCData kd = kcMastery.get(kcId);
+					 int masteryLevel = kd.getMasteryLevel();
+					 if (st_a2.getD_status().equals("correct")) {
 						++masteryLevel;
 					} else {
 						if (masteryLevel < 1) {
@@ -119,26 +117,39 @@ public class AnalyzerAccuracyPredictor {
 							predictedCorrectness = 1;
 						}
 					}
-					kcMastery.put(kcId, masteryLevel);
+					kd.setMasteryLevel(masteryLevel);
+					kd.setExists(true);
+					kcMastery.put(kcId, kd);
 				}
 				if (predictedCorrectness == -1) {
 					predictedCorrectness = 0;
 				}
 				studentKcMastery.put(studentTask.getStudent().getId(), kcMastery);
-				System.out.println("studentKCMastery" + studentKcMastery.get(2916));
-				String output[] = new String[4 + kcListForCourse.size()];
+
+				String output[] = new String[5 + kcListForCourse.size()];
 				output[0] = studentTask.getStudent().getExternal_id();
 				output[1] = studentTask.getTask().getExternal_id();
 				output[2] = st_a2.getD_status();
 				output[3] = String.valueOf(predictedCorrectness);
-				int index = 4;
+				output[4] = String.valueOf(studentTask.getTimestamp());
+				int index = 5;
 				ListIterator<KnowledgeComponent> kcIterator = kcListForCourse.listIterator();
 				while (kcIterator.hasNext()) {
-					Integer temp1 = kcMastery.get(kcIterator.next().getId());
-					if (temp1 == null) {
+					KCData kd = kcMastery.get(kcIterator.next().getId());
+					
+					if (kd == null) {
 						output[index] = "0";
 					} else {
-						output[index] = String.valueOf(temp1);
+						boolean temp1 = kd.isExists();
+						if(temp1)
+						{
+							output[index] = String.valueOf(1);
+						}
+						else
+						{
+							output[index] = String.valueOf(0);
+						}
+						//output[index] = String.valueOf(temp1);
 					}
 					index++;
 				}

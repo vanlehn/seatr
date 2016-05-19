@@ -15,12 +15,12 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
-import com.asu.seatr.models.analyzers.task.T_A1;
-import com.asu.seatr.models.analyzers.task.T_A2;
-import com.asu.seatr.models.analyzers.task.T_A3;
-import com.asu.seatr.models.analyzers.task_kc.TK_A1;
-import com.asu.seatr.models.analyzers.task_kc.TK_A2;
-import com.asu.seatr.models.analyzers.task_kc.TK_A3;
+import com.asu.seatr.models.analyzers.task.Task_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task.Task_N_In_A_Row;
+import com.asu.seatr.models.analyzers.task.Task_Required_Optional;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_N_In_A_Row;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_Required_Optional;
 
 @Entity
 @Table(name = "task", uniqueConstraints = @UniqueConstraint(columnNames = {"external_id", "course_id"}))
@@ -41,22 +41,22 @@ public class Task {
 	private List<StudentTask> StudentTask;
 
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
-	private List<T_A1> T_A1;
+	private List<Task_UnansweredTasks> T_A1;
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
-	private List<T_A2> T_A2;
+	private List<Task_N_In_A_Row> T_A2;
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
-	private List<T_A3> T_A3;
+	private List<Task_Required_Optional> T_A3;
 
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
-	private List<TK_A1> TK_A1;
+	private List<TaskKC_UnansweredTasks> TK_A1;
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
-	private List<TK_A2> TK_A2;
+	private List<TaskKC_N_In_A_Row> TK_A2;
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
-	private List<TK_A3> TK_A3;
+	private List<TaskKC_Required_Optional> TK_A3;
 
 	public final static String p_id = "id";
 	public final static String p_external_id = "external_id";
@@ -87,42 +87,42 @@ public class Task {
 	public void setStudentTask(List<StudentTask> studentTask) {
 		StudentTask = studentTask;
 	}
-	public List<T_A1> getT_A1() {
+	public List<Task_UnansweredTasks> getT_A1() {
 		return T_A1;
 	}
-	public void setT_A1(List<T_A1> t_A1) {
+	public void setT_A1(List<Task_UnansweredTasks> t_A1) {
 		T_A1 = t_A1;
 	}
 	
-	public List<T_A2> getT_A2() {
+	public List<Task_N_In_A_Row> getT_A2() {
 		return T_A2;
 	}
-	public void setT_A2(List<T_A2> t_A2) {
+	public void setT_A2(List<Task_N_In_A_Row> t_A2) {
 		T_A2 = t_A2;
 	}
 	
-	public List<T_A3> getT_A3() {
+	public List<Task_Required_Optional> getT_A3() {
 		return T_A3;
 	}
-	public void setT_A3(List<T_A3> t_A3) {
+	public void setT_A3(List<Task_Required_Optional> t_A3) {
 		T_A3 = t_A3;
 	}
-	public List<TK_A1> getTK_A1() {
+	public List<TaskKC_UnansweredTasks> getTK_A1() {
 		return TK_A1;
 	}
-	public void setTK_A1(List<TK_A1> tK_A1) {
+	public void setTK_A1(List<TaskKC_UnansweredTasks> tK_A1) {
 		TK_A1 = tK_A1;
 	}	
-	public List<TK_A2> getTK_A2() {
+	public List<TaskKC_N_In_A_Row> getTK_A2() {
 		return TK_A2;
 	}
-	public void setTK_A2(List<TK_A2> tK_A2) {
+	public void setTK_A2(List<TaskKC_N_In_A_Row> tK_A2) {
 		TK_A2 = tK_A2;
 	}	
-	public List<TK_A3> getTK_A3() {
+	public List<TaskKC_Required_Optional> getTK_A3() {
 		return TK_A3;
 	}
-	public void setTK_A3(List<TK_A3> tK_A3) {
+	public void setTK_A3(List<TaskKC_Required_Optional> tK_A3) {
 		TK_A3 = tK_A3;
 	}	
 

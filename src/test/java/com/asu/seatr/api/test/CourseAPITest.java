@@ -22,19 +22,19 @@ import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
 
-import com.asu.seatr.api.analyzer1.CourseAPI_1;
+import com.asu.seatr.api.analyzer.unansweredtasks.CourseAPI_UnansweredTasks;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.handlers.CourseAnalyzerHandler;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.models.Course;
-import com.asu.seatr.models.analyzers.course.C_A1;
+import com.asu.seatr.models.analyzers.course.Course_UnansweredTasks;
 import com.asu.seatr.models.interfaces.CourseAnalyzerI;
-import com.asu.seatr.rest.models.analyzer1.CAReader1;
+import com.asu.seatr.rest.models.analyzer.unansweredtasks.CAReader_UnansweredTasks;
 import com.asu.seatr.utils.MyMessage;
 import com.asu.seatr.utils.MyResponse;
 import com.asu.seatr.utils.MyStatus;
 
-@PrepareForTest({CourseAPI_1.class, CourseAnalyzerMapHandler.class, C_A1.class, 
+@PrepareForTest({CourseAPI_UnansweredTasks.class, CourseAnalyzerMapHandler.class, Course_UnansweredTasks.class, 
 	CourseAnalyzerHandler.class})
 @RunWith(PowerMockRunner.class)
 
@@ -46,7 +46,7 @@ public class CourseAPITest extends JerseyTest {
 	@Override
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-		return new ResourceConfig(CourseAPI_1.class);
+		return new ResourceConfig(CourseAPI_UnansweredTasks.class);
 	}
 
 	@Test
@@ -56,7 +56,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
@@ -69,9 +69,9 @@ public class CourseAPITest extends JerseyTest {
 		PowerMockito.when(CourseAnalyzerHandler.readByExtId(Mockito.any(Class.class), Mockito.anyString()))
 		.thenReturn(ca1list);
 
-		final CAReader1 resp =  target(ANALYZER1_URL)
+		final CAReader_UnansweredTasks resp =  target(ANALYZER1_URL)
 				.queryParam("external_course_id", "35").request()
-				.get(CAReader1.class);
+				.get(CAReader_UnansweredTasks.class);
 
 		assertEquals(new String("35"), resp.getExternal_course_id());
 		assertEquals(new String("second"), resp.getTeaching_unit());
@@ -86,7 +86,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
@@ -115,7 +115,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
@@ -139,8 +139,8 @@ public class CourseAPITest extends JerseyTest {
 
 	@Test
 	public void createCourseTest_Success() throws Exception {
-		C_A1 ca1 = Mockito.mock(C_A1.class);
-		PowerMockito.whenNew(C_A1.class).withNoArguments().thenReturn(ca1);
+		Course_UnansweredTasks ca1 = Mockito.mock(Course_UnansweredTasks.class);
+		PowerMockito.whenNew(Course_UnansweredTasks.class).withNoArguments().thenReturn(ca1);
 
 		Mockito.stubVoid(ca1).toReturn().on().createCourse(Mockito.anyString(), Mockito.anyString());
 		PowerMockito.mockStatic(CourseAnalyzerHandler.class);
@@ -156,7 +156,7 @@ public class CourseAPITest extends JerseyTest {
 		final Response resp = target(ANALYZER1_URL).request()
 				.post(Entity.json(data), Response.class);
 
-		PowerMockito.verifyNew(C_A1.class).withNoArguments();
+		PowerMockito.verifyNew(Course_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.CREATED.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_CREATED), 
 				resp.readEntity(String.class));
@@ -165,8 +165,8 @@ public class CourseAPITest extends JerseyTest {
 
 	@Test
 	public void createCourseTest_FailsWithPropertyValueNull() throws Exception {
-		C_A1 ca1 = Mockito.mock(C_A1.class);
-		PowerMockito.whenNew(C_A1.class).withNoArguments().thenReturn(ca1);
+		Course_UnansweredTasks ca1 = Mockito.mock(Course_UnansweredTasks.class);
+		PowerMockito.whenNew(Course_UnansweredTasks.class).withNoArguments().thenReturn(ca1);
 
 		Mockito.stubVoid(ca1).toThrow(new CourseException(MyStatus.ERROR, MyMessage.COURSE_PROPERTY_NULL))
 		.on().createCourse(Mockito.anyString(), Mockito.anyString());
@@ -183,7 +183,7 @@ public class CourseAPITest extends JerseyTest {
 		final Response resp = target(ANALYZER1_URL).request()
 				.post(Entity.json(data), Response.class);
 
-		PowerMockito.verifyNew(C_A1.class).withNoArguments();
+		PowerMockito.verifyNew(Course_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_PROPERTY_NULL), 
 				resp.readEntity(String.class));
@@ -192,8 +192,8 @@ public class CourseAPITest extends JerseyTest {
 
 	@Test
 	public void createCourseTest_FailsWithCourseAnalyzerAlreadyPresent() throws Exception {
-		C_A1 ca1 = Mockito.mock(C_A1.class);
-		PowerMockito.whenNew(C_A1.class).withNoArguments().thenReturn(ca1);
+		Course_UnansweredTasks ca1 = Mockito.mock(Course_UnansweredTasks.class);
+		PowerMockito.whenNew(Course_UnansweredTasks.class).withNoArguments().thenReturn(ca1);
 
 		Mockito.stubVoid(ca1).toReturn().on().createCourse(Mockito.anyString(), Mockito.anyString());
 
@@ -210,7 +210,7 @@ public class CourseAPITest extends JerseyTest {
 		final Response resp = target(ANALYZER1_URL).request()
 				.post(Entity.json(data), Response.class);
 
-		PowerMockito.verifyNew(C_A1.class).withNoArguments();
+		PowerMockito.verifyNew(Course_UnansweredTasks.class).withNoArguments();
 		assertEquals(Status.OK.getStatusCode(), resp.getStatus());		
 		assertEquals(MyResponse.build(MyStatus.ERROR, MyMessage.COURSE_ANALYZER_ALREADY_PRESENT), 
 				resp.readEntity(String.class));
@@ -224,7 +224,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
@@ -261,7 +261,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
@@ -298,7 +298,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
@@ -335,7 +335,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
@@ -366,7 +366,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
@@ -397,7 +397,7 @@ public class CourseAPITest extends JerseyTest {
 		course.setExternal_id("35");
 		course.setId(1);
 
-		C_A1 ca1 = new C_A1();
+		Course_UnansweredTasks ca1 = new Course_UnansweredTasks();
 		ca1.setId(1);
 		ca1.setCourse(course);
 		ca1.setTeaching_unit("second");
