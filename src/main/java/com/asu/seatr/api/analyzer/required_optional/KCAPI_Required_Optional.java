@@ -114,7 +114,7 @@ public class KCAPI_Required_Optional {
 			if(replace)
 			{
 				Course course = CourseHandler.getByExternalId(external_course_id);
-				session = KCAnalyzerHandler.hqlDeleteByCourse("A3", course,false);
+				session = KCAnalyzerHandler.hqlDeleteByCourse("Required_Optional", course,false);
 			}
 			TaskKC_Required_Optional tk3Array[] = new TaskKC_Required_Optional[tkReaderArray.length];
 			for(int i = 0; i<tkReaderArray.length;i++)

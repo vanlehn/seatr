@@ -114,7 +114,7 @@ public class KCAPI_UnansweredTasks {
 			if(replace)
 			{
 				Course course = CourseHandler.getByExternalId(external_course_id);
-				session = KCAnalyzerHandler.hqlDeleteByCourse("A1", course,false);
+				session = KCAnalyzerHandler.hqlDeleteByCourse("UnansweredTasks", course,false);
 			}
 			TaskKC_UnansweredTasks tk1Array[] = new TaskKC_UnansweredTasks[tkReaderArray.length];
 			for(int i = 0; i<tkReaderArray.length;i++)

@@ -19,7 +19,6 @@ import org.junit.Test;
 
 import com.asu.seatr.api.AdminAPI;
 import com.asu.seatr.api.CommonAPI;
-import com.asu.seatr.api.RecommenderAPI;
 import com.asu.seatr.api.analyzer.unansweredtasks.CourseAPI_UnansweredTasks;
 import com.asu.seatr.api.analyzer.unansweredtasks.RecommenderAPI_UnansweredTasks;
 import com.asu.seatr.api.analyzer.unansweredtasks.StudentAPI_UnansweredTasks;
@@ -48,7 +47,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	@Override
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-		return new ResourceConfig(CourseAPI_UnansweredTasks.class, RecommenderAPI_UnansweredTasks.class, AdminAPI.class, TaskAPI_UnansweredTasks.class, CommonAPI.class, StudentAPI_UnansweredTasks.class,RecommenderAPI.class,
+		return new ResourceConfig(CourseAPI_UnansweredTasks.class, RecommenderAPI_UnansweredTasks.class, AdminAPI.class, TaskAPI_UnansweredTasks.class, CommonAPI.class, StudentAPI_UnansweredTasks.class,
 				StudentTaskAPI_UnansweredTasks.class);
 	}
 

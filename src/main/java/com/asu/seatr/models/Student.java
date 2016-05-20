@@ -16,6 +16,10 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.asu.seatr.models.analyzers.student.Student_UnansweredTasks;
+import com.asu.seatr.models.analyzers.studenttask.RecommTask_N_In_A_Row;
+import com.asu.seatr.models.analyzers.studenttask.RecommTask_UnansweredTasks;
+import com.asu.seatr.models.analyzers.studenttask.STU_N_In_A_Row;
+import com.asu.seatr.models.analyzers.student.Student_N_In_A_Row;
 import com.asu.seatr.models.analyzers.student.Student_Required_Optional;
 
 @Entity
@@ -40,7 +44,19 @@ public class Student {
 	private List<Student_UnansweredTasks> S_A1;
 
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
+	private List<Student_N_In_A_Row> S_A2;
+	
+	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
 	private List<Student_Required_Optional> S_A3;
+	
+	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
+	private List<RecommTask_N_In_A_Row> recommTask_N_In_A_Row;
+	
+	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
+	private List<RecommTask_UnansweredTasks> recommTask_UnansweredTasks;
+	
+	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
+	private List<STU_N_In_A_Row> stu_N_In_A_Row;
 
 	public int getId() {
 		return id;
@@ -71,5 +87,36 @@ public class Student {
 	}
 	public void setS_A1(List<Student_UnansweredTasks> s_A1) {
 		S_A1 = s_A1;
-	}	
+	}
+	public List<Student_N_In_A_Row> getS_A2() {
+		return S_A2;
+	}
+	public void setS_A2(List<Student_N_In_A_Row> s_A2) {
+		S_A2 = s_A2;
+	}
+	public List<Student_Required_Optional> getS_A3() {
+		return S_A3;
+	}
+	public void setS_A3(List<Student_Required_Optional> s_A3) {
+		S_A3 = s_A3;
+	}
+	public List<RecommTask_N_In_A_Row> getRecommTask_N_In_A_Row() {
+		return recommTask_N_In_A_Row;
+	}
+	public void setRecommTask_N_In_A_Row(List<RecommTask_N_In_A_Row> recommTask_N_In_A_Row) {
+		this.recommTask_N_In_A_Row = recommTask_N_In_A_Row;
+	}
+	public List<RecommTask_UnansweredTasks> getRecommTask_UnansweredTasks() {
+		return recommTask_UnansweredTasks;
+	}
+	public void setRecommTask_UnansweredTasks(List<RecommTask_UnansweredTasks> recommTask_UnansweredTasks) {
+		this.recommTask_UnansweredTasks = recommTask_UnansweredTasks;
+	}
+	public List<STU_N_In_A_Row> getStu_N_In_A_Row() {
+		return stu_N_In_A_Row;
+	}
+	public void setStu_N_In_A_Row(List<STU_N_In_A_Row> stu_N_In_A_Row) {
+		this.stu_N_In_A_Row = stu_N_In_A_Row;
+	}
+	
 }

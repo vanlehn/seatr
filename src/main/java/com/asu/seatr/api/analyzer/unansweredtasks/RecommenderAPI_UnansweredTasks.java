@@ -21,6 +21,7 @@ import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskHandler;
+import com.asu.seatr.handlers.analyzer.unansweredtasks.RecommTaskHandler_UnansweredTasks;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
 import com.asu.seatr.models.Student;
@@ -37,7 +38,17 @@ import com.asu.seatr.utils.Utilities;
 public class RecommenderAPI_UnansweredTasks {
 
 	static Logger logger = Logger.getLogger(RecommenderAPI_UnansweredTasks.class);
-
+	
+	@Path("inittasks")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response initRecommendedTasks(@QueryParam("number_of_tasks") Integer number_of_tasks){
+		RecommTaskHandler_UnansweredTasks.initRecommTasks(number_of_tasks);
+		return Response.status(Status.OK)
+				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
+				.build();
+	}
+	
 	@Path("analyzer/unansweredtasks/gettasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)

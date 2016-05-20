@@ -61,7 +61,7 @@ public class CommonAPI {
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response setAnalyzer(
 			@QueryParam("external_course_id") String ext_c_id, 
-			@QueryParam("analyzer_id") String a_id, 
+			@QueryParam("analyzer_name") String a_id, 
 			@QueryParam("active") Boolean active){
 		Long requestTimestamp = System.currentTimeMillis();
 		try {
@@ -75,7 +75,9 @@ public class CommonAPI {
 				//set default value
 				active = false;
 			}
-			CourseAnalyzerMap ca_map=CourseAnalyzerMapHandler.getByCourseAndAnalyzer(ext_c_id, a_id);
+			Analyzer az = AnalyzerHandler.getByName(a_id);
+			int analyzer_id = az.getId();
+			CourseAnalyzerMap ca_map=CourseAnalyzerMapHandler.getByCourseAndAnalyzer(ext_c_id, String.valueOf(analyzer_id));
 			if(ca_map!=null){
 				if(active){
 					CourseAnalyzerMapHandler.deactiveAllAnalyzers(ext_c_id);
@@ -88,17 +90,26 @@ public class CommonAPI {
 				}	
 			}
 			else{ //no mapping existed
-				int id=Integer.valueOf(a_id);
+				int id=Integer.valueOf(analyzer_id);
 				Analyzer analyzer=AnalyzerHandler.getById(id);
 				Course c=CourseHandler.getByExternalId(ext_c_id);
 				ca_map=new CourseAnalyzerMap();
 				ca_map.setCourse(c);
 				ca_map.setAnalyzer(analyzer);
-				ca_map.setActive(active);
-				CourseAnalyzerMapHandler.save(ca_map);
+				//ca_map.setActive(active);
+				//CourseAnalyzerMapHandler.save(ca_map);
+				if(active){
+					CourseAnalyzerMapHandler.deactiveAllAnalyzers(ext_c_id);
+					ca_map.setActive(true);
+					CourseAnalyzerMapHandler.save(ca_map);
+				}
+				else{
+					ca_map.setActive(false);
+					CourseAnalyzerMapHandler.save(ca_map);
+				}
 
 			}
-			return Response.status(Status.OK)
+			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_ANALYZER_UPDATED)).build();
 		} catch (CourseException e) {
 			Response rb = Response.status(Status.OK)

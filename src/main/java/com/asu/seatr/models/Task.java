@@ -16,6 +16,9 @@ import javax.persistence.UniqueConstraint;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.asu.seatr.models.analyzers.task.Task_UnansweredTasks;
+import com.asu.seatr.models.analyzers.studenttask.RecommTask_N_In_A_Row;
+import com.asu.seatr.models.analyzers.studenttask.RecommTask_UnansweredTasks;
+import com.asu.seatr.models.analyzers.studenttask.STU_N_In_A_Row;
 import com.asu.seatr.models.analyzers.task.Task_N_In_A_Row;
 import com.asu.seatr.models.analyzers.task.Task_Required_Optional;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
@@ -57,6 +60,15 @@ public class Task {
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
 	private List<TaskKC_Required_Optional> TK_A3;
+	
+	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
+	private List<RecommTask_N_In_A_Row> recommTask_N_In_A_Row;
+	
+	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
+	private List<RecommTask_UnansweredTasks> recommTask_UnansweredTasks;
+	
+	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
+	private List<STU_N_In_A_Row> stu_N_In_A_Row;
 
 	public final static String p_id = "id";
 	public final static String p_external_id = "external_id";
@@ -124,6 +136,24 @@ public class Task {
 	}
 	public void setTK_A3(List<TaskKC_Required_Optional> tK_A3) {
 		TK_A3 = tK_A3;
+	}
+	public List<RecommTask_N_In_A_Row> getRecommTask_N_In_A_Row() {
+		return recommTask_N_In_A_Row;
+	}
+	public void setRecommTask_N_In_A_Row(List<RecommTask_N_In_A_Row> recommTask_N_In_A_Row) {
+		this.recommTask_N_In_A_Row = recommTask_N_In_A_Row;
+	}
+	public List<RecommTask_UnansweredTasks> getRecommTask_UnansweredTasks() {
+		return recommTask_UnansweredTasks;
+	}
+	public void setRecommTask_UnansweredTasks(List<RecommTask_UnansweredTasks> recommTask_UnansweredTasks) {
+		this.recommTask_UnansweredTasks = recommTask_UnansweredTasks;
+	}
+	public List<STU_N_In_A_Row> getStu_N_In_A_Row() {
+		return stu_N_In_A_Row;
+	}
+	public void setStu_N_In_A_Row(List<STU_N_In_A_Row> stu_N_In_A_Row) {
+		this.stu_N_In_A_Row = stu_N_In_A_Row;
 	}	
 
 }

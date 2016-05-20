@@ -184,7 +184,7 @@ public class KCAnalyzerHandler {
 			Query query = session.createQuery(hql).setParameter("course", course);
 			List<Task> taskList = query.list();
 			if(taskList == null || taskList.isEmpty()){return null;}
-			hql = "delete from TK_" + analyzerName + " tk where tk.task in :taskList";
+			hql = "delete from TaskKC_" + analyzerName + " tk where tk.task in :taskList";
 			session.createQuery(hql).setParameterList("taskList", taskList).executeUpdate();
 			if(commit)
 			{
