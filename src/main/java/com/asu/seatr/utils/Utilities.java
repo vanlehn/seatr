@@ -65,6 +65,8 @@ public class Utilities {
 
 		switch(from_analyzer_id) {
 		case 1: return TaskKC_UnansweredTasks.class;
+		case 2: return TaskKC_N_In_A_Row.class;
+		case 3: return TaskKC_Required_Optional.class;
 		default: return null;
 		}
 

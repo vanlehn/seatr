@@ -17,6 +17,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
+import org.hibernate.exception.ConstraintViolationException;
 
 import com.asu.seatr.auth.AuthenticationService;
 import com.asu.seatr.exceptions.CourseException;
@@ -98,7 +99,14 @@ public class CourseAPI_UnansweredTasks {
 			ca1.setThreshold(reader.getThreshold());
 			CourseAnalyzerHandler.save(ca1);
 
+			try
+			{
 			UserCourseHandler.save(username, reader.getExternal_course_id());
+			}
+			catch(ConstraintViolationException e)
+			{
+				logger.info("trying to create analyzer for an existing course: " + reader.getExternal_course_id());
+			}
 
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_CREATED)).build();

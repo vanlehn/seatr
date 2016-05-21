@@ -308,8 +308,8 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 			assertEquals("course created", Status.CREATED.getStatusCode(), resp.getStatus());
 			
 			//create course analyzer map
-			resp = target(SET_ANALYZER_COURSE).queryParam("external_course_id", "1").queryParam("analyzer_id", "1").queryParam("active", true).request().get(Response.class);
-			assertEquals("course analyzer map", Status.OK.getStatusCode(),resp.getStatus());
+			resp = target(SET_ANALYZER_COURSE).queryParam("external_course_id", "1").queryParam("analyzer_name", "UnansweredTasks").queryParam("active", true).request().get(Response.class);
+			assertEquals("course analyzer map", Status.CREATED.getStatusCode(),resp.getStatus());
 			
 			//create student
 			SAReader_UnansweredTasks sa = new SAReader_UnansweredTasks();
@@ -410,8 +410,8 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 			assertEquals("course created", Status.CREATED.getStatusCode(), resp.getStatus());
 			
 			//create course analyzer map
-			resp = target(SET_ANALYZER_COURSE).queryParam("external_course_id", "1").queryParam("analyzer_id", "1").queryParam("active", true).request().get(Response.class);
-			assertEquals("course analyzer map", Status.OK.getStatusCode(),resp.getStatus());
+			resp = target(SET_ANALYZER_COURSE).queryParam("external_course_id", "1").queryParam("analyzer_name", "UnansweredTasks").queryParam("active", true).request().get(Response.class);
+			assertEquals("course analyzer map", Status.CREATED.getStatusCode(),resp.getStatus());
 			
 			//create student
 			SAReader_UnansweredTasks sa = new SAReader_UnansweredTasks();
@@ -544,8 +544,8 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 			assertEquals("course created", Status.CREATED.getStatusCode(), resp.getStatus());
 			
 			//create course analyzer map
-			resp = target(SET_ANALYZER_COURSE).queryParam("external_course_id", "1").queryParam("analyzer_id", "1").queryParam("active", true).request().get(Response.class);
-			assertEquals("course analyzer map", Status.OK.getStatusCode(),resp.getStatus());
+			resp = target(SET_ANALYZER_COURSE).queryParam("external_course_id", "1").queryParam("analyzer_name", "UnansweredTasks").queryParam("active", true).request().get(Response.class);
+			assertEquals("course analyzer map", Status.CREATED.getStatusCode(),resp.getStatus());
 			
 			//create student
 			SAReader_UnansweredTasks sa = new SAReader_UnansweredTasks();
