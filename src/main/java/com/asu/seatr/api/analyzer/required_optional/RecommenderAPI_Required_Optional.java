@@ -85,8 +85,8 @@ public class RecommenderAPI_Required_Optional {
 		finally
 		{
 			Long responseTimestamp = System.currentTimeMillis();
-			Long response = (responseTimestamp -  requestTimestamp)/1000;
-			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+			Long response = (responseTimestamp -  requestTimestamp);
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp);		
 		}
 	}
 }
