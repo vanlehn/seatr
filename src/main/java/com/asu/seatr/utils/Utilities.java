@@ -131,6 +131,46 @@ public class Utilities {
 				}
 			}
 	}
+	public static void writeToGraphite(String metric,Double responseTime,Long timestamp)
+	{
+			if(!isJUnitTest)
+			{
+				Socket socket = null;
+				Writer writer = null;
+				try
+				{
+					socket = new Socket("localhost", 2003);
+					writer = new OutputStreamWriter(socket.getOutputStream());
+					String sentMessage = metric + " " + responseTime + " " + timestamp + "\n";
+			        System.out.println(sentMessage);
+			        writer.write(sentMessage);
+			        writer.flush();
+			        
+				}
+				catch(IOException e)
+				{
+					e.printStackTrace();
+				}
+				finally
+				{
+					try
+					{
+						if(socket != null)
+						{
+							socket.close();
+						}
+						if(writer != null)
+						{
+							writer.close();
+						}
+					}
+					catch(IOException e)
+					{
+						e.printStackTrace();
+					}
+				}
+			}
+	}
 	public static void clearDatabase()
 	{
 		Handler.hqlTruncate("RecommTask_UnansweredTasks");
