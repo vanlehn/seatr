@@ -91,7 +91,7 @@ public class Utilities {
 		return sf;
 	}
 	
-	public static void writeToGraphite(String metric,Long responseTime,Long timestamp)
+	public static void writeToGraphite(String metric,Double responseTime,Long timestamp)
 	{
 			if(!isJUnitTest)
 			{
@@ -131,7 +131,7 @@ public class Utilities {
 				}
 			}
 	}
-	public static void writeToGraphite(String metric,Double responseTime,Long timestamp)
+	public static void writeToGraphite(String metric,Long responseTime,Long timestamp)
 	{
 			if(!isJUnitTest)
 			{
