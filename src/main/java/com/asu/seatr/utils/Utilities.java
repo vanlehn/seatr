@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.Writer;
 import java.net.Socket;
+import java.util.List;
 
 import org.hibernate.SessionFactory;
 
@@ -41,6 +42,9 @@ public class Utilities {
 	}
 	public static Boolean checkExists(Double b) {
 		return (b != null);
+	}
+	public static Boolean checkExists(List l){
+		return !(l.isEmpty()||l==null);
 	}
 
 	public static String getTKTableNameByAnalyzerId(Integer analyzer_id) {
@@ -133,7 +137,7 @@ public class Utilities {
 	}
 	public static void writeToGraphite(String metric,Long responseTime,Long timestamp)
 	{
-			if(!isJUnitTest)
+			if(!isJUnitTest && Constants.GRAPHITE_ACTIVE)//set graphite_active to true in constants to activate tracking
 			{
 				Socket socket = null;
 				Writer writer = null;

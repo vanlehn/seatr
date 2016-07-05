@@ -4,7 +4,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import java.util.List;
-
+import java.util.Map;
 
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.client.Entity;
@@ -43,6 +43,7 @@ public class Recommender_Required_Optional_API_test extends JerseyTest{
 	private static String CREATE_STUDENT_3_URL = "analyzer/required_optional/students/";
 	private static String INIT_TASKS = "inittasks/";
 	private static String STUDENT_TASK_URL = "analyzer/required_optional/studenttasks";
+	private static String SCALE_TASKS = "analyzer/required_optional/scaletasks";
 	
 	@Override
 	protected Application configure() {
@@ -59,8 +60,9 @@ public class Recommender_Required_Optional_API_test extends JerseyTest{
 		Utilities.clearDatabase();
 		Utilities.setJUnitTest(false);
 	}
+	
 	@Test(expected=WebApplicationException.class)
-	public void emptyCourseId() {
+	public void emptyCourseIdGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			target(GETTASKS_3_URL).queryParam("external_student_id", "1")
@@ -78,7 +80,7 @@ public class Recommender_Required_Optional_API_test extends JerseyTest{
 		}
 	}
 	@Test(expected=WebApplicationException.class)
-	public void emptyStudentId() {
+	public void emptyStudentIdGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			final List<String> resList = target(GETTASKS_3_URL).queryParam("external_student_id", "")
@@ -97,7 +99,7 @@ public class Recommender_Required_Optional_API_test extends JerseyTest{
 	}
 
 	@Test(expected=WebApplicationException.class)
-	public void invalidCoureId() {
+	public void invalidCoureIdGetTasks() {
 
 		Utilities.setJUnitTest(true);
 		try {
@@ -117,17 +119,17 @@ public class Recommender_Required_Optional_API_test extends JerseyTest{
 
 	}
 	@Test
-	public void noTasksForCourse() {
+	public void noTasksForCourseGetTasks() {
 
 		Utilities.setJUnitTest(true);
 		try {
 
-			/*
-			 * UserReader ur = new UserReader(); ur.setUsername("cse310");
-			 * ur.setPassword("hello123"); Response rb =
-			 * target("superadmin/users").request().post(Entity.json(ur),
-			 * Response.class);
-			 */
+			
+			 // UserReader ur = new UserReader(); ur.setUsername("cse310");
+			 //ur.setPassword("hello123"); Response rb =
+			 //target("superadmin/users").request().post(Entity.json(ur),
+			 //Response.class);
+			 
 			// first creating dummy course
 			CAReader_Required_Optional ca = new CAReader_Required_Optional();
 			ca.setExternal_course_id("1");
@@ -163,17 +165,17 @@ public class Recommender_Required_Optional_API_test extends JerseyTest{
 
 	}
 	@Test
-	public void allNewTasks() {
+	public void allTestsGetTasks() {
 
 		Utilities.setJUnitTest(true);
 		try {
 
-			/*
-			 * UserReader ur = new UserReader(); ur.setUsername("cse310");
-			 * ur.setPassword("hello123"); Response rb =
-			 * target("superadmin/users").request().post(Entity.json(ur),
-			 * Response.class);
-			 */
+			
+			  //UserReader ur = new UserReader(); ur.setUsername("cse310");
+			  //ur.setPassword("hello123"); Response rb =
+			  //target("superadmin/users").request().post(Entity.json(ur),
+			 // Response.class);
+			 
 			// first creating dummy course
 			CAReader_Required_Optional ca = new CAReader_Required_Optional();
 			ca.setExternal_course_id("1");
@@ -614,6 +616,647 @@ public class Recommender_Required_Optional_API_test extends JerseyTest{
 			resList = target(GETTASKS_3_URL).queryParam("external_student_id", "1")
 					.queryParam("external_course_id", "1").queryParam("number_of_tasks", "11").request().get(List.class);
 			assertEquals("number of tasks",0,resList.size());
+			
+			
+		}  finally {
+			Handler.hqlTruncate("StudentTask_Required_Optional");
+			Handler.hqlTruncate("StudentTask");
+			Handler.hqlTruncate("Student_Required_Optional");
+			Handler.hqlTruncate("Student");
+			Handler.hqlTruncate("Task_Required_Optional");
+			Handler.hqlTruncate("Task");
+			Handler.hqlTruncate("Course_Required_Optional");
+			Handler.hqlTruncate("UserCourse");
+			Handler.hqlTruncate("Course");
+			Utilities.setJUnitTest(false);
+		}
+
+	}
+	@Test(expected=WebApplicationException.class)
+	public void emptyCourseIdScaleTasks() {
+		Utilities.setJUnitTest(true);
+		try {
+			target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "").queryParam("tasks_list", "1").request().get(Map.class);
+		} catch (WebApplicationException e) {
+
+			assertEquals("empty course id must return 400", Status.BAD_REQUEST.getStatusCode(),
+					e.getResponse().getStatus());
+			throw e;
+		} catch (Exception e) {
+			System.out.println("Error in testing");
+			e.printStackTrace();
+		} finally {
+			Utilities.setJUnitTest(false);
+		}
+	}
+	
+	
+	@Test(expected=WebApplicationException.class)
+	public void emptyStudentIdScaleTasks() {
+		Utilities.setJUnitTest(true);
+		try {
+			target(SCALE_TASKS).queryParam("external_student_id", "")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").request().get(Map.class);
+		} catch (WebApplicationException e) {
+
+			assertEquals("empty student id must return 400", Status.BAD_REQUEST.getStatusCode(),
+					e.getResponse().getStatus());
+			throw e;
+		} catch (Exception e) {
+			System.out.println("Error in testing");
+			e.printStackTrace();
+		} finally {
+			Utilities.setJUnitTest(false);
+		}
+	}
+
+	@Test(expected=WebApplicationException.class)
+	public void invalidCoureIdScaleTasks() {
+
+		Utilities.setJUnitTest(true);
+		try {
+			target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").request().get(Map.class);
+		} catch (WebApplicationException e) {
+
+			assertEquals("course not found must return 400", Status.BAD_REQUEST.getStatusCode(),
+					e.getResponse().getStatus());
+			throw e;
+		} catch (Exception e) {
+			System.out.println("Error in testing");
+			e.printStackTrace();
+		} finally {
+			Utilities.setJUnitTest(false);
+		}
+
+	}
+	@Test(expected=WebApplicationException.class)
+	public void noTasksForCourseScaleTasks() {
+
+		Utilities.setJUnitTest(true);
+		try {
+
+			
+			 // UserReader ur = new UserReader(); ur.setUsername("cse310");
+			 //ur.setPassword("hello123"); Response rb =
+			 //target("superadmin/users").request().post(Entity.json(ur),
+			 //Response.class);
+			 
+			// first creating dummy course
+			CAReader_Required_Optional ca = new CAReader_Required_Optional();
+			ca.setExternal_course_id("1");
+			ca.setS_units(1);
+			ca.setD_current_unit_no(1);
+			ca.setD_max_n(4);
+			ca.setDescription("chemistry");
+			ca.setDescription("physics");
+			Response resp = target(CREATE_COURSE_3_URL).request()
+					.header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ca), Response.class);
+			assertEquals("course created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			SAReader_Required_Optional sa = new SAReader_Required_Optional();
+			sa.setExternal_course_id("1");
+			sa.setExternal_student_id("1");
+			sa.setS_placement_score(20.0);
+			sa.setS_year("Grad");
+			resp =  target(CREATE_STUDENT_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sa),Response.class);
+			assertEquals("student created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").request().get(Map.class);
+
+
+		}
+		catch (WebApplicationException e) {
+
+			assertEquals("tasks not found must return 400", Status.BAD_REQUEST.getStatusCode(),
+					e.getResponse().getStatus());
+			throw e;
+		} catch (Exception e) {
+			System.out.println("Error in testing");
+			e.printStackTrace();
+		}finally {
+			Handler.hqlTruncate("Student_Required_Optional");
+			Handler.hqlTruncate("Student");
+			Handler.hqlTruncate("Course_Required_Optional");
+			Handler.hqlTruncate("UserCourse");
+			Handler.hqlTruncate("Course");
+			Utilities.setJUnitTest(false);
+		}
+
+	}
+	
+	@Test
+	public void allTestsScaleTasks() {
+
+		Utilities.setJUnitTest(true);
+		try {
+
+			
+			  //UserReader ur = new UserReader(); ur.setUsername("cse310");
+			  //ur.setPassword("hello123"); Response rb =
+			  //target("superadmin/users").request().post(Entity.json(ur),
+			 // Response.class);
+			 
+			// first creating dummy course
+			CAReader_Required_Optional ca = new CAReader_Required_Optional();
+			ca.setExternal_course_id("1");
+			ca.setS_units(1);
+			ca.setD_current_unit_no(1);
+			ca.setD_max_n(2);
+			ca.setDescription("chemistry");
+			ca.setDescription("physics");
+			Response resp = target(CREATE_COURSE_3_URL).request()
+					.header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ca), Response.class);
+			assertEquals("course created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			SAReader_Required_Optional sa = new SAReader_Required_Optional();
+			sa.setExternal_course_id("1");
+			sa.setExternal_student_id("1");
+			sa.setS_placement_score(20.0);
+			sa.setS_year("Grad");
+			resp =  target(CREATE_STUDENT_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sa),Response.class);
+			assertEquals("student created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			TAReader_Required_Optional ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("1");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(2);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("2");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(1);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("3");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(4);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("4");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(3);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("5");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(5);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("6");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(5);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("7");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(5);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("8");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(8);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("9");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(7);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("10");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(6);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("11");
+			ta.setS_is_required(true);
+			ta.setS_sequence_no(2);
+			ta.setS_unit_no(2);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("12");
+			ta.setS_is_required(false);
+			ta.setS_sequence_no(2);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("13");
+			ta.setS_is_required(false);
+			ta.setS_sequence_no(2);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+			
+			ta = new TAReader_Required_Optional();
+			ta.setExternal_course_id("1");
+			ta.setExternal_task_id("14");
+			ta.setS_is_required(false);
+			ta.setS_sequence_no(2);
+			ta.setS_unit_no(1);
+			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
+					.post(Entity.json(ta), Response.class);
+			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
+
+			
+			
+			Map<String,Integer> resMap = target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").queryParam("tasks_list", "2")
+					.queryParam("tasks_list", "3").queryParam("tasks_list", "4").queryParam("tasks_list", "5")
+					.queryParam("tasks_list", "6").queryParam("tasks_list", "7").queryParam("tasks_list", "8")
+					.queryParam("tasks_list", "9").queryParam("tasks_list", "10").queryParam("tasks_list", "11")
+					.queryParam("tasks_list", "12").queryParam("tasks_list", "14").request().get(Map.class);
+			assertEquals("task scaling", new Long(0), resMap.get("1"));
+			assertEquals("task scaling", new Long(1), resMap.get("2"));
+			assertEquals("task scaling", new Long(0), resMap.get("3"));
+			assertEquals("task scaling", new Long(0), resMap.get("4"));
+			assertEquals("task scaling", new Long(0), resMap.get("5"));
+			assertEquals("task scaling", new Long(0), resMap.get("6"));
+			assertEquals("task scaling", new Long(0), resMap.get("7"));
+			assertEquals("task scaling", new Long(0), resMap.get("8"));
+			assertEquals("task scaling", new Long(0), resMap.get("9"));
+			assertEquals("task scaling", new Long(0), resMap.get("10"));
+			assertEquals("task scaling", new Long(0), resMap.get("11"));
+			assertEquals("task scaling", new Long(0), resMap.get("12"));
+			assertEquals("task scaling", new Long(0), resMap.get("14"));
+			
+			//now lets answer some tasks
+			STAReader_Required_Optional sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("1");
+			sta.setD_is_answered(false);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("1");
+			sta.setD_is_answered(false);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("1");
+			sta.setD_is_answered(false);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			//now lets answer some tasks
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("2");
+			sta.setD_is_answered(false);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			resMap = target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").queryParam("tasks_list", "2")
+					.queryParam("tasks_list", "3").queryParam("tasks_list", "4").queryParam("tasks_list", "5")
+					.queryParam("tasks_list", "6").queryParam("tasks_list", "7").queryParam("tasks_list", "8")
+					.queryParam("tasks_list", "9").queryParam("tasks_list", "10").queryParam("tasks_list", "11")
+					.queryParam("tasks_list", "12").queryParam("tasks_list", "14").request().get(Map.class);
+			assertEquals("task scaling", new Long(0), resMap.get("1"));
+			assertEquals("task scaling", new Long(0), resMap.get("2"));
+			assertEquals("task scaling", new Long(0), resMap.get("3"));
+			assertEquals("task scaling", new Long(1), resMap.get("4"));
+			assertEquals("task scaling", new Long(0), resMap.get("5"));
+			assertEquals("task scaling", new Long(0), resMap.get("6"));
+			assertEquals("task scaling", new Long(0), resMap.get("7"));
+			assertEquals("task scaling", new Long(0), resMap.get("8"));
+			assertEquals("task scaling", new Long(0), resMap.get("9"));
+			assertEquals("task scaling", new Long(0), resMap.get("10"));
+			assertEquals("task scaling", new Long(0), resMap.get("11"));
+			assertEquals("task scaling", new Long(0), resMap.get("12"));
+			assertEquals("task scaling", new Long(0), resMap.get("14"));
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("3");
+			sta.setD_is_answered(false);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("4");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			resMap = target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").queryParam("tasks_list", "2")
+					.queryParam("tasks_list", "3").queryParam("tasks_list", "4").queryParam("tasks_list", "5")
+					.queryParam("tasks_list", "6").queryParam("tasks_list", "7").queryParam("tasks_list", "8")
+					.queryParam("tasks_list", "9").queryParam("tasks_list", "10").queryParam("tasks_list", "11")
+					.queryParam("tasks_list", "12").queryParam("tasks_list", "14").request().get(Map.class);
+			assertEquals("task scaling", new Long(0), resMap.get("1"));
+			assertEquals("task scaling", new Long(0), resMap.get("2"));
+			assertEquals("task scaling", new Long(0), resMap.get("3"));
+			assertEquals("task scaling", new Long(0), resMap.get("4"));
+			assertEquals("task scaling", new Long(1), resMap.get("5"));
+			assertEquals("task scaling", new Long(1), resMap.get("6"));
+			assertEquals("task scaling", new Long(1), resMap.get("7"));
+			assertEquals("task scaling", new Long(0), resMap.get("8"));
+			assertEquals("task scaling", new Long(0), resMap.get("9"));
+			assertEquals("task scaling", new Long(0), resMap.get("10"));
+			assertEquals("task scaling", new Long(0), resMap.get("11"));
+			assertEquals("task scaling", new Long(0), resMap.get("12"));
+			assertEquals("task scaling", new Long(0), resMap.get("14"));
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("5");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("6");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("7");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("8");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("9");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("10");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("11");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			resMap = target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").queryParam("tasks_list", "2")
+					.queryParam("tasks_list", "3").queryParam("tasks_list", "4").queryParam("tasks_list", "5")
+					.queryParam("tasks_list", "6").queryParam("tasks_list", "7").queryParam("tasks_list", "8")
+					.queryParam("tasks_list", "9").queryParam("tasks_list", "10").queryParam("tasks_list", "11")
+					.queryParam("tasks_list", "12").queryParam("tasks_list", "13").queryParam("tasks_list", "14").request().get(Map.class);
+			assertEquals("task scaling", new Long(0), resMap.get("1"));
+			assertEquals("task scaling", new Long(1), resMap.get("2"));
+			assertEquals("task scaling", new Long(0), resMap.get("3"));
+			assertEquals("task scaling", new Long(0), resMap.get("4"));
+			assertEquals("task scaling", new Long(0), resMap.get("5"));
+			assertEquals("task scaling", new Long(0), resMap.get("6"));
+			assertEquals("task scaling", new Long(0), resMap.get("7"));
+			assertEquals("task scaling", new Long(0), resMap.get("8"));
+			assertEquals("task scaling", new Long(0), resMap.get("9"));
+			assertEquals("task scaling", new Long(0), resMap.get("10"));
+			assertEquals("task scaling", new Long(0), resMap.get("11"));
+			assertEquals("task scaling", new Long(0), resMap.get("12"));
+			assertEquals("task scaling", new Long(0), resMap.get("13"));
+			assertEquals("task scaling", new Long(0), resMap.get("14"));
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("2");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			resMap = target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").queryParam("tasks_list", "2")
+					.queryParam("tasks_list", "3").queryParam("tasks_list", "4").queryParam("tasks_list", "5")
+					.queryParam("tasks_list", "6").queryParam("tasks_list", "7").queryParam("tasks_list", "8")
+					.queryParam("tasks_list", "9").queryParam("tasks_list", "10").queryParam("tasks_list", "11")
+					.queryParam("tasks_list", "12").queryParam("tasks_list", "13").queryParam("tasks_list", "14").request().get(Map.class);
+			assertEquals("task scaling", new Long(0), resMap.get("1"));
+			assertEquals("task scaling", new Long(0), resMap.get("2"));
+			assertEquals("task scaling", new Long(1), resMap.get("3"));
+			assertEquals("task scaling", new Long(0), resMap.get("4"));
+			assertEquals("task scaling", new Long(0), resMap.get("5"));
+			assertEquals("task scaling", new Long(0), resMap.get("6"));
+			assertEquals("task scaling", new Long(0), resMap.get("7"));
+			assertEquals("task scaling", new Long(0), resMap.get("8"));
+			assertEquals("task scaling", new Long(0), resMap.get("9"));
+			assertEquals("task scaling", new Long(0), resMap.get("10"));
+			assertEquals("task scaling", new Long(0), resMap.get("11"));
+			assertEquals("task scaling", new Long(0), resMap.get("12"));
+			assertEquals("task scaling", new Long(0), resMap.get("13"));
+			assertEquals("task scaling", new Long(0), resMap.get("14"));
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("3");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			resMap = target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").queryParam("tasks_list", "2")
+					.queryParam("tasks_list", "3").queryParam("tasks_list", "4").queryParam("tasks_list", "5")
+					.queryParam("tasks_list", "6").queryParam("tasks_list", "7").queryParam("tasks_list", "8")
+					.queryParam("tasks_list", "9").queryParam("tasks_list", "10").queryParam("tasks_list", "11")
+					.queryParam("tasks_list", "12").queryParam("tasks_list", "13").queryParam("tasks_list", "14").request().get(Map.class);
+			assertEquals("task scaling", new Long(0), resMap.get("1"));
+			assertEquals("task scaling", new Long(0), resMap.get("2"));
+			assertEquals("task scaling", new Long(0), resMap.get("3"));
+			assertEquals("task scaling", new Long(0), resMap.get("4"));
+			assertEquals("task scaling", new Long(0), resMap.get("5"));
+			assertEquals("task scaling", new Long(0), resMap.get("6"));
+			assertEquals("task scaling", new Long(0), resMap.get("7"));
+			assertEquals("task scaling", new Long(0), resMap.get("8"));
+			assertEquals("task scaling", new Long(0), resMap.get("9"));
+			assertEquals("task scaling", new Long(0), resMap.get("10"));
+			assertEquals("task scaling", new Long(0), resMap.get("11"));
+			assertEquals("task scaling", new Long(1), resMap.get("12"));
+			assertEquals("task scaling", new Long(1), resMap.get("13"));
+			assertEquals("task scaling", new Long(1), resMap.get("14"));
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("12");
+			sta.setD_is_answered(false);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("12");
+			sta.setD_is_answered(false);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("12");
+			sta.setD_is_answered(false);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			resMap = target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").queryParam("tasks_list", "2")
+					.queryParam("tasks_list", "3").queryParam("tasks_list", "4").queryParam("tasks_list", "5")
+					.queryParam("tasks_list", "6").queryParam("tasks_list", "7").queryParam("tasks_list", "8")
+					.queryParam("tasks_list", "9").queryParam("tasks_list", "10").queryParam("tasks_list", "11")
+					.queryParam("tasks_list", "12").queryParam("tasks_list", "13").queryParam("tasks_list", "14").request().get(Map.class);
+			assertEquals("task scaling", new Long(0), resMap.get("1"));
+			assertEquals("task scaling", new Long(0), resMap.get("2"));
+			assertEquals("task scaling", new Long(0), resMap.get("3"));
+			assertEquals("task scaling", new Long(0), resMap.get("4"));
+			assertEquals("task scaling", new Long(0), resMap.get("5"));
+			assertEquals("task scaling", new Long(0), resMap.get("6"));
+			assertEquals("task scaling", new Long(0), resMap.get("7"));
+			assertEquals("task scaling", new Long(0), resMap.get("8"));
+			assertEquals("task scaling", new Long(0), resMap.get("9"));
+			assertEquals("task scaling", new Long(0), resMap.get("10"));
+			assertEquals("task scaling", new Long(0), resMap.get("11"));
+			assertEquals("task scaling", new Long(1), resMap.get("12"));
+			assertEquals("task scaling", new Long(1), resMap.get("13"));
+			assertEquals("task scaling", new Long(1), resMap.get("14"));
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("12");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("13");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			sta = new STAReader_Required_Optional();
+			sta.setExternal_course_id("1");
+			sta.setExternal_student_id("1");
+			sta.setExternal_task_id("14");
+			sta.setD_is_answered(true);
+			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
+			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
+			
+			resMap = target(SCALE_TASKS).queryParam("external_student_id", "1")
+					.queryParam("external_course_id", "1").queryParam("tasks_list", "1").queryParam("tasks_list", "2")
+					.queryParam("tasks_list", "3").queryParam("tasks_list", "4").queryParam("tasks_list", "5")
+					.queryParam("tasks_list", "6").queryParam("tasks_list", "7").queryParam("tasks_list", "8")
+					.queryParam("tasks_list", "9").queryParam("tasks_list", "10").queryParam("tasks_list", "11")
+					.queryParam("tasks_list", "12").queryParam("tasks_list", "13").queryParam("tasks_list", "14").request().get(Map.class);
+			assertEquals("task scaling", new Long(0), resMap.get("1"));
+			assertEquals("task scaling", new Long(0), resMap.get("2"));
+			assertEquals("task scaling", new Long(0), resMap.get("3"));
+			assertEquals("task scaling", new Long(0), resMap.get("4"));
+			assertEquals("task scaling", new Long(0), resMap.get("5"));
+			assertEquals("task scaling", new Long(0), resMap.get("6"));
+			assertEquals("task scaling", new Long(0), resMap.get("7"));
+			assertEquals("task scaling", new Long(0), resMap.get("8"));
+			assertEquals("task scaling", new Long(0), resMap.get("9"));
+			assertEquals("task scaling", new Long(0), resMap.get("10"));
+			assertEquals("task scaling", new Long(0), resMap.get("11"));
+			assertEquals("task scaling", new Long(0), resMap.get("12"));
+			assertEquals("task scaling", new Long(0), resMap.get("13"));
+			assertEquals("task scaling", new Long(0), resMap.get("14"));
+			
 			
 			
 		}  finally {

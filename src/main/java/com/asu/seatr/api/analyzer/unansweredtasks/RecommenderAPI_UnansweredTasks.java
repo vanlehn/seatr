@@ -2,9 +2,12 @@ package com.asu.seatr.api.analyzer.unansweredtasks;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
 
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -17,10 +20,14 @@ import javax.ws.rs.core.Response.Status;
 import org.apache.log4j.Logger;
 
 import com.asu.seatr.exceptions.CourseException;
+import com.asu.seatr.exceptions.RecommException;
 import com.asu.seatr.exceptions.StudentException;
+import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseAnalyzerMapHandler;
+import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskHandler;
+import com.asu.seatr.handlers.analyzer.required_optional.RecommTaskHandler_Required_Optional;
 import com.asu.seatr.handlers.analyzer.unansweredtasks.RecommTaskHandler_UnansweredTasks;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.CourseAnalyzerMap;
@@ -162,6 +169,78 @@ public class RecommenderAPI_UnansweredTasks {
 			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);
 		
 		}
+	}
+	
+	@Path("analyzer/unansweredtasks/scaletasks")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Map<String,Integer> scaleTasks_3(
+			@QueryParam("external_student_id") String external_student_id,
+			@QueryParam("external_course_id") String external_course_id,
+			@QueryParam("tasks_list") List<String> tasks_list
+			)
+	{
+		try
+		{
+		if(!Utilities.checkExists(external_course_id)) {
+			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+		}
+		if(!Utilities.checkExists(external_student_id)) {
+			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ID_MISSING);
+		}
+		if(!Utilities.checkExists(tasks_list)) {
+			throw new RecommException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
+		}
+		Course course = CourseHandler.getByExternalId(external_course_id);
+		Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
+		List<Task> tasks = TaskHandler.readByExtTaskList_Course(tasks_list, course);
+		Map<String,Integer> TaskMap = new HashMap<String,Integer>();
+		List<String> resultTaskList=TaskHandler.getRecommTasksExternalIdInTaskList(RecommTask_UnansweredTasks.class, student, course, tasks);
+		for(String t : tasks_list)
+		{
+			if(resultTaskList.contains(t))
+			{
+				TaskMap.put(t, 1);
+			}
+			else
+			{
+				TaskMap.put(t, 0);
+			}
+		}
+		return TaskMap;
+		
+		}
+		catch(StudentException e)
+		{	
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);	
+		}
+		catch(TaskException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);			
+		}
+		catch(CourseException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);			
+		}
+		catch(RecommException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);			
+		}
+
+		catch(Exception e)
+		{
+			logger.error("Exception while getting tasks - analyzer 3", e);
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
+		
 	}
 
 }
