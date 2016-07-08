@@ -314,6 +314,8 @@ public class RecommTaskHandler_N_In_A_Row {
 		session.save(stu_a2);
 		session.getTransaction().commit();
 		
+		
+		/*
 		Criteria cr_recomm=session.createCriteria(RecommTask_N_In_A_Row.class);
 		cr_recomm.add(Restrictions.eq("student", stu));
 		cr_recomm.addOrder(Order.desc("utility"));
@@ -362,7 +364,7 @@ public class RecommTaskHandler_N_In_A_Row {
 		if(delnum>0){
 			fillRecommTask(stu,course,delnum,min_utility,recent_time);
 		}
-		
+		*/
 		
 	}
 }
