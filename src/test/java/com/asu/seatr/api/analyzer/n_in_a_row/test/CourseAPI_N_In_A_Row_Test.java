@@ -14,6 +14,7 @@ import org.glassfish.jersey.test.TestProperties;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.asu.seatr.api.analyzer.n_in_a_row.CourseAPI_N_In_A_Row;
 import com.asu.seatr.handlers.Handler;
 import com.asu.seatr.rest.models.analyzer.n_in_a_row.CAReader_N_In_A_Row;
 import com.asu.seatr.utils.Utilities;
@@ -25,7 +26,7 @@ public class CourseAPI_N_In_A_Row_Test extends JerseyTest{
 	@Override
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-		return new ResourceConfig(CourseAPI_N_In_A_Row_Test.class);
+		return new ResourceConfig(CourseAPI_N_In_A_Row.class);
 	}
 	
 	@Before
@@ -59,19 +60,6 @@ public class CourseAPI_N_In_A_Row_Test extends JerseyTest{
 					.get(CAReader_N_In_A_Row.class);
 			assertEquals("verify  inserted record","1",course.getExternal_course_id().toString());
 			
-			CAReader_N_In_A_Row ca1 = new CAReader_N_In_A_Row();
-			ca1.setExternal_course_id("1");
-			ca1.setDescription("chemistry");
-			
-			resp = target(COURSE_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
-					.put(Entity.json(ca1), Response.class);
-			assertEquals("course updated", Status.OK.getStatusCode(), resp.getStatus());
-			
-			course =  target(COURSE_3_URL)
-					.queryParam("external_course_id", "1").request()
-					.get(CAReader_N_In_A_Row.class);
-			assertEquals("verify updated description","2",course.getDescription().toString());
-			
 			resp = target(COURSE_3_URL)
 					.queryParam("external_course_id", "1").request()
 					.delete(Response.class);
@@ -93,30 +81,13 @@ public class CourseAPI_N_In_A_Row_Test extends JerseyTest{
 		finally
 		{
 			Handler.hqlTruncate("Course_N_In_A_Row");
+			Handler.hqlTruncate("UserCourse");
 			Handler.hqlTruncate("Course");
 			Utilities.setJUnitTest(false);
 		}
 	}
 
-	@Test
-	public void updateCourse_failure()
-	{
-		Utilities.setJUnitTest(true);
-		try
-		{
-			CAReader_N_In_A_Row ca1 = new CAReader_N_In_A_Row();
-			ca1.setExternal_course_id("1");
-			ca1.setDescription("chemistry");
-			Response resp = target(COURSE_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
-				.put(Entity.json(ca1), Response.class);
-			assertEquals("course not found",Status.NOT_FOUND.getStatusCode(),resp.getStatus());
-		}
-		finally
-		{
-			Utilities.setJUnitTest(false);
-		}
-	}
-	
+
 	@Test
 	public void deleteCourse_failure()
 	{

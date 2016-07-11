@@ -127,7 +127,7 @@ public class CourseAPI_N_In_A_Row {
 	}
 		
 	// Update the course details for analyzer 2
-	@PUT
+	/*@PUT
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response updateCourse(CAReader_N_In_A_Row reader){
@@ -156,7 +156,7 @@ public class CourseAPI_N_In_A_Row {
 			Long response = (responseTimestamp -  requestTimestamp)/1000;
 			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
-	}
+	}*/
 	
 	// Deletes only the analyzer 2 for the given external_course_id
 	@DELETE

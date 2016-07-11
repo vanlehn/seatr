@@ -41,37 +41,6 @@ the same task associated with it. Look at commits before 8/May/2016 to restore g
 public class StudentTaskAPI_N_In_A_Row {
 	static Logger logger = Logger.getLogger(StudentTaskAPI_N_In_A_Row.class);
 	
-	@Path("/inittasks")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response initRecommendedTasks(@QueryParam("number_of_tasks") Integer number_of_tasks){
-		RecommTaskHandler_N_In_A_Row.initRecommTasks(number_of_tasks);
-		return Response.status(Status.OK)
-				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
-				.build();
-	}
-	
-	@Path("/initstukc")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response initRecommendedTasks(){
-		RecommTaskHandler_N_In_A_Row.initStudentKC();
-		return Response.status(Status.OK)
-				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
-				.build();
-	}
-	
-	@Path("/initutility")
-	@GET
-	@Produces(MediaType.APPLICATION_JSON)
-	public Response initUtility(){
-		RecommTaskHandler_N_In_A_Row.initStudentTaskUtility();
-		return Response.status(Status.OK)
-				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
-				.build();
-	}
-	
-	
 	//create student task
 	@POST
 	@Consumes(MediaType.APPLICATION_JSON)

@@ -29,6 +29,7 @@ import com.asu.seatr.exceptions.RecommException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.StudentHandler;
+import com.asu.seatr.handlers.analyzer.n_in_a_row.RecommTaskHandler_N_In_A_Row;
 import com.asu.seatr.handlers.analyzer.required_optional.RecommTaskHandler_Required_Optional;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.Student;
@@ -45,6 +46,16 @@ import com.asu.seatr.utils.Utilities;
 public class RecommenderAPI_N_In_A_Row {
 	
 	static Logger logger = Logger.getLogger(RecommenderAPI_Required_Optional.class);
+	
+	@Path("analyzer/n_in_a_row/initutility")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Response initUtility(){
+		RecommTaskHandler_N_In_A_Row.initStudentTaskUtility();
+		return Response.status(Status.OK)
+				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
+				.build();
+	}
 	
 	@Path("analyzer/n_in_a_row/gettasks")
 	@GET

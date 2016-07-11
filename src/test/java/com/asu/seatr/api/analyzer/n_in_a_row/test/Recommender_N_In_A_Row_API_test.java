@@ -20,6 +20,7 @@ import org.junit.Test;
 import com.asu.seatr.api.AdminAPI;
 import com.asu.seatr.api.CommonAPI;
 import com.asu.seatr.api.analyzer.n_in_a_row.CourseAPI_N_In_A_Row;
+import com.asu.seatr.api.analyzer.n_in_a_row.KCAPI_N_In_A_Row;
 import com.asu.seatr.api.analyzer.n_in_a_row.RecommenderAPI_N_In_A_Row;
 import com.asu.seatr.api.analyzer.n_in_a_row.StudentAPI_N_In_A_Row;
 import com.asu.seatr.api.analyzer.n_in_a_row.StudentTaskAPI_N_In_A_Row;
@@ -40,7 +41,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 	private static String CREATE_COURSE_3_URL = "analyzer/n_in_a_row/courses/";
 	private static String CREATE_TASK_3_URL = "analyzer/n_in_a_row/tasks/";
 	private static String CREATE_STUDENT_3_URL = "analyzer/n_in_a_row/students/";
-	private static String INIT_TASKS = "inittasks/";
+	private static String INIT_TASKS_URL = "analyzer/n_in_a_row/initutility";
 	private static String STUDENT_TASK_URL = "analyzer/n_in_a_row/studenttasks";
 	private static String KC_URL = "analyzer/n_in_a_row/kc/createkc/";
 	private static String MAP_KC_URL = "analyzer/n_in_a_row/kc/mapkctask/";
@@ -49,7 +50,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
 		return new ResourceConfig(CourseAPI_N_In_A_Row.class, RecommenderAPI_N_In_A_Row.class, AdminAPI.class, TaskAPI_N_In_A_Row.class, CommonAPI.class, StudentAPI_N_In_A_Row.class,
-				StudentTaskAPI_N_In_A_Row.class);
+				StudentTaskAPI_N_In_A_Row.class, KCAPI_N_In_A_Row.class);
 	}
 	
 	@Before
@@ -60,6 +61,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 		Utilities.clearDatabase();
 		Utilities.setJUnitTest(false);
 	}
+	
 	@Test(expected=WebApplicationException.class)
 	public void emptyCourseId() {
 		Utilities.setJUnitTest(true);
@@ -78,6 +80,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			Utilities.setJUnitTest(false);
 		}
 	}
+	
 	@Test(expected=WebApplicationException.class)
 	public void emptyStudentId() {
 		Utilities.setJUnitTest(true);
@@ -173,7 +176,6 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			CAReader_N_In_A_Row ca = new CAReader_N_In_A_Row();
 			ca.setExternal_course_id("1");
 			ca.setDescription("chemistry");
-			ca.setDescription("physics");
 			Response resp = target(CREATE_COURSE_3_URL).request()
 					.header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ca), Response.class);
 			assertEquals("course created", Status.CREATED.getStatusCode(), resp.getStatus());
@@ -233,27 +235,6 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 					.post(Entity.json(ta), Response.class);
 			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
 			
-			ta = new TAReader_N_In_A_Row();
-			ta.setExternal_course_id("1");
-			ta.setExternal_task_id("8");
-			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
-					.post(Entity.json(ta), Response.class);
-			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
-			
-			ta = new TAReader_N_In_A_Row();
-			ta.setExternal_course_id("1");
-			ta.setExternal_task_id("9");
-			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
-					.post(Entity.json(ta), Response.class);
-			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
-			
-			ta = new TAReader_N_In_A_Row();
-			ta.setExternal_course_id("1");
-			ta.setExternal_task_id("10");
-			resp = target(CREATE_TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
-					.post(Entity.json(ta), Response.class);
-			assertEquals("task created", Status.CREATED.getStatusCode(), resp.getStatus());
-			
 			
 			//created KCs
 			KAReader_N_In_A_Row ka = new KAReader_N_In_A_Row();
@@ -280,7 +261,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			// map kc
 			TKReader_N_In_A_Row tkReader = new TKReader_N_In_A_Row();
 			tkReader.setExternal_course_id("1");
-			tkReader.setReplace(true);
+			tkReader.setReplace(false);
 			TKAReader_N_In_A_Row tkaReaderArray[] = new TKAReader_N_In_A_Row[2];
 
 			TKAReader_N_In_A_Row tk0 = new TKAReader_N_In_A_Row();
@@ -301,7 +282,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			
 			tkReader = new TKReader_N_In_A_Row();
 			tkReader.setExternal_course_id("1");
-			tkReader.setReplace(true);
+			tkReader.setReplace(false);
 			tkaReaderArray = new TKAReader_N_In_A_Row[2];
 
 			tk0 = new TKAReader_N_In_A_Row();
@@ -322,7 +303,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			
 			tkReader = new TKReader_N_In_A_Row();
 			tkReader.setExternal_course_id("1");
-			tkReader.setReplace(true);
+			tkReader.setReplace(false);
 			tkaReaderArray = new TKAReader_N_In_A_Row[2];
 
 			tk0 = new TKAReader_N_In_A_Row();
@@ -343,7 +324,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			
 			tkReader = new TKReader_N_In_A_Row();
 			tkReader.setExternal_course_id("1");
-			tkReader.setReplace(true);
+			tkReader.setReplace(false);
 			tkaReaderArray = new TKAReader_N_In_A_Row[1];
 
 			tk0 = new TKAReader_N_In_A_Row();
@@ -360,8 +341,8 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 
 			tkReader = new TKReader_N_In_A_Row();
 			tkReader.setExternal_course_id("1");
-			tkReader.setReplace(true);
-			tkaReaderArray = new TKAReader_N_In_A_Row[1];
+			tkReader.setReplace(false);
+			tkaReaderArray = new TKAReader_N_In_A_Row[2];
 
 			tk0 = new TKAReader_N_In_A_Row();
 			tk0.setExternal_kc_id("1");
@@ -381,7 +362,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			
 			tkReader = new TKReader_N_In_A_Row();
 			tkReader.setExternal_course_id("1");
-			tkReader.setReplace(true);
+			tkReader.setReplace(false);
 			tkaReaderArray = new TKAReader_N_In_A_Row[1];
 
 			tk0 = new TKAReader_N_In_A_Row();
@@ -397,7 +378,7 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			
 			tkReader = new TKReader_N_In_A_Row();
 			tkReader.setExternal_course_id("1");
-			tkReader.setReplace(true);
+			tkReader.setReplace(false);
 			tkaReaderArray = new TKAReader_N_In_A_Row[1];
 
 			tk0 = new TKAReader_N_In_A_Row();
@@ -420,6 +401,9 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			 *    6			2
 			 *    7			3
 			 */
+			
+			resp = target(INIT_TASKS_URL).queryParam("external_course_id", "1").request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").get(Response.class);
+			assertEquals("student task created", Status.OK.getStatusCode(),resp.getStatus());
 			
 			
 			//now lets answer some tasks
@@ -467,33 +451,43 @@ public class Recommender_N_In_A_Row_API_test extends JerseyTest{
 			
 			//now both of kc1 and kc3 are mastered
 			
-			//To-Do
-			/*resList = target(GETTASKS_3_URL).queryParam("external_student_id", "1")
-					.queryParam("external_course_id", "1").queryParam("number_of_tasks", "11").request().get(List.class);
-			assertEquals("empyt list returned", 8,resList.size());
+			/* 
+			 * The list of recommended task should be:
+			 * task_id		utility
+			 * 1			0.667
+			 * 2			0.667
+			 * 5			0.667
+			 * 6			0.5
+			 * 3			0
+			 * 4			0
+			 * 7			0
+			 */
 			
-			assertEquals("first task","2",resList.get(0));
-			assertEquals("second task","3",resList.get(1));
-			assertEquals("third task","1",resList.get(2));
-			assertEquals("fourth task","4",resList.get(3));
-			assertTrue("fiffth task", resList.get(4).equals("6") || resList.get(4).equals("7"));
-			assertTrue("sixth task", resList.get(5).equals("6") || resList.get(5).equals("7"));
-			assertEquals("seventh task","9",resList.get(6));
-			assertEquals("eighth task","8",resList.get(7));
-			*/
+			@SuppressWarnings("unchecked")
+			List<String> resList = 
+				target(GETTASKS_3_URL).queryParam("external_student_id", "1").queryParam("external_course_id", "1").queryParam("number_of_tasks", "7").request().get(List.class);
 			
-			
+			assertEquals("first task","1",resList.get(0));
+			assertEquals("second task","2",resList.get(1));
+			assertEquals("third task","5",resList.get(2));
+			assertEquals("fourth task","6",resList.get(3));
+			assertEquals("fifth task","3",resList.get(4));
+			assertEquals("sixth task","4",resList.get(5));
+			assertEquals("seventh task","7",resList.get(6));
+				
 			
 		}  finally {
-			Handler.hqlTruncate("StudentTask_Required_Optional");
+			Handler.hqlTruncate("SKC_N_In_A_Row");
+			Handler.hqlTruncate("STU_N_In_A_Row");
+			Handler.hqlTruncate("StudentTask_N_In_A_Row");
 			Handler.hqlTruncate("StudentTask");
-			Handler.hqlTruncate("Student_Required_Optional");
+			Handler.hqlTruncate("Student_N_In_A_Row");
 			Handler.hqlTruncate("Student");
-			Handler.hqlTruncate("Task_Required_Optional");
-			Handler.hqlTruncate("Task");
-			Handler.hqlTruncate("Course_Required_Optional");
+			Handler.hqlTruncate("Task_N_In_A_Row");
+			//Handler.hqlTruncate("Task");
+			Handler.hqlTruncate("Course_N_In_A_Row");
 			Handler.hqlTruncate("UserCourse");
-			Handler.hqlTruncate("Course");
+			//Handler.hqlTruncate("Course");
 			Utilities.setJUnitTest(false);
 		}
 

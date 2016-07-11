@@ -15,12 +15,13 @@ import org.junit.Before;
 import org.junit.Test;
 
 import com.asu.seatr.api.analyzer.n_in_a_row.CourseAPI_N_In_A_Row;
+import com.asu.seatr.api.analyzer.n_in_a_row.TaskAPI_N_In_A_Row;
 import com.asu.seatr.handlers.Handler;
 import com.asu.seatr.rest.models.analyzer.n_in_a_row.CAReader_N_In_A_Row;
 import com.asu.seatr.rest.models.analyzer.n_in_a_row.TAReader_N_In_A_Row;
 import com.asu.seatr.utils.Utilities;
 
-public class TaskAPI_Required_Optional_Test extends JerseyTest {
+public class TaskAPI_N_In_A_Row_Test extends JerseyTest {
 
 	private static String TASK_3_URL =  "analyzer/n_in_a_row/tasks/";
 	private static String COURSE_3_URL = "analyzer/n_in_a_row/courses/";
@@ -28,7 +29,7 @@ public class TaskAPI_Required_Optional_Test extends JerseyTest {
 	@Override
 	protected Application configure() {
 		enable(TestProperties.DUMP_ENTITY);
-		return new ResourceConfig(CourseAPI_N_In_A_Row.class, CourseAPI_N_In_A_Row.class);
+		return new ResourceConfig(CourseAPI_N_In_A_Row.class, TaskAPI_N_In_A_Row.class);
 	}
 
 	@Before
@@ -96,9 +97,9 @@ public class TaskAPI_Required_Optional_Test extends JerseyTest {
 		}
 
 		finally {
-			Handler.hqlTruncate("Task_Required_Optional");
+			Handler.hqlTruncate("Task_N_In_A_Row");
 			Handler.hqlTruncate("Task");
-			Handler.hqlTruncate("Course_Required_Optional");
+			Handler.hqlTruncate("Course_N_In_A_Row");
 			Handler.hqlTruncate("UserCourse");
 			Handler.hqlTruncate("Course");
 			Utilities.setJUnitTest(false);

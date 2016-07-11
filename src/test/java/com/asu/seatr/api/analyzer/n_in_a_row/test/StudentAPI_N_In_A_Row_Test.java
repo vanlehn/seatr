@@ -21,7 +21,7 @@ import com.asu.seatr.rest.models.analyzer.n_in_a_row.CAReader_N_In_A_Row;
 import com.asu.seatr.rest.models.analyzer.n_in_a_row.SAReader_N_In_A_Row;
 import com.asu.seatr.utils.Utilities;
 
-public class StudentAPI_Required_Optional_Test extends JerseyTest {
+public class StudentAPI_N_In_A_Row_Test extends JerseyTest {
 
 	private static String STUDENT_3_URL = "analyzer/n_in_a_row/students/";
 	private static String COURSE_3_URL = "analyzer/n_in_a_row/courses/";
@@ -97,9 +97,9 @@ public class StudentAPI_Required_Optional_Test extends JerseyTest {
 		}
 
 		finally {
-			Handler.hqlTruncate("Student_Required_Optional");
+			Handler.hqlTruncate("Student_N_In_A_Row");
 			Handler.hqlTruncate("Student");
-			Handler.hqlTruncate("Course_Required_Optional");
+			Handler.hqlTruncate("Course_N_In_A_Row");
 			Handler.hqlTruncate("UserCourse");
 			Handler.hqlTruncate("Course");
 			Utilities.setJUnitTest(false);
