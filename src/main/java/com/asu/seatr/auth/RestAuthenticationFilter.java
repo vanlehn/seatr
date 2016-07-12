@@ -48,7 +48,7 @@ public class RestAuthenticationFilter implements javax.servlet.Filter {
 	// checking directly with the URL, fails when the URL routes are changed
 	private boolean isCourseCreateRequest(ServletRequest request) {
 		String path = ((HttpServletRequest) request).getPathInfo();
-		String re1="(\\/analyzer\\/\\d+\\/courses)";
+		String re1="(\\/analyzer\\/\\w+\\/courses)";
 		Pattern p = Pattern.compile(re1,Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
 		Matcher m = p.matcher(path);
 		return m.find() && ((HttpServletRequest) request).getMethod().equals("POST");

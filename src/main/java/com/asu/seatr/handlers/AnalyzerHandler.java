@@ -55,5 +55,9 @@ public class AnalyzerHandler {
 			session.close();
 		}
 	}
+	public static void main(String args[]) throws AnalyzerException
+	{
+		System.out.println(getByName("UnansweredTasks").getName());
+	}
 
 }

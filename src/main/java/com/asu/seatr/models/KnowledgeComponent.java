@@ -33,7 +33,7 @@ public class KnowledgeComponent {
 	@Column(name = "external_id")
 	private String external_id;
 
-	@ManyToOne(targetEntity = Course.class)
+	@ManyToOne//(targetEntity = Course.class)
 	@JoinColumn(name = "course_id", referencedColumnName = "id")
 	private Course course;
 

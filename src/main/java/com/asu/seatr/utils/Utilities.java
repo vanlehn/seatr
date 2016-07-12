@@ -97,7 +97,7 @@ public class Utilities {
 	
 	public static void writeToGraphite(String metric,Double responseTime,Long timestamp)
 	{
-			if(!isJUnitTest)
+			if(!isJUnitTest && Constants.GRAPHITE_ACTIVE)
 			{
 				Socket socket = null;
 				Writer writer = null;

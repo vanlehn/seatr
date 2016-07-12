@@ -33,7 +33,7 @@ public class Student {
 	@Column(name = "external_id", nullable=false)
 	private String external_id;
 
-	@ManyToOne(targetEntity = Course.class)
+	@ManyToOne//(targetEntity = Course.class)
 	@JoinColumn(name = "course_id", referencedColumnName = "id", nullable=false)
 	private Course course;
 

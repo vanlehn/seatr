@@ -42,7 +42,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	private static String CREATE_TASK_1_URL = "analyzer/unansweredtasks/tasks/";
 	private static String SET_ANALYZER_COURSE = "courses/setanalyzer/";
 	private static String CREATE_STUDENT_1_URL = "analyzer/unansweredtasks/students/";
-	private static String INIT_TASKS = "inittasks/";
+	private static String INIT_TASKS = "analyzer/unansweredtasks/inittasks/";
 	private static String STUDENT_TASK_URL = "analyzer/unansweredtasks/studenttasks";
 	private static String SCALE_TASKS = "analyzer/unansweredtasks/scaletasks/";
 
@@ -63,9 +63,9 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 		Utilities.setJUnitTest(false);
 	}
 	
-	/*
+	
 	@Test(expected=WebApplicationException.class)
-	public void emptyCourseId() {
+	public void emptyCourseIdGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			target(GETTASKS_1_URL).queryParam("external_student_id", "1")
@@ -84,7 +84,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 
 	@Test(expected=WebApplicationException.class)
-	public void emptyStudentId() {
+	public void emptyStudentIdGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			final List<String> resList = target(GETTASKS_1_URL).queryParam("external_student_id", "")
@@ -103,7 +103,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 
 	@Test(expected=WebApplicationException.class)
-	public void invalidCoureId() {
+	public void invalidCoureIdGetTasks() {
 
 		Utilities.setJUnitTest(true);
 		try {
@@ -124,7 +124,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 
 	@Test(expected=WebApplicationException.class)
-	public void noTasksForCourse() {
+	public void noTasksForCourseGetTasks() {
 
 		Utilities.setJUnitTest(true);
 		try {
@@ -166,7 +166,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 
 	@Test
-	public void noPrimaryAnalyzer_tasksLessThanRequestedTasks() {
+	public void noPrimaryAnalyzer_tasksLessThanRequestedTasksGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			CAReader_UnansweredTasks ca = new CAReader_UnansweredTasks();
@@ -218,7 +218,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 
 	@Test
-	public void noPrimaryAnalyzer_tasksMoreThanRequestedTasks() {
+	public void noPrimaryAnalyzer_tasksMoreThanRequestedTasksGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			CAReader_UnansweredTasks ca = new CAReader_UnansweredTasks();
@@ -296,7 +296,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 
 	@Test
-	public void primaryAnalyzer_noStudentTasks_tasksMoreThanRequestedTasks() {
+	public void primaryAnalyzer_noStudentTasks_tasksMoreThanRequestedTasksGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			
@@ -398,7 +398,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	
 	//creating 6 tasks, then student answers 2 tasks. 1 task is answered twice. still we should get 4 recommended tasks
 	@Test
-	public void primaryAnalyzer_StudentTasks_taskslessThanRequestedTasks() {
+	public void primaryAnalyzer_StudentTasks_taskslessThanRequestedTasksGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			
@@ -532,7 +532,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	
 	//creating 6 tasks, then student answers 6 tasks. since all tasks answered no tasks left
 	@Test(expected=WebApplicationException.class)
-	public void primaryAnalyzer_StudentTasks_noTasksLeft() {
+	public void primaryAnalyzer_StudentTasks_noTasksLeftGetTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			
@@ -700,7 +700,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 	
 	@Test(expected=WebApplicationException.class)
-	public void emptyCourseId() {
+	public void emptyCourseIdScaleTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			target(SCALE_TASKS).queryParam("external_student_id", "1")
@@ -719,7 +719,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 
 	@Test(expected=WebApplicationException.class)
-	public void emptyStudentId() {
+	public void emptyStudentIdScaleTasks() {
 		Utilities.setJUnitTest(true);
 		try {
 			final List<String> resList = target(SCALE_TASKS).queryParam("external_student_id", "")
@@ -738,7 +738,7 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 	}
 
 	@Test(expected=WebApplicationException.class)
-	public void invalidCoureId() {
+	public void invalidCoureIdScaleTasks() {
 
 		Utilities.setJUnitTest(true);
 		try {
@@ -757,10 +757,10 @@ public class Recommender_UnansweredTasks_API_Test extends JerseyTest {
 		}
 
 	}
-	*/
+	
 	//creating 6 tasks, then student answers 6 tasks. since all tasks answered no tasks left
 		@Test
-		public void primaryAnalyzer_StudentTasks_noTasksLeft() {
+		public void primaryAnalyzer_StudentTasks_noTasksLeftScaleTasks() {
 			Utilities.setJUnitTest(true);
 			try {
 				

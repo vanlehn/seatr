@@ -46,7 +46,7 @@ public class RecommenderAPI_UnansweredTasks {
 
 	static Logger logger = Logger.getLogger(RecommenderAPI_UnansweredTasks.class);
 	
-	@Path("inittasks")
+	@Path("analyzer/unansweredtasks/inittasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response initRecommendedTasks(@QueryParam("number_of_tasks") Integer number_of_tasks){
