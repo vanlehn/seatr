@@ -102,7 +102,7 @@ public class RecommTaskHandler_N_In_A_Row {
 		}
 	}
 	
-	public static void initStudentKC(){  //create student kc for each student kc pair
+	private static void initStudentKC(){  //create student kc for each student kc pair
 		List<Student> stu_list=StudentHandler.readAll();
 		List<KnowledgeComponent> kc_list=KnowledgeComponentHandler.readAll();
 		SessionFactory sf;
@@ -116,7 +116,7 @@ public class RecommTaskHandler_N_In_A_Row {
 		}
 		Session session=sf.openSession();
 		session.beginTransaction();
-		Query q=session.createQuery("delete from SKC_A2");
+		Query q=session.createQuery("delete from SKC_N_In_A_Row");
 		q.executeUpdate();
 		
 		
@@ -135,6 +135,8 @@ public class RecommTaskHandler_N_In_A_Row {
 	}
 	
 	public static void initStudentTaskUtility(){
+		initStudentKC();
+		
 		//init utlity for each task: init STU_A2
 		String sql="select skc_a2.student_id as student_id, tk_a2.task_id as task_id,skc_a2.kc_id as kc_id,skc_a2.n_in_a_row as number "
 				+ "from tk_a2,skc_a2 where tk_a2.kc_id=skc_a2.kc_id order by student_id,task_id";
@@ -156,7 +158,7 @@ public class RecommTaskHandler_N_In_A_Row {
 		List<Object[]> result=sqlQuery.list();
 		
 		session.beginTransaction();
-		Query q=session.createQuery("delete from STU_A2");
+		Query q=session.createQuery("delete from STU_N_In_A_Row");
 		q.executeUpdate();
 		session.getTransaction().commit();
 		List<Integer> correctNum_list=new LinkedList<Integer>();
@@ -314,6 +316,8 @@ public class RecommTaskHandler_N_In_A_Row {
 		session.save(stu_a2);
 		session.getTransaction().commit();
 		
+		
+		/*
 		Criteria cr_recomm=session.createCriteria(RecommTask_N_In_A_Row.class);
 		cr_recomm.add(Restrictions.eq("student", stu));
 		cr_recomm.addOrder(Order.desc("utility"));
@@ -362,7 +366,7 @@ public class RecommTaskHandler_N_In_A_Row {
 		if(delnum>0){
 			fillRecommTask(stu,course,delnum,min_utility,recent_time);
 		}
-		
+		*/
 		
 	}
 }

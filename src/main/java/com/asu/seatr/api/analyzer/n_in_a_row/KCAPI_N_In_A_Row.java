@@ -49,10 +49,17 @@ public class KCAPI_N_In_A_Row {
 	@Consumes(MediaType.APPLICATION_JSON)
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response createKC2(KAReader_N_In_A_Row kaReader)
-	{
+	{	
 		Long requestTimestamp = System.currentTimeMillis();
 		KC_N_In_A_Row ka2 = new KC_N_In_A_Row();
 		try {
+			if(!Utilities.checkExists(kaReader.getExternal_course_id())) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(kaReader.getExternal_kc_id())) {
+				throw new KCException(MyStatus.ERROR, MyMessage.KC_ID_MISSING);
+			}	
+			
 			ka2.createKC(kaReader.getExternal_kc_id(), kaReader.getExternal_course_id());
 			KCAnalyzerHandler.save(ka2);
 			return Response.status(Status.CREATED)
@@ -104,7 +111,7 @@ public class KCAPI_N_In_A_Row {
 			if(replace)
 			{
 				Course course = CourseHandler.getByExternalId(external_course_id);
-				session = KCAnalyzerHandler.hqlDeleteByCourse("A2", course,false);
+				session = KCAnalyzerHandler.hqlDeleteByCourse("N_In_A_Row", course,false);
 			}
 			TaskKC_N_In_A_Row tk2Array[] = new TaskKC_N_In_A_Row[tkReaderArray.length];
 			for(int i = 0; i<tkReaderArray.length;i++)
