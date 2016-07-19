@@ -58,11 +58,11 @@ public class StudentAPI_UnansweredTasks {
 
 			return result;
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch (StudentException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
@@ -169,11 +169,11 @@ public class StudentAPI_UnansweredTasks {
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_UPDATED))
 					.build();
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch (StudentException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
@@ -213,11 +213,11 @@ public class StudentAPI_UnansweredTasks {
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_ANALYZER_DELETED))
 					.build();
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch (StudentException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){

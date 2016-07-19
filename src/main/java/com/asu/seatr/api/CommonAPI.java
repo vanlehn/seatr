@@ -159,7 +159,7 @@ public class CommonAPI {
 			return Response.status(Status.OK).entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_DELETED))
 					.build();
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
+			Response rb = Response.status(Status.OK).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
 					.build();
 			throw new WebApplicationException(rb);
 		} catch (Exception e) {
@@ -207,11 +207,11 @@ public class CommonAPI {
 			return Response.status(Status.OK).entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_DELETED))
 					.build();
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
+			Response rb = Response.status(Status.OK).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
 					.build();
 			throw new WebApplicationException(rb);
 		} catch (StudentException e) {
-			Response rb = Response.status(Status.NOT_FOUND).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
+			Response rb = Response.status(Status.OK).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
 					.build();
 			throw new WebApplicationException(rb);
 		} catch (Exception e) {
@@ -266,11 +266,11 @@ public class CommonAPI {
 		}
 
 		catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
+			Response rb = Response.status(Status.OK).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
 					.build();
 			throw new WebApplicationException(rb);
 		} catch (TaskException e) {
-			Response rb = Response.status(Status.NOT_FOUND).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
+			Response rb = Response.status(Status.OK).entity(MyResponse.build(e.getMyStatus(), e.getMyMessage()))
 					.build();
 			throw new WebApplicationException(rb);
 		}

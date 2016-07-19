@@ -66,17 +66,17 @@ public class RecommenderAPI_Required_Optional {
 		}
 		catch(StudentException e)
 		{	
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);	
 		}
 		catch(CourseException e) {
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);			
 		}
 		catch(RecommException e) {
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);			
 		}
@@ -133,22 +133,22 @@ public class RecommenderAPI_Required_Optional {
 		}
 		catch(StudentException e)
 		{	
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);	
 		}
 		catch(TaskException e) {
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);			
 		}
 		catch(CourseException e) {
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);			
 		}
 		catch(RecommException e) {
-			Response rb = Response.status(Status.BAD_REQUEST)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
 			throw new WebApplicationException(rb);			
 		}

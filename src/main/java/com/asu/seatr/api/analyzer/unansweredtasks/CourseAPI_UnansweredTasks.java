@@ -57,7 +57,7 @@ public class CourseAPI_UnansweredTasks {
 			reader.setThreshold(ca1.getThreshold());
 			return reader;
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
@@ -162,7 +162,7 @@ public class CourseAPI_UnansweredTasks {
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_UPDATED))
 					.build();
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
@@ -197,7 +197,7 @@ public class CourseAPI_UnansweredTasks {
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_ANALYZER_DELETED)).build();
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
