@@ -54,8 +54,6 @@
 		<mapping class="com.asu.seatr.models.analyzers.task_kc.TaskKC_Required_Optional" />
 		<mapping class="com.asu.seatr.models.analyzers.kc.KC_Required_Optional" />
 		
-		
-		
 		<mapping class="com.asu.seatr.models.analyzers.student.Student_N_In_A_Row"/>
 		<mapping class="com.asu.seatr.models.analyzers.task.Task_N_In_A_Row"/>
 		<mapping class="com.asu.seatr.models.analyzers.course.Course_N_In_A_Row"/>
@@ -65,6 +63,15 @@
 		<mapping class="com.asu.seatr.models.analyzers.studenttask.RecommTask_N_In_A_Row"/>
 		<mapping class="com.asu.seatr.models.analyzers.studenttask.STU_N_In_A_Row"/>
 		<mapping class="com.asu.seatr.models.analyzers.student.SKC_N_In_A_Row"/>
+		
+		<mapping class="com.asu.seatr.models.analyzers.student.Student_BKT"/>
+		<mapping class="com.asu.seatr.models.analyzers.task.Task_BKT"/>
+		<mapping class="com.asu.seatr.models.analyzers.course.Course_BKT"/>
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.StudentTask_BKT"/>
+		<mapping class="com.asu.seatr.models.analyzers.task_kc.TaskKC_BKT"/>
+		<mapping class="com.asu.seatr.models.analyzers.kc.KC_BKT"/>
+		<mapping class="com.asu.seatr.models.analyzers.studenttask.StuTaskUtility_BKT"/>
+		<mapping class="com.asu.seatr.models.analyzers.student.SKC_BKT"/>
 
 
 	</session-factory>
