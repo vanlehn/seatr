@@ -36,6 +36,195 @@ import com.asu.seatr.utils.Utilities;
 @SuppressWarnings("unchecked")
 public class RecommTaskHandler_BKT {
 	
+	public static void initOneStudent(String stuId,int course_id){
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
+		
+		//init student kcs
+		Session session=sf.openSession();
+		Criteria cr = session.createCriteria(KC_BKT.class);
+		List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
+		session.beginTransaction();
+		String sql="delete from skc_bkt where skc_bkt.student_id = "+ stuId;
+		Query q=session.createSQLQuery(sql);
+		q.executeUpdate();
+		session.getTransaction().commit();
+		
+		Student stu=StudentHandler.read(Integer.valueOf(stuId));
+		for(KC_BKT kc : kc_list){
+			SKC_BKT skc=new SKC_BKT();
+			skc.setStudent(stu);
+			skc.setKc(kc.getKc());
+			skc.setProficiency(kc.getInit_p());
+			session.beginTransaction();
+			session.save(skc);
+			session.getTransaction().commit();
+		}
+		
+		//init all task utilities for the student 
+		sql="select skc_bkt.student_id as student_id, "
+				+ "tk_bkt.task_id as task_id,"
+				+ "skc_bkt.kc_id as kc_id,"
+				+ "skc_bkt.proficiency as proficiency,"
+				+ "k_bkt.learning_rate as l,"
+				+ "k_bkt.utility as utility, "
+				+ "t_bkt.type as type "
+				+ "from tk_bkt,skc_bkt,k_bkt,t_bkt "
+				+ "where tk_bkt.kc_id=skc_bkt.kc_id and k_bkt.kc_id=skc_bkt.kc_id and t_bkt.task_id=tk_bkt.task_id "
+				+ "and t_bkt.course_id="+String.valueOf(course_id)
+				+ " and skc_bkt.student_id="+stuId
+				+ " order by task_id";
+		SQLQuery sqlQuery=session.createSQLQuery(sql);
+		sqlQuery.addScalar("student_id", IntegerType.INSTANCE);
+		sqlQuery.addScalar("task_id", IntegerType.INSTANCE);
+		sqlQuery.addScalar("kc_id", IntegerType.INSTANCE);
+		sqlQuery.addScalar("proficiency", DoubleType.INSTANCE);
+		sqlQuery.addScalar("l", DoubleType.INSTANCE);
+		sqlQuery.addScalar("utility", DoubleType.INSTANCE);
+		sqlQuery.addScalar("type", StringType.INSTANCE);
+		List<Object[]> result=sqlQuery.list();
+		
+		session.beginTransaction();
+		sql="delete from stu_bkt where stu_bkt.student_id = "+stuId;
+		q=session.createSQLQuery(sql);
+		q.executeUpdate();
+		session.getTransaction().commit();
+		List<Double> kc_p_list=new LinkedList<Double>();
+		List<Double> kc_l_list=new LinkedList<Double>();
+		List<Double> kc_u_list=new LinkedList<Double>();
+		int curtaskid=(int) result.get(0)[1];
+		String curTaskType=(String) result.get(0)[6];
+		for(Object[] tkc:result){
+			int tkcid=(int) tkc[1];
+			if(tkcid!=curtaskid){
+				TaskFeature taskFeature=Calculation_BKT.getTaskFeature(curTaskType);
+				double utility=Calculation_BKT.task_utility_kc(kc_p_list, kc_l_list, kc_u_list, taskFeature.slip, taskFeature.guess);
+				kc_p_list.clear();
+				kc_l_list.clear();
+				kc_u_list.clear();
+
+				Task task=TaskHandler.read(curtaskid);
+				StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
+				stuTaskUtility.setStudent(stu);
+				stuTaskUtility.setTask(task);
+				stuTaskUtility.setUtility(utility);
+				session.beginTransaction();
+				session.save(stuTaskUtility);
+				session.getTransaction().commit();
+
+			}
+			curtaskid=tkcid;
+			curTaskType=(String)tkc[6];
+			kc_p_list.add((double)tkc[3]);
+			kc_l_list.add((double)tkc[4]);
+			kc_u_list.add((double)tkc[5]);
+		}
+		TaskFeature taskFeature=Calculation_BKT.getTaskFeature(curTaskType);
+		double utility=Calculation_BKT.task_utility_kc(kc_p_list, kc_l_list, kc_u_list, taskFeature.slip, taskFeature.guess);
+		kc_p_list.clear();
+		kc_l_list.clear();
+		kc_u_list.clear();
+		Task task=TaskHandler.read(curtaskid);
+		StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
+		stuTaskUtility.setStudent(stu);
+		stuTaskUtility.setTask(task);
+		stuTaskUtility.setUtility(utility);
+		session.beginTransaction();
+		session.save(stuTaskUtility);
+		session.getTransaction().commit();
+		
+		session.close();
+	}
+	
+	public static void initOneTask(String taskId){
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
+		Session session=sf.openSession();
+		
+		session.beginTransaction();
+		String sql="delete from stu_bkt where stu_bkt.task_id = "+ taskId;
+		Query q=session.createSQLQuery(sql);
+		q.executeUpdate();
+		
+		sql="select skc_bkt.student_id as student_id,"
+				+ "tk_bkt.task_id as task_id,"
+				+ "skc_bkt.kc_id as kc_id,"
+				+ "skc_bkt.proficiency as proficiency,"
+				+ "k_bkt.learning_rate as l,"
+				+ "k_bkt.utility as utility, "
+				+ "t_bkt.type as type "
+				+ "from tk_bkt,skc_bkt,k_bkt,t_bkt "
+				+ "where tk_bkt.kc_id=skc_bkt.kc_id and k_bkt.kc_id=skc_bkt.kc_id and t_bkt.task_id=tk_bkt.task_id "
+				+ "and t_bkt.task_id="+taskId
+				+ " order by student_id";
+		SQLQuery sqlQuery=session.createSQLQuery(sql);
+		sqlQuery=session.createSQLQuery(sql);
+		sqlQuery.addScalar("student_id", IntegerType.INSTANCE);
+		sqlQuery.addScalar("kc_id", IntegerType.INSTANCE);
+		sqlQuery.addScalar("proficiency", DoubleType.INSTANCE);
+		sqlQuery.addScalar("l", DoubleType.INSTANCE);
+		sqlQuery.addScalar("utility", DoubleType.INSTANCE);
+		sqlQuery.addScalar("type", StringType.INSTANCE);
+		List<Object[]> result=sqlQuery.list();
+		
+		int curstuid=(int) result.get(0)[0];
+		String taskType=(String) result.get(0)[5];
+		List<Double> kc_p_list=new LinkedList<Double>();
+		List<Double> kc_l_list=new LinkedList<Double>();
+		List<Double> kc_u_list=new LinkedList<Double>();
+		Task task=TaskHandler.read(Integer.valueOf(taskId));
+		TaskFeature taskFeature=Calculation_BKT.getTaskFeature(taskType);
+		for(Object[] tkc:result){
+			int stuid=(int) tkc[0];
+			if(stuid!=curstuid){			
+				double utility=Calculation_BKT.task_utility_kc(kc_p_list, kc_l_list, kc_u_list, taskFeature.slip, taskFeature.guess);
+				kc_p_list.clear();
+				kc_l_list.clear();
+				kc_u_list.clear();
+				Student stu=StudentHandler.read(curstuid);
+				StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
+				stuTaskUtility.setStudent(stu);
+				stuTaskUtility.setTask(task);
+				stuTaskUtility.setUtility(utility);
+				session.beginTransaction();
+				session.save(stuTaskUtility);
+				session.getTransaction().commit();
+			}
+			curstuid=stuid;
+			kc_p_list.add((double)tkc[2]);
+			kc_l_list.add((double)tkc[3]);
+			kc_u_list.add((double)tkc[4]);
+		}
+		double utility=Calculation_BKT.task_utility_kc(kc_p_list, kc_l_list, kc_u_list, taskFeature.slip, taskFeature.guess);
+		kc_p_list.clear();
+		kc_l_list.clear();
+		kc_u_list.clear();
+		Student stu=StudentHandler.read(curstuid);
+		StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
+		stuTaskUtility.setStudent(stu);
+		stuTaskUtility.setTask(task);
+		stuTaskUtility.setUtility(utility);
+		session.beginTransaction();
+		session.save(stuTaskUtility);
+		session.getTransaction().commit();
+		
+		session.close();
+	}
+	
 	private static void initStudentKC(String[] stuIds){  //create student kc for each student kc pair
 		StringBuilder idset_str=new StringBuilder();
 		HashSet<String> idset=new HashSet<String>();
@@ -63,6 +252,7 @@ public class RecommTaskHandler_BKT {
 		String sql="delete from skc_bkt where skc_bkt.student_id in "+ idset_str;
 		Query q=session.createSQLQuery(sql);
 		q.executeUpdate();
+		session.getTransaction().commit();
 		
 		for(Student stu : stu_list){
 			if (!idset.contains(String.valueOf(stu.getId())))

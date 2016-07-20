@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -51,8 +52,8 @@ public class Student {
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
 	private List<Student_Required_Optional> S_A3;
 	
-	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
-	private List<Student_BKT> S_BKT;
+	@OneToOne(mappedBy = "student", cascade=CascadeType.ALL)
+	private Student_BKT S_BKT;
 	
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
 	private List<RecommTask_N_In_A_Row> recommTask_N_In_A_Row;
@@ -66,10 +67,10 @@ public class Student {
 	@OneToMany(mappedBy = "student", cascade=CascadeType.ALL)
 	private List<StuTaskUtility_BKT> stu_BKT;
 
-	public List<Student_BKT> getS_BKT() {
+	public Student_BKT getS_BKT() {
 		return S_BKT;
 	}
-	public void setS_BKT(List<Student_BKT> s_BKT) {
+	public void setS_BKT(Student_BKT s_BKT) {
 		S_BKT = s_BKT;
 	}
 	public List<StuTaskUtility_BKT> getStu_BKT() {
