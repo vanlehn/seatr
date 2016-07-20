@@ -12,14 +12,17 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.asu.seatr.models.analyzers.course.Course_BKT;
 import com.asu.seatr.models.analyzers.course.Course_N_In_A_Row;
 import com.asu.seatr.models.analyzers.course.Course_Required_Optional;
 import com.asu.seatr.models.analyzers.course.Course_UnansweredTasks;
+import com.asu.seatr.models.analyzers.student.Student_BKT;
 import com.asu.seatr.models.analyzers.student.Student_N_In_A_Row;
 import com.asu.seatr.models.analyzers.student.Student_Required_Optional;
 import com.asu.seatr.models.analyzers.student.Student_UnansweredTasks;
 import com.asu.seatr.models.analyzers.studenttask.RecommTask_N_In_A_Row;
 import com.asu.seatr.models.analyzers.studenttask.RecommTask_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task.Task_BKT;
 import com.asu.seatr.models.analyzers.task.Task_N_In_A_Row;
 import com.asu.seatr.models.analyzers.task.Task_Required_Optional;
 import com.asu.seatr.models.analyzers.task.Task_UnansweredTasks;
@@ -62,7 +65,28 @@ public class Course {
 	
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<Course_Required_Optional> C_A3;
+	
+	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
+	private List<Course_BKT> C_BKT;
 
+	public List<Course_BKT> getC_BKT() {
+		return C_BKT;
+	}
+	public void setC_BKT(List<Course_BKT> c_BKT) {
+		C_BKT = c_BKT;
+	}
+	public List<Student_BKT> getS_BKT() {
+		return S_BKT;
+	}
+	public void setS_BKT(List<Student_BKT> s_BKT) {
+		S_BKT = s_BKT;
+	}
+	public List<Task_BKT> getT_BKT() {
+		return T_BKT;
+	}
+	public void setT_BKT(List<Task_BKT> t_BKT) {
+		T_BKT = t_BKT;
+	}
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<Student_UnansweredTasks> S_A1;
 	
@@ -71,6 +95,9 @@ public class Course {
 	
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<Student_Required_Optional> S_A3;
+	
+	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
+	private List<Student_BKT> S_BKT;
 
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<Task_UnansweredTasks> T_A1;
@@ -80,6 +107,9 @@ public class Course {
 	
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<Task_Required_Optional> T_A3;
+	
+	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
+	private List<Task_BKT> T_BKT;
 	
 	@OneToMany(mappedBy = "course", cascade=CascadeType.ALL)
 	private List<RecommTask_N_In_A_Row> recommTask_N_In_A_Row;
