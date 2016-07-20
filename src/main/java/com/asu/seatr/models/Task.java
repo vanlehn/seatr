@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -19,9 +20,12 @@ import com.asu.seatr.models.analyzers.task.Task_UnansweredTasks;
 import com.asu.seatr.models.analyzers.studenttask.RecommTask_N_In_A_Row;
 import com.asu.seatr.models.analyzers.studenttask.RecommTask_UnansweredTasks;
 import com.asu.seatr.models.analyzers.studenttask.STU_N_In_A_Row;
+import com.asu.seatr.models.analyzers.studenttask.StuTaskUtility_BKT;
+import com.asu.seatr.models.analyzers.task.Task_BKT;
 import com.asu.seatr.models.analyzers.task.Task_N_In_A_Row;
 import com.asu.seatr.models.analyzers.task.Task_Required_Optional;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_BKT;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_N_In_A_Row;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_Required_Optional;
 
@@ -51,6 +55,9 @@ public class Task {
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
 	private List<Task_Required_Optional> T_A3;
+	
+	@OneToOne(mappedBy = "task", cascade=CascadeType.ALL)
+	private Task_BKT T_BKT;
 
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
 	private List<TaskKC_UnansweredTasks> TK_A1;
@@ -62,6 +69,9 @@ public class Task {
 	private List<TaskKC_Required_Optional> TK_A3;
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
+	private List<TaskKC_BKT> TK_BKT;
+	
+	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
 	private List<RecommTask_N_In_A_Row> recommTask_N_In_A_Row;
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
@@ -69,6 +79,9 @@ public class Task {
 	
 	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
 	private List<STU_N_In_A_Row> stu_N_In_A_Row;
+	
+	@OneToMany(mappedBy = "task", cascade=CascadeType.ALL)
+	private List<StuTaskUtility_BKT> stu_BKT;
 
 	public final static String p_id = "id";
 	public final static String p_external_id = "external_id";
@@ -154,6 +167,24 @@ public class Task {
 	}
 	public void setStu_N_In_A_Row(List<STU_N_In_A_Row> stu_N_In_A_Row) {
 		this.stu_N_In_A_Row = stu_N_In_A_Row;
+	}
+	public Task_BKT getT_BKT() {
+		return T_BKT;
+	}
+	public void setT_BKT(Task_BKT t_BKT) {
+		T_BKT = t_BKT;
+	}
+	public List<TaskKC_BKT> getTK_BKT() {
+		return TK_BKT;
+	}
+	public void setTK_BKT(List<TaskKC_BKT> tK_BKT) {
+		TK_BKT = tK_BKT;
+	}
+	public List<StuTaskUtility_BKT> getStu_BKT() {
+		return stu_BKT;
+	}
+	public void setStu_BKT(List<StuTaskUtility_BKT> stu_BKT) {
+		this.stu_BKT = stu_BKT;
 	}	
 
 }

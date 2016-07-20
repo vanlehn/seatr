@@ -15,9 +15,11 @@ import javax.persistence.UniqueConstraint;
 
 import org.hibernate.annotations.GenericGenerator;
 
+import com.asu.seatr.models.analyzers.kc.KC_BKT;
 import com.asu.seatr.models.analyzers.kc.KC_N_In_A_Row;
 import com.asu.seatr.models.analyzers.kc.KC_Required_Optional;
 import com.asu.seatr.models.analyzers.kc.KC_UnansweredTasks;
+import com.asu.seatr.models.analyzers.task_kc.TaskKC_BKT;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_N_In_A_Row;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_Required_Optional;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_UnansweredTasks;
@@ -45,6 +47,9 @@ public class KnowledgeComponent {
 	
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<KC_Required_Optional> K_A3;
+	
+	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
+	private List<KC_BKT> K_BKT;
 
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<TaskKC_UnansweredTasks> TK_A1;
@@ -54,6 +59,17 @@ public class KnowledgeComponent {
 	
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<TaskKC_Required_Optional> TK_A3;
+	
+	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
+	private List<TaskKC_BKT> TK_BKT;
+
+	public List<KC_BKT> getK_BKT() {
+		return K_BKT;
+	}
+
+	public void setK_BKT(List<KC_BKT> k_BKT) {
+		K_BKT = k_BKT;
+	}
 
 	public int getId() {
 		return id;
