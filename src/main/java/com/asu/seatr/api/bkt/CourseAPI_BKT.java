@@ -47,7 +47,7 @@ public class CourseAPI_BKT {
 		try {
 			ca = (Course_BKT)CourseAnalyzerHandler.readByExtId(Course_BKT.class, external_course_id).get(0);
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
@@ -141,7 +141,7 @@ public class CourseAPI_BKT {
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.COURSE_ANALYZER_DELETED)).build();
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
