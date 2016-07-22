@@ -181,8 +181,10 @@ public class RecommTaskHandler_BKT {
 		sqlQuery.addScalar("type", StringType.INSTANCE);
 		List<Object[]> result=sqlQuery.list();
 		
-		if(result==null || result.isEmpty())
+		if(result==null || result.isEmpty()){
+			session.close();
 			return;
+		}
 		
 		int curstuid=(int) result.get(0)[0];
 		String taskType=(String) result.get(0)[5];
@@ -425,8 +427,10 @@ public class RecommTaskHandler_BKT {
 		String taskType=task.getT_BKT().getType();
 		TaskFeature taskFeature=Calculation_BKT.getTaskFeature(taskType);
 		List<Object[]> kc_list=sqlQuery.list();
-		if (kc_list==null || kc_list.isEmpty())
+		if (kc_list==null || kc_list.isEmpty()){
+			session.close();
 			return;
+		}
 		List<Integer> kc_id_list=new LinkedList<Integer>();
 		List<Double> kc_p_list=new LinkedList<Double>();
 		List<Double> kc_l_list=new LinkedList<Double>();
@@ -502,7 +506,13 @@ public class RecommTaskHandler_BKT {
 				cr_tmp.add(Restrictions.eq("student", stu));
 				Task affected_task=TaskHandler.read(curtaskid);
 				cr_tmp.add(Restrictions.eq("task",affected_task));
-				StuTaskUtility_BKT stuTaskUtility=(StuTaskUtility_BKT) cr_tmp.list().get(0);
+				List<StuTaskUtility_BKT> stuTaskUList= cr_tmp.list();
+				if (stuTaskUList.isEmpty())
+				{
+					session.close();
+					return;
+				}
+				StuTaskUtility_BKT stuTaskUtility=stuTaskUList.get(0);
 				stuTaskUtility.setStudent(stu);
 				stuTaskUtility.setTask(curtask);
 				stuTaskUtility.setUtility(utility);
@@ -526,8 +536,13 @@ public class RecommTaskHandler_BKT {
 		Criteria cr_tmp=session.createCriteria(StuTaskUtility_BKT.class);
 		cr_tmp.add(Restrictions.eq("student", stu));
 		Task affected_task=TaskHandler.read(curtaskid);
-		cr_tmp.add(Restrictions.eq("task",affected_task));
-		StuTaskUtility_BKT stuTaskUtility=(StuTaskUtility_BKT) cr_tmp.list().get(0);
+		List<StuTaskUtility_BKT> stuTaskUList= cr_tmp.list();
+		if (stuTaskUList.isEmpty())
+		{
+			session.close();
+			return;
+		}
+		StuTaskUtility_BKT stuTaskUtility=stuTaskUList.get(0);
 		stuTaskUtility.setStudent(stu);
 		stuTaskUtility.setTask(curtask);
 		stuTaskUtility.setUtility(utility);
