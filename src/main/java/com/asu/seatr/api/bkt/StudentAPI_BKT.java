@@ -47,11 +47,11 @@ public class StudentAPI_BKT {
 			try {
 				StudentAnalyzerHandler.readByExtId(Student_BKT.class, external_student_id, external_course_id).get(0);
 			} catch (CourseException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
+				Response rb = Response.status(Status.OK)
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			} catch (StudentException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
+				Response rb = Response.status(Status.OK)
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			} catch(Exception e){
@@ -142,11 +142,11 @@ public class StudentAPI_BKT {
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_UPDATED))
 					.build();
 		} catch (CourseException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch (StudentException e) {
-			Response rb = Response.status(Status.NOT_FOUND)
+			Response rb = Response.status(Status.OK)
 					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 			throw new WebApplicationException(rb);
 		} catch(Exception e){
@@ -181,11 +181,11 @@ public class StudentAPI_BKT {
 						.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_ANALYZER_DELETED))
 						.build();
 			} catch (CourseException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
+				Response rb = Response.status(Status.OK)
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			} catch (StudentException e) {
-				Response rb = Response.status(Status.NOT_FOUND)
+				Response rb = Response.status(Status.OK)
 						.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();			
 				throw new WebApplicationException(rb);
 			} catch(Exception e){
