@@ -22,6 +22,7 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.type.DoubleType;
 import org.hibernate.type.IntegerType;
+import org.hibernate.type.StringType;
 
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
@@ -125,7 +126,7 @@ public class RecommenderAPI_BKT {
 		{
 			Course course = CourseHandler.getByExternalId(taskList.getExternal_course_id());
 			Student student = StudentHandler.getByExternalId(taskList.getExternal_student_id(), taskList.getExternal_course_id());
-			return getUtility(student, course, taskList.getExternal_task_ids());
+			return getScale(student, course, taskList.getExternal_task_ids());
 		}
 		catch(StudentException e)
 		{	
@@ -157,6 +158,75 @@ public class RecommenderAPI_BKT {
 			Double response = (responseTimestamp -  requestTimestamp)/1000d;
 			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
 		}
+	}
+	
+	private static List<TUReader_BKT> getScale(Student stu, Course course, String[] externalTaskIds) throws StudentException, CourseException, TaskException{
+		if(stu == null || stu.getS_BKT()==null)
+		{
+			throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_NOT_FOUND);
+		}
+		if(course == null)
+		{
+			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
+		}
+		HashSet<String> unProcessedEIds=new HashSet<String>();
+		for (String eid:externalTaskIds)
+			unProcessedEIds.add(eid);
+		HashSet<String> allEIds=(HashSet<String>) unProcessedEIds.clone();
+		SessionFactory sf = Utilities.getSessionFactory();
+		
+		boolean already_init_stu=false;
+		boolean already_init_tasks=false;
+		List<TUReader_BKT> task_u_list=new LinkedList<TUReader_BKT>();
+		int count=0;
+		do{
+			Session session = sf.openSession();
+			String sql="SELECT task.external_id, stu_bkt.utility FROM stu_bkt,task "
+					+ "where stu_bkt.task_id=task.id and "
+					+ "task.course_id="+course.getId()+" and stu_bkt.student_id="+stu.getId()
+					+ " order by utility desc";
+			SQLQuery sqlQuery=session.createSQLQuery(sql);
+			sqlQuery.addScalar("task.external_id", StringType.INSTANCE);
+			sqlQuery.addScalar("utility", DoubleType.INSTANCE);
+			List<Object[]> result_list=sqlQuery.list();
+			List<String> taskIds=new LinkedList<String>();
+			List<Double> utilities=new LinkedList<Double>();
+			double max=0.0001;
+			for (Object[] stu_task_u: result_list){
+				taskIds.add((String)stu_task_u[0]);
+				utilities.add((Double) stu_task_u[1]);
+				if ((Double) stu_task_u[1]>max)
+					max=(Double) stu_task_u[1];
+				unProcessedEIds.remove((String)stu_task_u[0]);
+			}
+			DecimalFormat df=new DecimalFormat("0.000");
+			for (int i=0;i<taskIds.size();i++){
+				if (!allEIds.contains(taskIds.get(i)))
+					continue;
+				TUReader_BKT task_u_reader=new TUReader_BKT();
+				task_u_reader.setExternal_task_id(taskIds.get(i));
+				double scale=utilities.get(i)/max;
+				scale=scale>1?1:scale;
+				scale=scale<0?0:scale;
+				task_u_reader.setUtility(df.format(scale));
+				task_u_list.add(task_u_reader);
+			}
+			
+			if(task_u_list.isEmpty() && !already_init_stu){
+				RecommTaskHandler_BKT.initOneStudent(String.valueOf(stu.getId()), stu.getCourse().getId());
+				already_init_stu=true;
+			}
+			else if(!unProcessedEIds.isEmpty() && !already_init_tasks){
+				for (String eid:unProcessedEIds){
+					Task task=TaskHandler.readByExtId(eid, course.getExternal_id());
+					RecommTaskHandler_BKT.initOneTask(String.valueOf(task.getId()));
+				}
+				already_init_tasks=true;
+			}
+			session.close();
+			count++;
+		}while((task_u_list.isEmpty() || !unProcessedEIds.isEmpty()) && count<2);
+		return task_u_list;
 	}
 	
 	private static List<TUReader_BKT> getUtility(Student stu, Course course, String[] externalTaskIds) throws StudentException, CourseException, TaskException{
