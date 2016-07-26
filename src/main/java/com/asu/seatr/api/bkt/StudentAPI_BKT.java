@@ -20,6 +20,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.StudentException;
 import com.asu.seatr.handlers.StudentAnalyzerHandler;
+import com.asu.seatr.handlers.analyzer.bkt.RecommTaskHandler_BKT;
 import com.asu.seatr.models.analyzers.student.Student_BKT;
 import com.asu.seatr.rest.models.analyzer.bkt.SAReader_BKT;
 import com.asu.seatr.utils.Constants;
@@ -87,11 +88,12 @@ public class StudentAPI_BKT {
 		//populate student table
 		//retrieve the analyzer name using courseid, like a1,a2,or a3...
 		Long requestTimestamp = System.currentTimeMillis();
-		Student_BKT s_a2 = new Student_BKT();
+		Student_BKT s_a = new Student_BKT();
 		
 		try {
-			s_a2.createStudent(sa.getExternal_student_id(), sa.getExternal_course_id(), 2);			
-			StudentAnalyzerHandler.save(s_a2);			
+			s_a.createStudent(sa.getExternal_student_id(), sa.getExternal_course_id(), 4);			
+			StudentAnalyzerHandler.save(s_a);	
+			RecommTaskHandler_BKT.initOneStudent(String.valueOf(s_a.getStudent().getId()), s_a.getCourse().getId());
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_CREATED)).build();
 		

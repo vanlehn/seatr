@@ -42,7 +42,7 @@ public class StudentAPI_BKT_Test extends JerseyTest {
 		}
 	}
 
-	@Test(expected = WebApplicationException.class)
+	@Test
 	public void create_Update_Get_Delete_Student_Sucess() {
 		Utilities.setJUnitTest(true);
 		try {
@@ -89,6 +89,7 @@ public class StudentAPI_BKT_Test extends JerseyTest {
 			// get student
 			student = target(STUDENT_3_URL).queryParam("external_course_id", "1").queryParam("external_student_id", "1")
 					.request().get(SAReader_BKT.class);
+			assertEquals("not found",student.getExternal_student_id(),null);
 
 		} catch (WebApplicationException e) {
 			assertEquals("student not found once deleted", Status.NOT_FOUND.getStatusCode(),
@@ -126,7 +127,7 @@ public class StudentAPI_BKT_Test extends JerseyTest {
 			resp = target(STUDENT_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
 					.put(Entity.json(sa), Response.class);
 
-			assertEquals("student not found", Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+			assertEquals("student not found", Status.OK.getStatusCode(), resp.getStatus());
 		} finally {
 			Utilities.setJUnitTest(false);
 		}
@@ -148,7 +149,7 @@ public class StudentAPI_BKT_Test extends JerseyTest {
 			//delete non existing student
 			resp = target(STUDENT_3_URL).queryParam("external_course_id", "1").queryParam("external_student_id", "1")
 					.request().delete(Response.class);
-			assertEquals("student not found", Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+			assertEquals("student not found", Status.OK.getStatusCode(), resp.getStatus());
 		} finally {
 			Utilities.setJUnitTest(false);
 		}

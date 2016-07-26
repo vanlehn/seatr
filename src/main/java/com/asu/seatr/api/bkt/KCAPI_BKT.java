@@ -1,6 +1,8 @@
 package com.asu.seatr.api.bkt;
 
 
+import java.util.HashSet;
+
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -22,6 +24,7 @@ import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
+import com.asu.seatr.handlers.analyzer.bkt.RecommTaskHandler_BKT;
 import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
@@ -64,6 +67,7 @@ public class KCAPI_BKT {
 			ka.setInit_p(kaReader.getInit_p());
 			ka.setLearning_rate(kaReader.getLearning_rate());
 			KCAnalyzerHandler.save(ka);
+			RecommTaskHandler_BKT.initOneKC(ka);
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_CREATED)).build();
 		} catch (CourseException e) {
@@ -116,6 +120,7 @@ public class KCAPI_BKT {
 				session = KCAnalyzerHandler.hqlDeleteByCourse("BKT", course,false);
 			}
 			TaskKC_BKT tk2Array[] = new TaskKC_BKT[tkReaderArray.length];
+			HashSet<Integer> affectedTaskIds=new HashSet<Integer>();
 			for(int i = 0; i<tkReaderArray.length;i++)
 			{
 				TaskKC_BKT tk2 = new TaskKC_BKT();
@@ -126,6 +131,7 @@ public class KCAPI_BKT {
 				tk2.setKc(kc);
 				tk2.setTask(task);
 				tk2Array[i] = tk2;
+				affectedTaskIds.add(task.getId());
 			}
 			session = TaskKCAnalyzerHandler.batchSave(tk2Array,false,session);
 			if(session != null)
@@ -135,7 +141,9 @@ public class KCAPI_BKT {
 				session.close();
 				}
 
-			
+			for (int taskid : affectedTaskIds){
+				RecommTaskHandler_BKT.initOneTask(String.valueOf(taskid));
+			}
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_TASK_CREATED)).build();
 			} catch (CourseException e) {

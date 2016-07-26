@@ -17,6 +17,7 @@ import org.hibernate.type.IntegerType;
 import org.hibernate.type.LongType;
 import org.hibernate.type.StringType;
 
+import com.asu.seatr.exceptions.KCException;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
 import com.asu.seatr.handlers.StudentHandler;
 import com.asu.seatr.handlers.TaskHandler;
@@ -36,7 +37,7 @@ import com.asu.seatr.utils.Utilities;
 @SuppressWarnings("unchecked")
 public class RecommTaskHandler_BKT {
 	
-	public static void initOneStudent(String stuId,int course_id){
+	public static void initOneStudent(String stuId,int course_id){  //internal student id
 		SessionFactory sf;
 		if(Utilities.isJUnitTest())
 		{
@@ -51,6 +52,10 @@ public class RecommTaskHandler_BKT {
 		Session session=sf.openSession();
 		Criteria cr = session.createCriteria(KC_BKT.class);
 		List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
+		if(kc_list==null || kc_list.isEmpty()){		
+			session.close();
+			return;
+		}
 		session.beginTransaction();
 		String sql="delete from skc_bkt where skc_bkt.student_id = "+ stuId;
 		Query q=session.createSQLQuery(sql);
@@ -64,7 +69,7 @@ public class RecommTaskHandler_BKT {
 			skc.setKc(kc.getKc());
 			skc.setProficiency(kc.getInit_p());
 			session.beginTransaction();
-			session.save(skc);
+			session.saveOrUpdate(skc);
 			session.getTransaction().commit();
 		}
 		
@@ -90,6 +95,10 @@ public class RecommTaskHandler_BKT {
 		sqlQuery.addScalar("utility", DoubleType.INSTANCE);
 		sqlQuery.addScalar("type", StringType.INSTANCE);
 		List<Object[]> result=sqlQuery.list();
+		if(result==null || result.isEmpty()){
+			session.close();
+			return;
+		}
 		
 		session.beginTransaction();
 		sql="delete from stu_bkt where stu_bkt.student_id = "+stuId;
@@ -116,7 +125,7 @@ public class RecommTaskHandler_BKT {
 				stuTaskUtility.setTask(task);
 				stuTaskUtility.setUtility(utility);
 				session.beginTransaction();
-				session.save(stuTaskUtility);
+				session.saveOrUpdate(stuTaskUtility);
 				session.getTransaction().commit();
 
 			}
@@ -137,13 +146,13 @@ public class RecommTaskHandler_BKT {
 		stuTaskUtility.setTask(task);
 		stuTaskUtility.setUtility(utility);
 		session.beginTransaction();
-		session.save(stuTaskUtility);
+		session.saveOrUpdate(stuTaskUtility);
 		session.getTransaction().commit();
 		
 		session.close();
 	}
 	
-	public static void initOneTask(String taskId){
+	public static void initOneTask(String taskId){  //internal task id
 		SessionFactory sf;
 		if(Utilities.isJUnitTest())
 		{
@@ -206,7 +215,7 @@ public class RecommTaskHandler_BKT {
 				stuTaskUtility.setTask(task);
 				stuTaskUtility.setUtility(utility);
 				session.beginTransaction();
-				session.save(stuTaskUtility);
+				session.saveOrUpdate(stuTaskUtility);
 				session.getTransaction().commit();
 			}
 			curstuid=stuid;
@@ -224,9 +233,40 @@ public class RecommTaskHandler_BKT {
 		stuTaskUtility.setTask(task);
 		stuTaskUtility.setUtility(utility);
 		session.beginTransaction();
-		session.save(stuTaskUtility);
+		session.saveOrUpdate(stuTaskUtility);
 		session.getTransaction().commit();
 		
+		session.close();
+	}
+	
+	public static void initOneKC(KC_BKT kc){  
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
+		Session session=sf.openSession();
+		
+		session.beginTransaction();
+		String sql="delete from skc_bkt where skc_bkt.kc_id = "+ String.valueOf(kc.getKc().getId());
+		Query q=session.createSQLQuery(sql);
+		q.executeUpdate();
+		session.getTransaction().commit();
+		
+		List<Student> stu_list=StudentHandler.readAll();
+		for(Student stu : stu_list){
+			SKC_BKT skc=new SKC_BKT();
+			skc.setStudent(stu);
+			skc.setKc(kc.getKc());
+			skc.setProficiency(kc.getInit_p());
+			session.beginTransaction();
+			session.save(skc);
+			session.getTransaction().commit();
+		}	
 		session.close();
 	}
 	
@@ -268,7 +308,7 @@ public class RecommTaskHandler_BKT {
 				skc.setKc(kc.getKc());
 				skc.setProficiency(kc.getInit_p());
 				session.beginTransaction();
-				session.save(skc);
+				session.saveOrUpdate(skc);
 				session.getTransaction().commit();
 			}
 		}	
@@ -372,7 +412,7 @@ public class RecommTaskHandler_BKT {
 					stuTaskUtility.setTask(task);
 					stuTaskUtility.setUtility(utility);
 					session.beginTransaction();
-					session.save(stuTaskUtility);
+					session.saveOrUpdate(stuTaskUtility);
 					session.getTransaction().commit();
 				}
 			}
@@ -395,7 +435,7 @@ public class RecommTaskHandler_BKT {
 		stuTaskUtility.setTask(task);
 		stuTaskUtility.setUtility(utility);
 		session.beginTransaction();
-		session.save(stuTaskUtility);
+		session.saveOrUpdate(stuTaskUtility);
 		session.getTransaction().commit();
 		
 		session.close();
@@ -459,7 +499,7 @@ public class RecommTaskHandler_BKT {
 		for(SKC_BKT skc:skc_list){
 			if(kc_newp.containsKey(skc.getKc().getId())){
 				skc.setProficiency(kc_newp.get(skc.getKc().getId()));
-				session.save(skc);
+				session.saveOrUpdate(skc);
 			}
 		}
 		session.getTransaction().commit();
@@ -504,8 +544,7 @@ public class RecommTaskHandler_BKT {
 				
 				Criteria cr_tmp=session.createCriteria(StuTaskUtility_BKT.class);
 				cr_tmp.add(Restrictions.eq("student", stu));
-				Task affected_task=TaskHandler.read(curtaskid);
-				cr_tmp.add(Restrictions.eq("task",affected_task));
+				cr_tmp.add(Restrictions.eq("task",curtask));
 				List<StuTaskUtility_BKT> stuTaskUList= cr_tmp.list();
 				if (stuTaskUList.isEmpty())
 				{
@@ -513,11 +552,9 @@ public class RecommTaskHandler_BKT {
 					return;
 				}
 				StuTaskUtility_BKT stuTaskUtility=stuTaskUList.get(0);
-				stuTaskUtility.setStudent(stu);
-				stuTaskUtility.setTask(curtask);
 				stuTaskUtility.setUtility(utility);
 				session.beginTransaction();
-				session.save(stuTaskUtility);
+				session.saveOrUpdate(stuTaskUtility);
 				session.getTransaction().commit();
 			}
 			curtaskid=tkcid;
@@ -535,7 +572,7 @@ public class RecommTaskHandler_BKT {
 		
 		Criteria cr_tmp=session.createCriteria(StuTaskUtility_BKT.class);
 		cr_tmp.add(Restrictions.eq("student", stu));
-		Task affected_task=TaskHandler.read(curtaskid);
+		cr_tmp.add(Restrictions.eq("task",curtask));
 		List<StuTaskUtility_BKT> stuTaskUList= cr_tmp.list();
 		if (stuTaskUList.isEmpty())
 		{
@@ -543,11 +580,9 @@ public class RecommTaskHandler_BKT {
 			return;
 		}
 		StuTaskUtility_BKT stuTaskUtility=stuTaskUList.get(0);
-		stuTaskUtility.setStudent(stu);
-		stuTaskUtility.setTask(curtask);
 		stuTaskUtility.setUtility(utility);
 		session.beginTransaction();
-		session.save(stuTaskUtility);
+		session.saveOrUpdate(stuTaskUtility);
 		session.getTransaction().commit();
 		
 		session.close();

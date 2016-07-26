@@ -42,7 +42,7 @@ public class TaskAPI_BKT_Test extends JerseyTest {
 		}
 	}
 
-	@Test(expected = WebApplicationException.class)
+	@Test
 	public void create_Update_Get_Delete_Task_Sucess() {
 		Utilities.setJUnitTest(true);
 		try {
@@ -95,6 +95,7 @@ public class TaskAPI_BKT_Test extends JerseyTest {
 			// get task
 			task = target(TASK_3_URL).queryParam("external_course_id", "1").queryParam("external_task_id", "1")
 					.request().get(TAReader_BKT.class);
+			assertEquals("deleted successfully", task.getExternal_task_id(), null);
 
 		} catch (WebApplicationException e) {
 			assertEquals("task not found once deleted", Status.NOT_FOUND.getStatusCode(),
@@ -134,7 +135,7 @@ public class TaskAPI_BKT_Test extends JerseyTest {
 			resp = target(TASK_3_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz")
 					.put(Entity.json(ta), Response.class);
 
-			assertEquals("task not found", Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+			assertEquals("task not found", Status.OK.getStatusCode(), resp.getStatus());
 		} finally {
 			Utilities.setJUnitTest(false);
 		}
@@ -156,7 +157,7 @@ public class TaskAPI_BKT_Test extends JerseyTest {
 			//delete non existing task
 			resp = target(TASK_3_URL).queryParam("external_course_id", "1").queryParam("external_task_id", "1")
 					.request().delete(Response.class);
-			assertEquals("task not found", Status.NOT_FOUND.getStatusCode(), resp.getStatus());
+			assertEquals("task not found", Status.OK.getStatusCode(), resp.getStatus());
 		} finally {
 			Utilities.setJUnitTest(false);
 		}

@@ -10,6 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.UniqueConstraint;
 
@@ -48,8 +49,8 @@ public class KnowledgeComponent {
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<KC_Required_Optional> K_A3;
 	
-	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
-	private List<KC_BKT> K_BKT;
+	@OneToOne(mappedBy = "kc", cascade=CascadeType.ALL)
+	private KC_BKT K_BKT;
 
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<TaskKC_UnansweredTasks> TK_A1;
@@ -63,11 +64,11 @@ public class KnowledgeComponent {
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<TaskKC_BKT> TK_BKT;
 
-	public List<KC_BKT> getK_BKT() {
+	public KC_BKT getK_BKT() {
 		return K_BKT;
 	}
 
-	public void setK_BKT(List<KC_BKT> k_BKT) {
+	public void setK_BKT(KC_BKT k_BKT) {
 		K_BKT = k_BKT;
 	}
 

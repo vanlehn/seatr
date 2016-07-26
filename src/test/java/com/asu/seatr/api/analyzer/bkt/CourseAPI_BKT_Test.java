@@ -42,7 +42,7 @@ public class CourseAPI_BKT_Test extends JerseyTest{
 			Utilities.setJUnitTest(false);
 		}
 	}
-	@Test(expected=WebApplicationException.class)
+	@Test
 	public void create_Update_Get_Delete_Course_Sucess()
 	{
 		Utilities.setJUnitTest(true);
@@ -69,8 +69,7 @@ public class CourseAPI_BKT_Test extends JerseyTest{
 			course =  target(COURSE_URL)
 					.queryParam("external_course_id", "1").request()
 					.get(CAReader_BKT.class);
-			
-			
+			assertEquals("deleted sucessfully",course.getExternal_course_id(),null);
 			
 		}
 		catch(WebApplicationException e)
@@ -97,7 +96,7 @@ public class CourseAPI_BKT_Test extends JerseyTest{
 		Response resp = target(COURSE_URL)
 				.queryParam("external_course_id", "1").request()
 				.delete(Response.class);
-		assertEquals("course not found",Status.NOT_FOUND.getStatusCode(),resp.getStatus());
+		assertEquals("course not found",Status.OK.getStatusCode(),resp.getStatus());
 		}
 		finally
 		{

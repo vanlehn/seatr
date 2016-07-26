@@ -180,6 +180,7 @@ public class RecommenderAPI_BKT {
 		List<TUReader_BKT> task_u_list=new LinkedList<TUReader_BKT>();
 		int count=0;
 		do{
+			task_u_list=new LinkedList<TUReader_BKT>();
 			Session session = sf.openSession();
 			String sql="SELECT task.external_id, stu_bkt.utility FROM stu_bkt,task "
 					+ "where stu_bkt.task_id=task.id and "
@@ -254,6 +255,7 @@ public class RecommenderAPI_BKT {
 		List<TUReader_BKT> task_u_list=new LinkedList<TUReader_BKT>();
 		int count=0;
 		do{
+			task_u_list=new LinkedList<TUReader_BKT>();
 			Session session = sf.openSession();
 			String sql="SELECT task.external_id, stu_bkt.utility FROM stu_bkt,task "
 					+ "where stu_bkt.task_id=task.id and "

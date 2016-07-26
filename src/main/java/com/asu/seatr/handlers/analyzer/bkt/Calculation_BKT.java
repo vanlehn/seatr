@@ -4,6 +4,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class Calculation_BKT {
+	private static double DISCOUNT=0.9;  //discount to delay to recommend the tasks with multiple KCs
+	
 	static private double cal_kc_product(List<Double> kc_p_list){
 		double kc_p_product=1.0;
 		for (double kc_p:kc_p_list)
@@ -94,8 +96,8 @@ public class Calculation_BKT {
 		List<Double> kc_p_list_incorrect=update_kc_p(new LinkedList<Double>(kc_p_list),kc_l_list,slip, guess,false);
 		double task_correct_p=cal_task_correct_p(kc_p_list, slip, guess);
 		double task_incorrect_p=1-task_correct_p;
-		double utility=task_correct_p*cal_sum(p_list_comb(kc_p_list_correct,kc_p_list,kc_u_list))
-				+task_incorrect_p*cal_sum(p_list_comb(kc_p_list_incorrect,kc_p_list,kc_u_list));
+		double utility=task_correct_p*cal_sum(p_list_comb(kc_p_list_correct,kc_p_list,kc_u_list))*Math.pow(DISCOUNT, kc_p_list.size())
+				+task_incorrect_p*cal_sum(p_list_comb(kc_p_list_incorrect,kc_p_list,kc_u_list))*Math.pow(DISCOUNT, kc_p_list.size());
 		return utility;
 		
 	}

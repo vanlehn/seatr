@@ -44,7 +44,7 @@ public class Recommender_BKT_test extends JerseyTest{
 	private static String CREATE_COURSE_BKT_URL = "analyzer/bkt/courses/";
 	private static String CREATE_TASK_BKT_URL = "analyzer/bkt/tasks/";
 	private static String CREATE_STUDENT_BKT_URL = "analyzer/bkt/students/";
-	private static String INIT_TASKS_URL = "analyzer/bkt/initutility";
+	//private static String INIT_TASKS_URL = "analyzer/bkt/initutility";
 	private static String STUDENT_TASK_URL = "analyzer/bkt/studenttasks";
 	private static String KC_URL = "analyzer/bkt/kc/createkc/";
 	private static String MAP_KC_URL = "analyzer/bkt/kc/mapkctask/";
@@ -119,46 +119,6 @@ public class Recommender_BKT_test extends JerseyTest{
 			System.out.println("Error in testing");
 			e.printStackTrace();
 		} finally {
-			Utilities.setJUnitTest(false);
-		}
-
-	}
-	@Test
-	public void noTasksForCourse() {
-
-		Utilities.setJUnitTest(true);
-		try {
-
-			/*
-			 * UserReader ur = new UserReader(); ur.setUsername("cse310");
-			 * ur.setPassword("hello123"); Response rb =
-			 * target("superadmin/users").request().post(Entity.json(ur),
-			 * Response.class);
-			 */
-			// first creating dummy course
-			CAReader_BKT ca = new CAReader_BKT();
-			ca.setExternal_course_id("1");;
-			ca.setDescription("chemistry");
-			Response resp = target(CREATE_COURSE_BKT_URL).request()
-					.header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ca), Response.class);
-			assertEquals("course created", Status.CREATED.getStatusCode(), resp.getStatus());
-			
-			SAReader_BKT sa = new SAReader_BKT();
-			sa.setExternal_course_id("1");
-			sa.setExternal_student_id("1");
-			resp =  target(CREATE_STUDENT_BKT_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sa),Response.class);
-			assertEquals("student created", Status.CREATED.getStatusCode(),resp.getStatus());
-			
-			final List<String> resList = target(GETTASKS_BKT_URL).queryParam("external_student_id", "1")
-					.queryParam("external_course_id", "1").queryParam("number_of_tasks", "5").request().get(List.class);
-			assertEquals("empty tasks", 0,resList.size());
-
-		}  finally {
-			Handler.hqlTruncate("Student_BKT");
-			Handler.hqlTruncate("Student");
-			Handler.hqlTruncate("Course_BKT");
-			Handler.hqlTruncate("UserCourse");
-			Handler.hqlTruncate("Course");
 			Utilities.setJUnitTest(false);
 		}
 
@@ -433,8 +393,8 @@ public class Recommender_BKT_test extends JerseyTest{
 			 *    7			3
 			 */
 			
-			resp = target(INIT_TASKS_URL).queryParam("external_course_id", "1").request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").get(Response.class);
-			assertEquals("initialization finished", Status.OK.getStatusCode(),resp.getStatus());
+			//resp = target(INIT_TASKS_URL).queryParam("external_course_id", "1").request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").get(Response.class);
+			//assertEquals("initialization finished", Status.OK.getStatusCode(),resp.getStatus());
 			
 			
 			//now lets answer some tasks
@@ -462,7 +422,6 @@ public class Recommender_BKT_test extends JerseyTest{
 			resp = target(STUDENT_TASK_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(sta),Response.class);
 			assertEquals("student task created", Status.CREATED.getStatusCode(),resp.getStatus());
 			
-			//now  kc1 is mastered and proficiency for kc3 is 1
 			
 			sta = new STAReader_BKT();
 			sta.setExternal_course_id("1");
@@ -492,8 +451,17 @@ public class Recommender_BKT_test extends JerseyTest{
 			TLReader_BKT task_list=new TLReader_BKT();
 			task_list.setExternal_student_id("1");
 			task_list.setExternal_course_id("1");
-			task_list.setExternal_task_ids(new String[]{"1","2","3","4","5","6","7"});
+			task_list.setExternal_task_ids(new String[]{"1","2","3","4","5"});
 			List<String> utilityList = 
+				target(GETUTILITY_BKT_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").put(Entity.json(task_list),List.class);
+			
+			assertEquals("length of task","5",String.valueOf(utilityList.size()));
+			
+			task_list=new TLReader_BKT();
+			task_list.setExternal_student_id("1");
+			task_list.setExternal_course_id("1");
+			task_list.setExternal_task_ids(new String[]{"1","2","3","4","5","6","7"});
+			utilityList = 
 				target(GETUTILITY_BKT_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").put(Entity.json(task_list),List.class);
 			
 			assertEquals("length of task","7",String.valueOf(utilityList.size()));
