@@ -43,7 +43,7 @@ public class Task_BKT implements TaskAnalyzerI{
 	@Column(name = "difficulty")
 	private double difficulty;
 	
-	@Column(name = "type")
+	@Column(name = "type",nullable=false)
 	private String type;
 	
 	public Course getCourse() {
@@ -97,19 +97,25 @@ public class Task_BKT implements TaskAnalyzerI{
 		if(course == null) {
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_NOT_FOUND);
 		}
-		Task task = new Task();
-		task.setExternal_id(external_task_id);
-		task.setCourse(course);
-		try {
-			task = TaskHandler.save(task);
-		}catch(ConstraintViolationException cve) {
-			task = TaskHandler.readByExtTaskId_Course(external_task_id, course);
-			//throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ALREADY_PRESENT);
-
+		Task task;
+		try{
+			task=TaskHandler.readByExtTaskId_Course(external_task_id,course);
 		}
-		catch(PropertyValueException pve) {
-			throw new TaskException(MyStatus.ERROR, MyMessage.TASK_PROPERTY_NULL);
+		catch (TaskException e){
+			task = new Task();
+			task.setExternal_id(external_task_id);
+			task.setCourse(course);
+			try {
+				task = TaskHandler.save(task);
+			}catch(ConstraintViolationException cve) {
+				task = TaskHandler.readByExtTaskId_Course(external_task_id, course);
+				//throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ALREADY_PRESENT);
+			}
+			catch(PropertyValueException pve) {
+				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_PROPERTY_NULL);
+			}
 		}
+		
 		this.task = task;
 		this.course = course;
 		

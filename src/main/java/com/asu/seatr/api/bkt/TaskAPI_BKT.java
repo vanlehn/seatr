@@ -83,14 +83,14 @@ public class TaskAPI_BKT {
 	public Response createTask(TAReader_BKT taReader2)
 	{
 		
-			Task_BKT t_a2 = new Task_BKT(); 
+			Task_BKT t_a = new Task_BKT(); 
 		Long requestTimestamp = System.currentTimeMillis();
 		try
 			{
-			t_a2.createTask(taReader2.getExternal_task_id(), taReader2.getExternal_course_id(), 2);
-			t_a2.setDifficulty(taReader2.getDifficulty());
-			t_a2.setType(taReader2.getType());
-			TaskAnalyzerHandler.save(t_a2);
+			t_a.createTask(taReader2.getExternal_task_id(), taReader2.getExternal_course_id(), 2);
+			t_a.setDifficulty(taReader2.getDifficulty());
+			t_a.setType(taReader2.getType());
+			TaskAnalyzerHandler.save(t_a);
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_CREATED)).build();
 		}
