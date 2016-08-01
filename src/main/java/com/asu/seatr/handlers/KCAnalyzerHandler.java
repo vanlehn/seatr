@@ -177,6 +177,7 @@ public class KCAnalyzerHandler {
 	{
 		try
 		{
+			
 			SessionFactory sf = Utilities.getSessionFactory();
 			Session session = sf.openSession();
 			session.beginTransaction();
@@ -211,13 +212,16 @@ public class KCAnalyzerHandler {
 	 * @return		 session if commit is false
 	 * 				 null if commit is true
 	 */
-	public static Session hqlDeleteByTask(String analyzerName, Task task, boolean commit)
+	public static Session hqlDeleteByTask(String analyzerName, Task task, boolean commit, Session session)
 	{
 		try
 		{
-			SessionFactory sf = Utilities.getSessionFactory();
-			Session session = sf.openSession();
-			session.beginTransaction();
+			if(session == null)
+			{	
+				SessionFactory sf = Utilities.getSessionFactory();
+				session = sf.openSession();
+				session.beginTransaction();
+			}
 			//String hql = "select T from Task T where T.course = :course";
 			//Query query = session.createQuery(hql).setParameter("course", course);
 			//List<Task> taskList = query.list();

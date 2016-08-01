@@ -128,9 +128,9 @@ public class KCAPI_BKT {
 				
 				Task task;
 				task = TaskHandler.readByExtId(tkReader2.getExternal_task_id(), external_course_id);
-				if(replace)
+				if(replace && !affectedTaskIds.contains(task.getId()))
 				{
-					session = KCAnalyzerHandler.hqlDeleteByTask("BKT", task,false);
+					session = KCAnalyzerHandler.hqlDeleteByTask("BKT", task,false, session);
 				}
 				if(tkReader2.getExternal_kc_id().trim().equals(""))
 				{
