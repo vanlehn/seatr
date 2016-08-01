@@ -114,20 +114,30 @@ public class KCAPI_BKT {
 			String external_course_id  = tkReader.getExternal_course_id();
 			TKAReaderI[] tkReaderArray = tkReader.getTkaReader();
 			
-			if(replace)
+			/*if(replace)
 			{
 				Course course = CourseHandler.getByExternalId(external_course_id);
 				session = KCAnalyzerHandler.hqlDeleteByCourse("BKT", course,false);
-			}
+			}*/
 			TaskKC_BKT tk2Array[] = new TaskKC_BKT[tkReaderArray.length];
 			HashSet<Integer> affectedTaskIds=new HashSet<Integer>();
 			for(int i = 0; i<tkReaderArray.length;i++)
 			{
 				TaskKC_BKT tk2 = new TaskKC_BKT();
 				TKAReader_BKT tkReader2 = (TKAReader_BKT) tkReaderArray[i];
-				KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(tkReader2.getExternal_kc_id(), external_course_id);
+				
 				Task task;
 				task = TaskHandler.readByExtId(tkReader2.getExternal_task_id(), external_course_id);
+				if(replace)
+				{
+					session = KCAnalyzerHandler.hqlDeleteByTask("BKT", task,false);
+				}
+				if(tkReader2.getExternal_kc_id().trim().equals(""))
+				{
+					affectedTaskIds.add(task.getId());
+					continue;
+				}
+				KnowledgeComponent kc = KnowledgeComponentHandler.readByExtId(tkReader2.getExternal_kc_id(), external_course_id);
 				tk2.setKc(kc);
 				tk2.setTask(task);
 				tk2Array[i] = tk2;

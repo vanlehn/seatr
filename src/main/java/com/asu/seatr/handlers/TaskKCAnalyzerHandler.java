@@ -58,6 +58,7 @@ public class TaskKCAnalyzerHandler {
 		for(int i = 0; i < tkcArray.length; i++)
 		{
 			TaskKCAnalyzerI tkc = tkcArray[i];
+			if(tkc == null){continue;}
 			int id = (int)session.save(tkc);
 			tkc.setId(id);
 		}
