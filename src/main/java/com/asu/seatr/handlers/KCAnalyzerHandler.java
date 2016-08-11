@@ -79,7 +79,7 @@ public class KCAnalyzerHandler {
 		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
-		cr.add(Restrictions.eq("kc_id", kc));
+		cr.add(Restrictions.eq("kc", kc));
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
 		session.close();
 		if(kcAnalyzerList.size() < 1 )
@@ -94,7 +94,7 @@ public class KCAnalyzerHandler {
 		SessionFactory sf = Utilities.getSessionFactory();
 		Session session = sf.openSession();
 		Criteria cr = session.createCriteria(typeParameterClass);
-		cr.add(Restrictions.eq("kc_id", kc));
+		cr.add(Restrictions.eq("kc", kc));
 		List<KCAnalyzerI> kcAnalyzerList = (List<KCAnalyzerI>)cr.list();
 		session.close();
 		if(kcAnalyzerList.size() < 1 )
