@@ -114,6 +114,8 @@ public class KCAPI_BKT {
 			k_a.setLearning_rate(kaReader.getLearning_rate());
 			k_a.setInit_p(kaReader.getInit_p());
 			KCAnalyzerHandler.update(k_a);
+			Course c=CourseHandler.getByExternalId(kaReader.getExternal_course_id());
+			RecommTaskHandler_BKT.initStudentTaskUtility(c.getId());
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_UPDATED))
 					.build();
@@ -159,6 +161,8 @@ public class KCAPI_BKT {
 		try {
 			KC_BKT k_a2 = (KC_BKT)KCAnalyzerHandler.readByExtId(KC_BKT.class, external_kc_id, external_course_id);
 			KCAnalyzerHandler.delete(k_a2);
+			Course c=CourseHandler.getByExternalId(external_course_id);
+			RecommTaskHandler_BKT.initStudentTaskUtility(c.getId());
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_ANALYZER_DELETED)).build();
 		}
