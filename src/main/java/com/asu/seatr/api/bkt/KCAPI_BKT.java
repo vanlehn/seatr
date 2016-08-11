@@ -4,9 +4,12 @@ package com.asu.seatr.api.bkt;
 import java.util.HashSet;
 
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -22,6 +25,7 @@ import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.CourseHandler;
 import com.asu.seatr.handlers.KCAnalyzerHandler;
 import com.asu.seatr.handlers.KnowledgeComponentHandler;
+import com.asu.seatr.handlers.TaskAnalyzerHandler;
 import com.asu.seatr.handlers.TaskHandler;
 import com.asu.seatr.handlers.TaskKCAnalyzerHandler;
 import com.asu.seatr.handlers.analyzer.bkt.RecommTaskHandler_BKT;
@@ -29,8 +33,10 @@ import com.asu.seatr.models.Course;
 import com.asu.seatr.models.KnowledgeComponent;
 import com.asu.seatr.models.Task;
 import com.asu.seatr.models.analyzers.kc.KC_BKT;
+import com.asu.seatr.models.analyzers.task.Task_BKT;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_BKT;
 import com.asu.seatr.rest.models.analyzer.bkt.KAReader_BKT;
+import com.asu.seatr.rest.models.analyzer.bkt.TAReader_BKT;
 import com.asu.seatr.rest.models.analyzer.bkt.TKAReader_BKT;
 import com.asu.seatr.rest.models.analyzer.bkt.TKReader_BKT;
 import com.asu.seatr.rest.models.interfaces.TKAReaderI;
@@ -82,6 +88,93 @@ public class KCAPI_BKT {
 		catch(Exception e){
 			logger.error(e.getStackTrace());
 			System.out.println(e.getMessage());
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
+	}
+	
+	@Path("/updatekc")
+	@PUT
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response updateKC(KAReader_BKT kaReader)
+	{
+		Long requestTimestamp = System.currentTimeMillis();
+		try
+		{
+			KC_BKT k_a = (KC_BKT)KCAnalyzerHandler.readByExtId(KC_BKT.class, kaReader.getExternal_kc_id(), kaReader.getExternal_course_id());
+			k_a.setUtility(kaReader.getUtility());
+			k_a.setLearning_rate(kaReader.getLearning_rate());
+			k_a.setInit_p(kaReader.getInit_p());
+			KCAnalyzerHandler.update(k_a);
+			return Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_UPDATED))
+					.build();
+		}
+
+		catch(CourseException e) {
+			Response rb = Response.status(Status.OK).
+					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);
+		}
+		catch(KCException e) {
+			Response rb = Response.status(Status.OK).
+					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);
+		}
+		
+		catch(Exception e){		
+			logger.error(e.getStackTrace());
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST))
+					.build();
+			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Long response = (responseTimestamp -  requestTimestamp)/1000;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
+	}
+	
+	@Path("/deletekc")
+	@DELETE
+	@Produces(MediaType.APPLICATION_JSON)
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response deleteKCAnalyzer(
+			@QueryParam("external_course_id") String external_course_id,
+			@QueryParam("external_kc_id") String external_kc_id
+			)
+	{
+
+		Long requestTimestamp = System.currentTimeMillis();
+		try {
+			KC_BKT k_a2 = (KC_BKT)KCAnalyzerHandler.readByExtId(KC_BKT.class, external_kc_id, external_course_id);
+			KCAnalyzerHandler.delete(k_a2);
+			return Response.status(Status.OK)
+					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.KC_ANALYZER_DELETED)).build();
+		}
+
+		catch(CourseException e) {
+			Response rb = Response.status(Status.OK).
+					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);
+		}
+		catch(KCException e) {
+			Response rb = Response.status(Status.OK).
+					entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);
+		}		
+		catch(Exception e){
+			logger.error(e.getStackTrace());
 			Response rb = Response.status(Status.BAD_REQUEST)
 					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
 			throw new WebApplicationException(rb);
