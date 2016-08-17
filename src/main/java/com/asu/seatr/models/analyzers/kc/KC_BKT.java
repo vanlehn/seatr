@@ -36,7 +36,7 @@ public class KC_BKT implements KCAnalyzerI{
 	private KnowledgeComponent kc;
 	
 	@Column(name = "utility")
-	private int utility;
+	private double utility;
 	
 	@Column(name = "init_p")
 	private double init_p;
@@ -60,10 +60,10 @@ public class KC_BKT implements KCAnalyzerI{
 	public void setKc(KnowledgeComponent kc) {
 		this.kc = kc;
 	}	
-	public int getUtility() {
+	public double getUtility() {
 		return utility;
 	}
-	public void setUtility(int utility) {
+	public void setUtility(double utility) {
 		this.utility = utility;
 	}
 	public double getInit_p() {

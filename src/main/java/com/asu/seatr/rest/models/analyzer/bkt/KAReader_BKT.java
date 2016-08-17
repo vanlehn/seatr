@@ -7,7 +7,7 @@ public class KAReader_BKT implements KAReaderI{
 	
 	private String external_kc_id;
 	private String external_course_id;
-	private Integer utility;
+	private Double utility;
 	private Double init_p;
 	private Double learning_rate;
 
@@ -31,11 +31,11 @@ public class KAReader_BKT implements KAReaderI{
 		this.external_course_id = external_course_id;
 	}
 
-	public Integer getUtility() {
+	public Double getUtility() {
 		return utility;
 	}
 
-	public void setUtility(Integer utility) {
+	public void setUtility(Double utility) {
 		this.utility = utility;
 	}
 
