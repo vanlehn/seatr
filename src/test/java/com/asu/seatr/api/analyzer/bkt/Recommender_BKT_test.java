@@ -219,7 +219,7 @@ public class Recommender_BKT_test extends JerseyTest{
 			ka.setExternal_kc_id("1");
 			ka.setInit_p(0.2);
 			ka.setLearning_rate(0.3);
-			ka.setUtility(2);
+			ka.setUtility(2.0);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
 			assertEquals("kc created", Status.CREATED.getStatusCode(), resp.getStatus());
@@ -229,7 +229,7 @@ public class Recommender_BKT_test extends JerseyTest{
 			ka.setExternal_kc_id("2");
 			ka.setInit_p(0.2);
 			ka.setLearning_rate(0.3);
-			ka.setUtility(2);
+			ka.setUtility(2.0);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
 			assertEquals("kc created", Status.CREATED.getStatusCode(), resp.getStatus());
@@ -239,7 +239,7 @@ public class Recommender_BKT_test extends JerseyTest{
 			ka.setExternal_kc_id("3");
 			ka.setInit_p(0.2);
 			ka.setLearning_rate(0.3);
-			ka.setUtility(2);
+			ka.setUtility(2.0);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
 			assertEquals("kc created", Status.CREATED.getStatusCode(), resp.getStatus());

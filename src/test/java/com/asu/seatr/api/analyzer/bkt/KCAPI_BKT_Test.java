@@ -64,7 +64,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("1");
 			ka.setExternal_kc_id("1");
 			ka.setInit_p(0.4);
-			ka.setUtility(2);
+			ka.setUtility(2.0);
 			ka.setLearning_rate(0.2);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
@@ -92,7 +92,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("1");
 			ka.setExternal_kc_id("");
 			ka.setInit_p(0.6);
-			ka.setUtility(3);
+			ka.setUtility(3.0);
 			ka.setLearning_rate(0.1);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
@@ -103,7 +103,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("");
 			ka.setExternal_kc_id("2");
 			ka.setInit_p(0.6);
-			ka.setUtility(3);
+			ka.setUtility(3.0);
 			ka.setLearning_rate(0.5);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
@@ -114,7 +114,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("1");
 			ka.setExternal_kc_id("1");
 			ka.setInit_p(0.6);
-			ka.setUtility(3);
+			ka.setUtility(3.0);
 			ka.setLearning_rate(0.2);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
@@ -125,7 +125,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("1");
 			ka.setExternal_kc_id("1");
 			ka.setInit_p(0.6);
-			ka.setUtility(3);
+			ka.setUtility(3.0);
 			ka.setLearning_rate(0.3);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
@@ -136,7 +136,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("2");
 			ka.setExternal_kc_id("3");
 			ka.setInit_p(0.6);
-			ka.setUtility(3);
+			ka.setUtility(3.0);
 			ka.setLearning_rate(0.4);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
@@ -166,7 +166,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("1");
 			ka.setExternal_kc_id("1");
 			ka.setInit_p(0.3);
-			ka.setUtility(1);
+			ka.setUtility(1.0);
 			ka.setLearning_rate(0.6);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
@@ -176,7 +176,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka = new KAReader_BKT();
 			ka.setExternal_course_id("1");
 			ka.setExternal_kc_id("2");
-			ka.setUtility(2);
+			ka.setUtility(2.0);
 			ka.setInit_p(0.4);
 			ka.setLearning_rate(0.1);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
@@ -250,7 +250,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("1");
 			ka.setExternal_kc_id("1");
 			ka.setInit_p(0.6);
-			ka.setUtility(3);
+			ka.setUtility(3.0);
 			ka.setLearning_rate(0.1);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
@@ -261,7 +261,7 @@ public class KCAPI_BKT_Test extends JerseyTest {
 			ka.setExternal_course_id("1");
 			ka.setExternal_kc_id("2");
 			ka.setInit_p(0.6);
-			ka.setUtility(3);
+			ka.setUtility(3.0);
 			ka.setLearning_rate(0.2);
 			resp = target(KC_URL).request().header("Authorization", "Basic Y3NlMzEwOmhlbGxvMTIz").post(Entity.json(ka),
 					Response.class);
