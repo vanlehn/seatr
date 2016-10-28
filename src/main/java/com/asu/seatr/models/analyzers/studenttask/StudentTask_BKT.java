@@ -40,6 +40,9 @@ public class StudentTask_BKT implements StudentTaskAnalyzerI{
 	@Column(name = "d_status")
 	private String d_status; // "correct" or "incorrect"
 	
+	@Column(name = "type",nullable=false)
+	private String type;
+	
 	@Override
 	public int getId() {
 		return id;
@@ -66,6 +69,13 @@ public class StudentTask_BKT implements StudentTaskAnalyzerI{
 		this.d_status = d_status;
 	}
 
+	public String getType() {
+		return type;
+	}
+
+	public void setType(String type) {
+		this.type = type;
+	}
 
 	@Override
 	public void createStudentTask(String external_student_id, String external_course_id, String external_task_id,

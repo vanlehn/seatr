@@ -441,7 +441,7 @@ public class RecommTaskHandler_BKT {
 		session.close();
 	}
 	
-	public static void completeATask(Student stu, Course course, Task task, boolean correct){
+	public static void completeATask(Student stu, Course course, Task task,String st_type, boolean correct){
 		SessionFactory sf;
 		if(Utilities.isJUnitTest())
 		{
@@ -464,7 +464,8 @@ public class RecommTaskHandler_BKT {
 		sqlQuery.addScalar("kc_id", IntegerType.INSTANCE);
 		sqlQuery.addScalar("p", DoubleType.INSTANCE);
 		sqlQuery.addScalar("l", DoubleType.INSTANCE);
-		String taskType=task.getT_BKT().getType();
+		//String taskType=task.getT_BKT().getType();
+		String taskType = st_type;//the student may have mc as well as an input choice and depending on what the student chose we will use the appropriate slip and guess
 		TaskFeature taskFeature=Calculation_BKT.getTaskFeature(taskType);
 		List<Object[]> kc_list=sqlQuery.list();
 		if (kc_list==null || kc_list.isEmpty()){

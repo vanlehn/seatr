@@ -52,15 +52,17 @@ public class StudentTaskAPI_BKT {
 			StudentTask_BKT sta2 = new StudentTask_BKT();
 			sta2.createStudentTask(sta.getExternal_student_id(),sta.getExternal_course_id(),sta.getExternal_task_id(), 1);
 			sta2.setD_status(sta.getD_status());
+			sta2.setType(sta.getType());
 			StudentTaskAnalyzerHandler.save(sta2);
 			
 			Student student = StudentHandler.getByExternalId(sta.getExternal_student_id(), sta.getExternal_course_id());
 			Task task = TaskHandler.readByExtId(sta.getExternal_task_id(), sta.getExternal_course_id());
 			Course course=CourseHandler.getByExternalId(sta.getExternal_course_id());
+			String type = sta.getType();
 			if(sta.getD_status().equals("correct"))
-				RecommTaskHandler_BKT.completeATask(student, course,task,true);
+				RecommTaskHandler_BKT.completeATask(student, course,task,type,true);
 			else if(sta.getD_status().equals("incorrect"))
-				RecommTaskHandler_BKT.completeATask(student, course,task,false);
+				RecommTaskHandler_BKT.completeATask(student, course,task,type,false);
 			
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_TASK_CREATED)).build();

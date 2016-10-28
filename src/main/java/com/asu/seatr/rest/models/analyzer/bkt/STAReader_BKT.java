@@ -8,6 +8,7 @@ public class STAReader_BKT implements STAReaderI {
 	private String external_student_id;
 	private String external_course_id;
 	private String d_status; 
+	private String type;
 	
 	@Override
 	public String getExternal_task_id() {
@@ -38,6 +39,12 @@ public class STAReader_BKT implements STAReaderI {
 	}
 	public void setD_status(String d_status) {
 		this.d_status = d_status;
+	}
+	public String getType() {
+		return type;
+	}
+	public void setType(String type) {
+		this.type = type;
 	}
 	
 }
