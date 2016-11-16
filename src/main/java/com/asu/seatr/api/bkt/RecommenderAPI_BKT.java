@@ -309,8 +309,8 @@ public class RecommenderAPI_BKT {
 		int count=0;
 		do{
 			Session session = sf.openSession();
-			String sql="SELECT task.external_id, stu_bkt.utility FROM stu_bkt,task "
-					+ "where stu_bkt.task_id=task.id and "
+			String sql="SELECT task.external_id, stu_bkt.utility FROM stu_bkt,task,t_bkt "
+					+ "where stu_bkt.task_id=task.id and task.id = t_bkt.task_id and "
 					+ "task.course_id="+course.getId()+" and stu_bkt.student_id="+stu.getId()
 					+ " order by utility desc";
 			SQLQuery sqlQuery=session.createSQLQuery(sql);
