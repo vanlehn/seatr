@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -61,6 +62,21 @@ public class RecommenderAPI_BKT {
 				.build();
 	}
 		
+	//returns the prediction of whether a student will solve a question as right or wrong
+	@Path("analyzer/bkt/accuracy_predict")
+	@GET
+	@Produces(MediaType.APPLICATION_JSON)
+	public Integer getStudentResponsePrediction(
+			@QueryParam("external_course_id") String external_course_id,
+			@QueryParam("external_student_id") String external_student_id,
+			@QueryParam("external_task_id") String external_task_id
+			)
+	{
+		Random r = new Random();
+		Integer dummy_ans = r.nextInt(2);
+		return dummy_ans;
+	}
+	
 	@Path("analyzer/bkt/get_recomm_tasks")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
