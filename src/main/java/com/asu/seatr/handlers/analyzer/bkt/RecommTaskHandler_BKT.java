@@ -588,4 +588,44 @@ public class RecommTaskHandler_BKT {
 		
 		session.close();
 	}
+	
+	public static List<Double> getKcMasteryList(Student stu, Course course, Task task)
+	{
+		SessionFactory sf;
+		if(Utilities.isJUnitTest())
+		{
+			sf = SessionFactoryUtil.getSessionFactory();
+		}
+		else
+		{	
+			sf = HibernateUtil.getSessionFactory();
+		}
+		
+		//get the current probability of mastery of all the related KCs to the task
+		Session session=sf.openSession();
+		String sql="select k_bkt.kc_id as kc_id, skc_bkt.proficiency as p, k_bkt.learning_rate as l "
+				+ "from skc_bkt,k_bkt,tk_bkt,t_bkt "
+				+ "where skc_bkt.kc_id=k_bkt.kc_id and tk_bkt.kc_id=k_bkt.kc_id and tk_bkt.task_id=t_bkt.task_id and "
+				+ "t_bkt.task_id="+task.getId()+" "
+				+ "and t_bkt.course_id="+course.getId()+" "
+				+ "and skc_bkt.student_id="+stu.getId();
+		SQLQuery sqlQuery=session.createSQLQuery(sql);
+		sqlQuery.addScalar("kc_id", IntegerType.INSTANCE);
+		sqlQuery.addScalar("p", DoubleType.INSTANCE);
+		sqlQuery.addScalar("l", DoubleType.INSTANCE);
+		List<Object[]> kc_list=sqlQuery.list();
+		if (kc_list==null || kc_list.isEmpty()){
+			session.close();
+			return null;
+		}
+		List<Integer> kc_id_list=new LinkedList<Integer>();
+		List<Double> kc_p_list=new LinkedList<Double>();
+		List<Double> kc_l_list=new LinkedList<Double>();
+		for (Object[] kc:kc_list){
+			kc_id_list.add((Integer)kc[0]);
+			kc_p_list.add((Double) kc[1]);
+			kc_l_list.add((Double) kc[2]);
+		}
+		return kc_p_list;
+	}
 }

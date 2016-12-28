@@ -66,15 +66,75 @@ public class RecommenderAPI_BKT {
 	@Path("analyzer/bkt/accuracy_predict")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
-	public Integer getStudentResponsePrediction(
+	public Double getStudentResponsePrediction(
 			@QueryParam("external_course_id") String external_course_id,
 			@QueryParam("external_student_id") String external_student_id,
 			@QueryParam("external_task_id") String external_task_id
 			)
 	{
+		/*
 		Random r = new Random();
 		Integer dummy_ans = r.nextInt(2);
 		return dummy_ans;
+		*/
+		Long requestTimestamp = System.currentTimeMillis();
+		try
+		{
+			if(!Utilities.checkExists(external_course_id)) {
+				throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
+			}
+			if(!Utilities.checkExists(external_student_id)) {
+				throw new StudentException(MyStatus.ERROR, MyMessage.STUDENT_ID_MISSING);
+			}
+			if(!Utilities.checkExists(external_task_id)) {
+				throw new TaskException(MyStatus.ERROR, MyMessage.TASK_ID_MISSING);
+			}
+			Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
+			Task task = TaskHandler.readByExtId(external_task_id, external_course_id);
+			Course course=CourseHandler.getByExternalId(external_course_id);
+			List<Double> p_list = RecommTaskHandler_BKT.getKcMasteryList(student, course, task);
+			Double average = 0.0;
+			if(p_list == null || p_list.size()==0)
+			{
+				return average;
+			}
+			for(double p : p_list)
+			{
+				average += p;
+			}
+			average = average/p_list.size();
+			return average;
+		}
+		catch(StudentException e)
+		{	
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);	
+		}
+		catch(CourseException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);			
+		}
+		catch(TaskException e) {
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(e.getMyStatus(), e.getMyMessage())).build();
+			throw new WebApplicationException(rb);
+		}
+		catch(Exception e)
+		{
+			logger.error("Exception while getting tasks - analyzer bkt", e);
+			Response rb = Response.status(Status.BAD_REQUEST)
+					.entity(MyResponse.build(MyStatus.ERROR, MyMessage.BAD_REQUEST)).build();
+			throw new WebApplicationException(rb);
+		}
+		finally
+		{
+			Long responseTimestamp = System.currentTimeMillis();
+			Double response = (responseTimestamp -  requestTimestamp)/1000d;
+			Utilities.writeToGraphite(Constants.METRIC_RESPONSE_TIME, response, requestTimestamp/1000);		
+		}
+		
 	}
 	
 	@Path("analyzer/bkt/get_recomm_tasks")
