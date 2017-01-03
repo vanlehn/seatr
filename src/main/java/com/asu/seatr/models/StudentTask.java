@@ -15,6 +15,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
 import com.asu.seatr.models.analyzers.studenttask.StudentTask_UnansweredTasks;
+import com.asu.seatr.models.analyzers.studenttask.StudentTask_BKT;
 import com.asu.seatr.models.analyzers.studenttask.StudentTask_N_In_A_Row;
 import com.asu.seatr.models.analyzers.studenttask.StudentTask_Required_Optional;
 
@@ -46,6 +47,9 @@ public class StudentTask {
 	
 	@OneToMany(mappedBy = "studentTask", cascade=CascadeType.ALL)
 	private List<StudentTask_Required_Optional> ST_A3;
+	
+	@OneToMany(mappedBy = "studentTask", cascade=CascadeType.ALL)
+	private List<StudentTask_BKT> ST_BKT;
 
 
 	public int getId() {
@@ -89,6 +93,12 @@ public class StudentTask {
 	}
 	public void setST_A3(List<StudentTask_Required_Optional> sT_A3) {
 		ST_A3 = sT_A3;
+	}
+	public List<StudentTask_BKT> getST_BKT() {
+		return ST_BKT;
+	}
+	public void setST_BKT(List<StudentTask_BKT> sT_BKT) {
+		ST_BKT = sT_BKT;
 	}
 
 }

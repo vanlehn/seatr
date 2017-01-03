@@ -20,6 +20,8 @@ import com.asu.seatr.models.analyzers.kc.KC_BKT;
 import com.asu.seatr.models.analyzers.kc.KC_N_In_A_Row;
 import com.asu.seatr.models.analyzers.kc.KC_Required_Optional;
 import com.asu.seatr.models.analyzers.kc.KC_UnansweredTasks;
+import com.asu.seatr.models.analyzers.student.SKC_BKT;
+import com.asu.seatr.models.analyzers.student.SKC_N_In_A_Row;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_BKT;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_N_In_A_Row;
 import com.asu.seatr.models.analyzers.task_kc.TaskKC_Required_Optional;
@@ -63,6 +65,12 @@ public class KnowledgeComponent {
 	
 	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
 	private List<TaskKC_BKT> TK_BKT;
+	
+	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
+	private List<SKC_N_In_A_Row> skc_N_In_A_Row;
+	
+	@OneToMany(mappedBy = "kc", cascade=CascadeType.ALL)
+	private List<SKC_BKT> skc_BKT;	
 
 	public KC_BKT getK_BKT() {
 		return K_BKT;
@@ -128,6 +136,46 @@ public class KnowledgeComponent {
 
 	public void setK_A3(List<KC_Required_Optional> k_A3) {
 		K_A3 = k_A3;
+	}
+
+	public List<SKC_N_In_A_Row> getSkc_N_In_A_Row() {
+		return skc_N_In_A_Row;
+	}
+
+	public void setSkc_N_In_A_Row(List<SKC_N_In_A_Row> skc_N_In_A_Row) {
+		this.skc_N_In_A_Row = skc_N_In_A_Row;
+	}
+
+	public List<TaskKC_N_In_A_Row> getTK_A2() {
+		return TK_A2;
+	}
+
+	public void setTK_A2(List<TaskKC_N_In_A_Row> tK_A2) {
+		TK_A2 = tK_A2;
+	}
+
+	public List<TaskKC_Required_Optional> getTK_A3() {
+		return TK_A3;
+	}
+
+	public void setTK_A3(List<TaskKC_Required_Optional> tK_A3) {
+		TK_A3 = tK_A3;
+	}
+
+	public List<TaskKC_BKT> getTK_BKT() {
+		return TK_BKT;
+	}
+
+	public void setTK_BKT(List<TaskKC_BKT> tK_BKT) {
+		TK_BKT = tK_BKT;
+	}
+
+	public List<SKC_BKT> getSkc_BKT() {
+		return skc_BKT;
+	}
+
+	public void setSkc_BKT(List<SKC_BKT> skc_BKT) {
+		this.skc_BKT = skc_BKT;
 	}
 
 
