@@ -278,7 +278,17 @@ public class RecommTaskHandler_BKT {
 			idset_str.append(String.valueOf(id)+",");
 			idset.add(String.valueOf(id));
 		}
-		idset_str.setCharAt(idset_str.length()-1, ')');
+		if(idset_str.charAt(idset_str.length()-1)==',')
+		{
+			idset_str.setCharAt(idset_str.length()-1, ')'); 
+		}
+		else
+		{
+			//TODO temporary fix. Nothing equals null. not even null. expected to not do anything
+			idset_str.append("null)"); //if stuIds is empty 
+		}
+		
+		//idset_str.setCharAt(idset_str.length()-1, ')');
 		
 		List<Student> stu_list=StudentHandler.readAll();
 		SessionFactory sf;
@@ -350,7 +360,16 @@ public class RecommTaskHandler_BKT {
 			idset_str.append(String.valueOf(id)+",");
 			idset.add(String.valueOf(id));
 		}
-		idset_str.setCharAt(idset_str.length()-1, ')');
+		if(idset_str.charAt(idset_str.length()-1)==',')
+		{
+			idset_str.setCharAt(idset_str.length()-1, ')'); 
+		}
+		else
+		{
+			//TODO temporary fix. Nothing equals null. not even null. expected to not do anything
+			idset_str.append("null)"); //if stuIds is empty 
+		}
+		//idset_str.setCharAt(idset_str.length()-1, ')');     //raises an error when stuIds is empty
 		
 		//init utlity for each task: 
 		String sql="select skc_bkt.student_id as student_id, "
@@ -392,52 +411,53 @@ public class RecommTaskHandler_BKT {
 		List<Double> kc_p_list=new LinkedList<Double>();
 		List<Double> kc_l_list=new LinkedList<Double>();
 		List<Double> kc_u_list=new LinkedList<Double>();
-		int curtaskid=(int) result.get(0)[1];
-		int curstuid=(int) result.get(0)[0];
-		String curTaskType=(String) result.get(0)[6];
-		for(Object[] tkc:result){
-			int tkcid=(int) tkc[1];
-			int stuid=(int) tkc[0];
-			if(tkcid!=curtaskid || curstuid!=stuid){
-				TaskFeature taskFeature=Calculation_BKT.getTaskFeature(curTaskType);
-				double utility=Calculation_BKT.task_utility_kc(kc_p_list, kc_l_list, kc_u_list, taskFeature.slip, taskFeature.guess);
-				kc_p_list.clear();
-				kc_l_list.clear();
-				kc_u_list.clear();
-				if (idset.contains(String.valueOf(curstuid))){
-					Student stu=StudentHandler.read(curstuid);
-					Task task=TaskHandler.read(curtaskid);
-					StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
-					stuTaskUtility.setStudent(stu);
-					stuTaskUtility.setTask(task);
-					stuTaskUtility.setUtility(utility);
-					session.beginTransaction();
-					session.saveOrUpdate(stuTaskUtility);
-					session.getTransaction().commit();
+		if(!result.isEmpty()) {
+			int curtaskid=(int) result.get(0)[1];
+			int curstuid=(int) result.get(0)[0];
+			String curTaskType=(String) result.get(0)[6];
+			for(Object[] tkc:result){
+				int tkcid=(int) tkc[1];
+				int stuid=(int) tkc[0];
+				if(tkcid!=curtaskid || curstuid!=stuid){
+					TaskFeature taskFeature=Calculation_BKT.getTaskFeature(curTaskType);
+					double utility=Calculation_BKT.task_utility_kc(kc_p_list, kc_l_list, kc_u_list, taskFeature.slip, taskFeature.guess);
+					kc_p_list.clear();
+					kc_l_list.clear();
+					kc_u_list.clear();
+					if (idset.contains(String.valueOf(curstuid))){
+						Student stu=StudentHandler.read(curstuid);
+						Task task=TaskHandler.read(curtaskid);
+						StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
+						stuTaskUtility.setStudent(stu);
+						stuTaskUtility.setTask(task);
+						stuTaskUtility.setUtility(utility);
+						session.beginTransaction();
+						session.saveOrUpdate(stuTaskUtility);
+						session.getTransaction().commit();
+					}
 				}
+				curtaskid=tkcid;
+				curTaskType=(String)tkc[6];
+				curstuid=stuid;
+				kc_p_list.add((double)tkc[3]);
+				kc_l_list.add((double)tkc[4]);
+				kc_u_list.add((double)tkc[5]);
 			}
-			curtaskid=tkcid;
-			curTaskType=(String)tkc[6];
-			curstuid=stuid;
-			kc_p_list.add((double)tkc[3]);
-			kc_l_list.add((double)tkc[4]);
-			kc_u_list.add((double)tkc[5]);
+			TaskFeature taskFeature=Calculation_BKT.getTaskFeature(curTaskType);
+			double utility=Calculation_BKT.task_utility_kc(kc_p_list, kc_l_list, kc_u_list, taskFeature.slip, taskFeature.guess);
+			kc_p_list.clear();
+			kc_l_list.clear();
+			kc_u_list.clear();
+			Student stu=StudentHandler.read(curstuid);
+			Task task=TaskHandler.read(curtaskid);
+			StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
+			stuTaskUtility.setStudent(stu);
+			stuTaskUtility.setTask(task);
+			stuTaskUtility.setUtility(utility);
+			session.beginTransaction();
+			session.saveOrUpdate(stuTaskUtility);
+			session.getTransaction().commit();
 		}
-		TaskFeature taskFeature=Calculation_BKT.getTaskFeature(curTaskType);
-		double utility=Calculation_BKT.task_utility_kc(kc_p_list, kc_l_list, kc_u_list, taskFeature.slip, taskFeature.guess);
-		kc_p_list.clear();
-		kc_l_list.clear();
-		kc_u_list.clear();
-		Student stu=StudentHandler.read(curstuid);
-		Task task=TaskHandler.read(curtaskid);
-		StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
-		stuTaskUtility.setStudent(stu);
-		stuTaskUtility.setTask(task);
-		stuTaskUtility.setUtility(utility);
-		session.beginTransaction();
-		session.saveOrUpdate(stuTaskUtility);
-		session.getTransaction().commit();
-		
 		session.close();
 	}
 	
