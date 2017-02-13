@@ -103,8 +103,10 @@ public class Calculation_BKT {
 	}
 	
 	static TaskFeature getTaskFeature(String type){
+		//assuming N=4; @TODO work on getting the value of N from the front end system
+		double N = 4;
 		if(type.equals("multiple-choice"))
-			return new TaskFeature(0.2, 0.2);
+			return new TaskFeature(0.2 * (1-Math.exp(2-N)), 1/N);
 		else if(type.equals("simple-input"))
 			return new TaskFeature(0.3,0.01);
 		else if(type.equals("normal-input"))
