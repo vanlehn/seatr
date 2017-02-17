@@ -311,7 +311,7 @@ public class RecommTaskHandler_BKT {
 		List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
 		session.beginTransaction();
 		
-		String hql="delete from SKC_BKT skc_bkt where skc_bkt.student_id in :studentList";
+		String hql="delete from SKC_BKT skc_bkt where skc_bkt.student in :studentList";
 		Query q=session.createQuery(hql).setParameterList("studentList", stuIds);
 		q.executeUpdate();
 		session.getTransaction().commit();
@@ -394,7 +394,7 @@ public class RecommTaskHandler_BKT {
 		List<Object[]> result=sqlQuery.list();
 		
 		session.beginTransaction();
-		String hql="delete from StuTaskUtility_BKT stu_bkt where stu_bkt.student_id in :stuSet";
+		String hql="delete from StuTaskUtility_BKT stu_bkt where stu_bkt.student in :stuSet";
 		Query q=session.createQuery(hql).setParameterList("stuSet", idset);
 		q.executeUpdate();
 		session.getTransaction().commit();
