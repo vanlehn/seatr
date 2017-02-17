@@ -272,7 +272,7 @@ public class RecommTaskHandler_BKT {
 		session.close();
 	}
 	
-	private static void initStudentKC(Set<Integer> stuIds,List<Student> stuList){  //create student kc for each student kc pair
+	private static void initStudentKC(Set<Integer> stuIds,List<Student> stuList,Course course){  //create student kc for each student kc pair
 		
 		/*
 		// old code by lishan
@@ -308,6 +308,8 @@ public class RecommTaskHandler_BKT {
 		}
 		Session session=sf.openSession();
 		Criteria cr = session.createCriteria(KC_BKT.class);
+		cr.add(Restrictions.eq("course", course));
+		
 		List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
 		session.beginTransaction();
 		
@@ -360,7 +362,7 @@ public class RecommTaskHandler_BKT {
 		for (Student stu:stuList){
 			idset.add(stu.getId());
 		}
-		initStudentKC(idset,stuList);
+		initStudentKC(idset,stuList,course);
 		//init utlity for each task: 
 		String sql="select skc_bkt.student_id as student_id, "
 				+ "tk_bkt.task_id as task_id,"
