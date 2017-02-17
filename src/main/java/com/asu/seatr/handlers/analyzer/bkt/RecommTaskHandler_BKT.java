@@ -39,7 +39,7 @@ import com.asu.seatr.utils.Utilities;
 @SuppressWarnings("unchecked")
 public class RecommTaskHandler_BKT {
 	
-	public static void initOneStudent(String stuId,int course_id){  //internal student id
+	public static void initOneStudent(String stuId,Course course){  //internal student id
 		SessionFactory sf;
 		if(Utilities.isJUnitTest())
 		{
@@ -53,6 +53,7 @@ public class RecommTaskHandler_BKT {
 		//init student kcs
 		Session session=sf.openSession();
 		Criteria cr = session.createCriteria(KC_BKT.class);
+		cr.add(Restrictions.eq("course", course));
 		List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
 		if(kc_list==null || kc_list.isEmpty()){		
 			session.close();
@@ -85,7 +86,7 @@ public class RecommTaskHandler_BKT {
 				+ "t_bkt.type as type "
 				+ "from tk_bkt,skc_bkt,k_bkt,t_bkt "
 				+ "where tk_bkt.kc_id=skc_bkt.kc_id and k_bkt.kc_id=skc_bkt.kc_id and t_bkt.task_id=tk_bkt.task_id "
-				+ "and t_bkt.course_id="+String.valueOf(course_id)
+				+ "and t_bkt.course_id="+String.valueOf(course.getId())
 				+ " and skc_bkt.student_id="+stuId
 				+ " order by task_id";
 		SQLQuery sqlQuery=session.createSQLQuery(sql);
@@ -254,12 +255,14 @@ public class RecommTaskHandler_BKT {
 		Session session=sf.openSession();
 		
 		session.beginTransaction();
-		String sql="delete from skc_bkt where skc_bkt.kc_id = "+ String.valueOf(kc.getKc().getId());
-		Query q=session.createSQLQuery(sql);
+		//String sql="delete from skc_bkt where skc_bkt.kc_id = "+ String.valueOf(kc.getKc().getId());
+		String hql="delete from SKC_BKT skc_bkt where skc_bkt.kc = :pKc";
+		Query q=session.createQuery(hql).setParameter("pKc", kc.getKc());
 		q.executeUpdate();
 		session.getTransaction().commit();
 		
-		List<Student> stu_list=StudentHandler.readAll();
+		//List<Student> stu_list=StudentHandler.readAll();
+		List<Student> stu_list = StudentHandler.getByCourse(kc.getKc().getCourse());
 		for(Student stu : stu_list){
 			SKC_BKT skc=new SKC_BKT();
 			skc.setStudent(stu);

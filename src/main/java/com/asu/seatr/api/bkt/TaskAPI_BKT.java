@@ -137,6 +137,7 @@ public class TaskAPI_BKT {
 			t_a.setType(taReader.getType());
 			t_a.setDifficulty(taReader.getDifficulty());;
 			TaskAnalyzerHandler.update(t_a);
+			RecommTaskHandler_BKT.initOneTask(String.valueOf(t_a.getTask().getId()));
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_UPDATED))
 					.build();
