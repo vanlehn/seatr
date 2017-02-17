@@ -1,9 +1,11 @@
 package com.asu.seatr.handlers.analyzer.bkt;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.hibernate.Criteria;
 import org.hibernate.Query;
@@ -270,7 +272,10 @@ public class RecommTaskHandler_BKT {
 		session.close();
 	}
 	
-	private static void initStudentKC(String[] stuIds){  //create student kc for each student kc pair
+	private static void initStudentKC(Set<String> stuIds,List<Student> stuList){  //create student kc for each student kc pair
+		
+		/*
+		// old code by lishan
 		StringBuilder idset_str=new StringBuilder();
 		HashSet<String> idset=new HashSet<String>();
 		idset_str.append('(');
@@ -291,6 +296,7 @@ public class RecommTaskHandler_BKT {
 		//idset_str.setCharAt(idset_str.length()-1, ')');
 		
 		List<Student> stu_list=StudentHandler.readAll();
+		*/
 		SessionFactory sf;
 		if(Utilities.isJUnitTest())
 		{
@@ -304,14 +310,13 @@ public class RecommTaskHandler_BKT {
 		Criteria cr = session.createCriteria(KC_BKT.class);
 		List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
 		session.beginTransaction();
-		String sql="delete from skc_bkt where skc_bkt.student_id in "+ idset_str;
-		Query q=session.createSQLQuery(sql);
+		
+		String hql="delete from skc_bkt where skc_bkt.student_id in :studentList";
+		Query q=session.createQuery(hql).setParameterList("studentList", stuIds);
 		q.executeUpdate();
 		session.getTransaction().commit();
 		
-		for(Student stu : stu_list){
-			if (!idset.contains(String.valueOf(stu.getId())))
-				continue;
+		for(Student stu : stuList){
 			for(KC_BKT kc : kc_list){
 				SKC_BKT skc=new SKC_BKT();
 				skc.setStudent(stu);
@@ -348,29 +353,14 @@ public class RecommTaskHandler_BKT {
 		return ids;
 	}
 	
-	public static void initStudentTaskUtility(int course_id){
-		String[] stuIds=getAllStudentsIn(course_id);
-		
-		initStudentKC(stuIds);
-		
-		StringBuilder idset_str=new StringBuilder();
+	public static void initStudentTaskUtility(Course course){
+		//String[] stuIds=getAllStudentsIn(course_id);
+		List<Student> stuList = StudentHandler.getByCourse(course);
 		HashSet<String> idset=new HashSet<String>();
-		idset_str.append('(');
-		for (String id:stuIds){
-			idset_str.append(String.valueOf(id)+",");
-			idset.add(String.valueOf(id));
+		for (Student stu:stuList){
+			idset.add(String.valueOf(stu.getId()));
 		}
-		if(idset_str.charAt(idset_str.length()-1)==',')
-		{
-			idset_str.setCharAt(idset_str.length()-1, ')'); 
-		}
-		else
-		{
-			//TODO temporary fix. Nothing equals null. not even null. expected to not do anything
-			idset_str.append("null)"); //if stuIds is empty 
-		}
-		//idset_str.setCharAt(idset_str.length()-1, ')');     //raises an error when stuIds is empty
-		
+		initStudentKC(idset,stuList);
 		//init utlity for each task: 
 		String sql="select skc_bkt.student_id as student_id, "
 				+ "tk_bkt.task_id as task_id,"
@@ -381,7 +371,7 @@ public class RecommTaskHandler_BKT {
 				+ "t_bkt.type as type "
 				+ "from tk_bkt,skc_bkt,k_bkt,t_bkt "
 				+ "where tk_bkt.kc_id=skc_bkt.kc_id and k_bkt.kc_id=skc_bkt.kc_id and t_bkt.task_id=tk_bkt.task_id "
-				+ "and t_bkt.course_id="+String.valueOf(course_id)
+				+ "and t_bkt.course_id="+String.valueOf(course.getId())
 				+ " order by student_id,task_id";
 		SessionFactory sf;
 		if(Utilities.isJUnitTest())
@@ -404,8 +394,8 @@ public class RecommTaskHandler_BKT {
 		List<Object[]> result=sqlQuery.list();
 		
 		session.beginTransaction();
-		sql="delete from stu_bkt where stu_bkt.student_id in "+idset_str;
-		Query q=session.createSQLQuery(sql);
+		String hql="delete from stu_bkt where stu_bkt.student_id in :stuSet";
+		Query q=session.createQuery(hql).setParameterList("stuSet", idset);
 		q.executeUpdate();
 		session.getTransaction().commit();
 		List<Double> kc_p_list=new LinkedList<Double>();

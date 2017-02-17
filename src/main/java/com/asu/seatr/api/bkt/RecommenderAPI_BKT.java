@@ -56,7 +56,7 @@ public class RecommenderAPI_BKT {
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
 		}
 		Course c=CourseHandler.getByExternalId(external_course_id);
-		RecommTaskHandler_BKT.initStudentTaskUtility(c.getId());
+		RecommTaskHandler_BKT.initStudentTaskUtility(c);
 		return Response.status(Status.OK)
 				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
 				.build();
