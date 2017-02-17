@@ -272,7 +272,7 @@ public class RecommTaskHandler_BKT {
 		session.close();
 	}
 	
-	private static void initStudentKC(Set<String> stuIds,List<Student> stuList){  //create student kc for each student kc pair
+	private static void initStudentKC(Set<Integer> stuIds,List<Student> stuList){  //create student kc for each student kc pair
 		
 		/*
 		// old code by lishan
@@ -356,9 +356,9 @@ public class RecommTaskHandler_BKT {
 	public static void initStudentTaskUtility(Course course){
 		//String[] stuIds=getAllStudentsIn(course_id);
 		List<Student> stuList = StudentHandler.getByCourse(course);
-		HashSet<String> idset=new HashSet<String>();
+		HashSet<Integer> idset=new HashSet<Integer>();
 		for (Student stu:stuList){
-			idset.add(String.valueOf(stu.getId()));
+			idset.add(stu.getId());
 		}
 		initStudentKC(idset,stuList);
 		//init utlity for each task: 
@@ -414,7 +414,7 @@ public class RecommTaskHandler_BKT {
 					kc_p_list.clear();
 					kc_l_list.clear();
 					kc_u_list.clear();
-					if (idset.contains(String.valueOf(curstuid))){
+					if (idset.contains(curstuid)){
 						Student stu=StudentHandler.read(curstuid);
 						Task task=TaskHandler.read(curtaskid);
 						StuTaskUtility_BKT stuTaskUtility=new StuTaskUtility_BKT();
