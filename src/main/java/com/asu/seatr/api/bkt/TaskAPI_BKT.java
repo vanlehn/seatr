@@ -92,7 +92,9 @@ public class TaskAPI_BKT {
 			t_a.setDifficulty(taReader2.getDifficulty());
 			t_a.setType(taReader2.getType());
 			TaskAnalyzerHandler.save(t_a);
-			RecommTaskHandler_BKT.initOneTask(String.valueOf(t_a.getTask().getId()));
+			//no need to do initOneTask() since new tasks will not have kc's mapped to them and hence
+			//no utilities to be calculated
+			//RecommTaskHandler_BKT.initOneTask(String.valueOf(t_a.getTask().getId()));
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_CREATED)).build();
 		}

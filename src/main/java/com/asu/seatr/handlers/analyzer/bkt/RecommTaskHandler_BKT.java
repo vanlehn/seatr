@@ -52,9 +52,10 @@ public class RecommTaskHandler_BKT {
 		
 		//init student kcs
 		Session session=sf.openSession();
-		Criteria cr = session.createCriteria(KC_BKT.class);
-		cr.add(Restrictions.eq("course", course));
-		List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
+		//Criteria cr = session.createCriteria(KC_BKT.class);
+		//cr.add(Restrictions.eq("course", course));
+		//List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
+		List<KC_BKT> kc_list = KC_BKT_Handler.readByExtCourse(course);
 		if(kc_list==null || kc_list.isEmpty()){		
 			session.close();
 			return;
@@ -310,10 +311,11 @@ public class RecommTaskHandler_BKT {
 			sf = HibernateUtil.getSessionFactory();
 		}
 		Session session=sf.openSession();
-		Criteria cr = session.createCriteria(KC_BKT.class);
-		cr.add(Restrictions.eq("course", course));
+		//Criteria cr = session.createCriteria(KC_BKT.class);
+		//cr.add(Restrictions.eq("course", course));
 		
-		List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
+		//List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
+		List<KC_BKT> kc_list = KC_BKT_Handler.readByExtCourse(course);
 		session.beginTransaction();
 		
 		String hql="delete from SKC_BKT skc_bkt where skc_bkt.student in :pStudentList";
