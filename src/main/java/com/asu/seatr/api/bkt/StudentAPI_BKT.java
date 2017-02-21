@@ -93,7 +93,7 @@ public class StudentAPI_BKT {
 		try {
 			s_a.createStudent(sa.getExternal_student_id(), sa.getExternal_course_id(), 4);			
 			StudentAnalyzerHandler.save(s_a);	
-			RecommTaskHandler_BKT.initOneStudent(String.valueOf(s_a.getStudent().getId()), s_a.getCourse().getId());
+			RecommTaskHandler_BKT.initOneStudent(String.valueOf(s_a.getStudent().getId()), s_a.getCourse());
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_CREATED)).build();
 		
@@ -140,6 +140,7 @@ public class StudentAPI_BKT {
 					(Student_BKT.class, sa.getExternal_student_id(), sa.getExternal_course_id()).get(0);
 			
 			StudentAnalyzerHandler.update(s_a2);
+			RecommTaskHandler_BKT.initOneStudent(String.valueOf(s_a2.getStudent().getId()), s_a2.getCourse());
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.STUDENT_UPDATED))
 					.build();

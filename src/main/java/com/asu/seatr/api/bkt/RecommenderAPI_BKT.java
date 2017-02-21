@@ -56,7 +56,7 @@ public class RecommenderAPI_BKT {
 			throw new CourseException(MyStatus.ERROR, MyMessage.COURSE_ID_MISSING);
 		}
 		Course c=CourseHandler.getByExternalId(external_course_id);
-		RecommTaskHandler_BKT.initStudentTaskUtility(c.getId());
+		RecommTaskHandler_BKT.initStudentTaskUtility(c);
 		return Response.status(Status.OK)
 				.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.RECOMM_TASK_INIT))
 				.build();
@@ -290,7 +290,7 @@ public class RecommenderAPI_BKT {
 			}
 			
 			if(task_u_list.isEmpty() && !already_init_stu){
-				RecommTaskHandler_BKT.initOneStudent(String.valueOf(stu.getId()), stu.getCourse().getId());
+				RecommTaskHandler_BKT.initOneStudent(String.valueOf(stu.getId()), stu.getCourse());
 				already_init_stu=true;
 			}
 			else if(!unProcessedEIds.isEmpty() && !already_init_tasks){
@@ -351,7 +351,7 @@ public class RecommenderAPI_BKT {
 				unProcessedEIds.remove(String.valueOf(stu_task_u[0]));
 			}
 			if(task_u_list.isEmpty() && !already_init_stu){
-				RecommTaskHandler_BKT.initOneStudent(String.valueOf(stu.getId()), stu.getCourse().getId());
+				RecommTaskHandler_BKT.initOneStudent(String.valueOf(stu.getId()), stu.getCourse());
 				already_init_stu=true;
 			}
 			else if(!unProcessedEIds.isEmpty() && !already_init_tasks){
@@ -403,7 +403,7 @@ public class RecommenderAPI_BKT {
 				task_u_list.add(task_u_reader);
 			}
 			if (task_u_list.isEmpty() && !already_init_stu){
-				RecommTaskHandler_BKT.initOneStudent(String.valueOf(stu.getId()), stu.getCourse().getId());
+				RecommTaskHandler_BKT.initOneStudent(String.valueOf(stu.getId()), stu.getCourse());
 				already_init_stu=true;
 			}
 			session.close();

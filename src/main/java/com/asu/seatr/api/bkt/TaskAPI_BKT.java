@@ -19,6 +19,7 @@ import org.hibernate.exception.ConstraintViolationException;
 import com.asu.seatr.exceptions.CourseException;
 import com.asu.seatr.exceptions.TaskException;
 import com.asu.seatr.handlers.TaskAnalyzerHandler;
+import com.asu.seatr.handlers.analyzer.bkt.RecommTaskHandler_BKT;
 import com.asu.seatr.models.analyzers.task.Task_BKT;
 import com.asu.seatr.models.analyzers.task.Task_Required_Optional;
 import com.asu.seatr.rest.models.analyzer.bkt.TAReader_BKT;
@@ -91,6 +92,9 @@ public class TaskAPI_BKT {
 			t_a.setDifficulty(taReader2.getDifficulty());
 			t_a.setType(taReader2.getType());
 			TaskAnalyzerHandler.save(t_a);
+			//no need to do initOneTask() since new tasks will not have kc's mapped to them and hence
+			//no utilities to be calculated
+			//RecommTaskHandler_BKT.initOneTask(String.valueOf(t_a.getTask().getId()));
 			return Response.status(Status.CREATED)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_CREATED)).build();
 		}
@@ -135,6 +139,7 @@ public class TaskAPI_BKT {
 			t_a.setType(taReader.getType());
 			t_a.setDifficulty(taReader.getDifficulty());;
 			TaskAnalyzerHandler.update(t_a);
+			RecommTaskHandler_BKT.initOneTask(String.valueOf(t_a.getTask().getId()));
 			return Response.status(Status.OK)
 					.entity(MyResponse.build(MyStatus.SUCCESS, MyMessage.TASK_UPDATED))
 					.build();
