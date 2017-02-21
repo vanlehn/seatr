@@ -52,9 +52,6 @@ public class RecommTaskHandler_BKT {
 		
 		//init student kcs
 		Session session=sf.openSession();
-		//Criteria cr = session.createCriteria(KC_BKT.class);
-		//cr.add(Restrictions.eq("course", course));
-		//List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
 		List<KC_BKT> kc_list = KC_BKT_Handler.readByExtCourse(course);
 		if(kc_list==null || kc_list.isEmpty()){		
 			session.close();
@@ -256,13 +253,10 @@ public class RecommTaskHandler_BKT {
 		Session session=sf.openSession();
 		
 		session.beginTransaction();
-		//String sql="delete from skc_bkt where skc_bkt.kc_id = "+ String.valueOf(kc.getKc().getId());
 		String hql="delete from SKC_BKT skc_bkt where skc_bkt.kc = :pKc";
 		Query q=session.createQuery(hql).setParameter("pKc", kc.getKc());
 		q.executeUpdate();
 		session.getTransaction().commit();
-		
-		//List<Student> stu_list=StudentHandler.readAll();
 		List<Student> stu_list = StudentHandler.getByCourse(kc.getKc().getCourse());
 		for(Student stu : stu_list){
 			SKC_BKT skc=new SKC_BKT();
@@ -311,10 +305,6 @@ public class RecommTaskHandler_BKT {
 			sf = HibernateUtil.getSessionFactory();
 		}
 		Session session=sf.openSession();
-		//Criteria cr = session.createCriteria(KC_BKT.class);
-		//cr.add(Restrictions.eq("course", course));
-		
-		//List<KC_BKT> kc_list = (List<KC_BKT>)cr.list();
 		List<KC_BKT> kc_list = KC_BKT_Handler.readByExtCourse(course);
 		session.beginTransaction();
 		
@@ -361,7 +351,6 @@ public class RecommTaskHandler_BKT {
 	}
 	
 	public static void initStudentTaskUtility(Course course){
-		//String[] stuIds=getAllStudentsIn(course_id);
 		List<Student> stuList = StudentHandler.getByCourse(course);
 		HashSet<Integer> idset=new HashSet<Integer>();
 		for (Student stu:stuList){
@@ -481,7 +470,6 @@ public class RecommTaskHandler_BKT {
 		sqlQuery.addScalar("kc_id", IntegerType.INSTANCE);
 		sqlQuery.addScalar("p", DoubleType.INSTANCE);
 		sqlQuery.addScalar("l", DoubleType.INSTANCE);
-		//String taskType=task.getT_BKT().getType();
 		String taskType = st_type;//the student may have mc as well as an input choice and depending on what the student chose we will use the appropriate slip and guess
 		TaskFeature taskFeature=Calculation_BKT.getTaskFeature(taskType);
 		List<Object[]> kc_list=sqlQuery.list();
