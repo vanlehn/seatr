@@ -272,29 +272,6 @@ public class RecommTaskHandler_BKT {
 	
 	private static void initStudentKC(Set<Integer> stuIds,List<Student> stuList,Course course){  //create student kc for each student kc pair
 		
-		/*
-		// old code by lishan
-		StringBuilder idset_str=new StringBuilder();
-		HashSet<String> idset=new HashSet<String>();
-		idset_str.append('(');
-		for (String id:stuIds){
-			idset_str.append(String.valueOf(id)+",");
-			idset.add(String.valueOf(id));
-		}
-		if(idset_str.charAt(idset_str.length()-1)==',')
-		{
-			idset_str.setCharAt(idset_str.length()-1, ')'); 
-		}
-		else
-		{
-			//TODO temporary fix. Nothing equals null. not even null. expected to not do anything
-			idset_str.append("null)"); //if stuIds is empty 
-		}
-		
-		//idset_str.setCharAt(idset_str.length()-1, ')');
-		
-		List<Student> stu_list=StudentHandler.readAll();
-		*/
 		SessionFactory sf;
 		if(Utilities.isJUnitTest())
 		{
