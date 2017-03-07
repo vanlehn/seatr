@@ -405,11 +405,26 @@ public class RecommenderAPI_BKT {
 					+ "task.course_id="+course.getId()+" and stu_bkt.student_id="+stu.getId()
 					+ " order by utility desc";
 			*/
-			String hql = "SELECT stu_bkt.task.external_id, stu_bkt.utility from StuTaskUtility_BKT AS stu_bkt,Task_BKT as t_bkt WHERE t_bkt.task = stu_bkt.task AND "
-					+ 	 "stu_bkt.task.course = :pCourse AND stu_bkt.student= :pStudent ORDER BY stu_bkt.utility DESC";
+			String hql = "SELECT stu_bkt.task.external_id, stu_bkt.utility from StuTaskUtility_BKT AS stu_bkt,"
+					+ " Task_BKT as t_bkt WHERE t_bkt.task = stu_bkt.task AND "
+					+ " stu_bkt.task.course = :pCourse AND stu_bkt.student= :pStudent ";
+			
+			if (taskList != null && taskList.length > 0) {
+				hql += "AND stu_bkt.task.external_id IN :pTaskList ";
+			}
+			
+			hql += "ORDER BY stu_bkt.utility DESC";
+			
 			Query hqlQuery=session.createQuery(hql);
 			hqlQuery.setParameter("pCourse", course);
 			hqlQuery.setParameter("pStudent", stu);
+			if (taskList != null && taskList.length > 0) {
+				hqlQuery.setParameterList("pTaskList", taskList);
+			}
+			
+			hqlQuery.setMaxResults(10);
+			
+			System.out.println("we are here 1");
 			/*
 			sqlQuery.addScalar("task.external_id", IntegerType.INSTANCE);
 			sqlQuery.addScalar("utility", DoubleType.INSTANCE);
@@ -432,6 +447,8 @@ public class RecommenderAPI_BKT {
 			count++;
 		} while(task_u_list.isEmpty() && count<2);
 		
+		System.out.println("we are here 2");
+		System.out.println(task_u_list.size());
 		return task_u_list;
 	}
 	
