@@ -390,16 +390,6 @@ public class RecommenderAPI_BKT {
 			Session session = sf.openSession();
 			String taskQuery = "";
 			/*
-			if(taskList != null)
-			{
-				StringBuilder sb = new StringBuilder();
-				for(String taskId : taskList)
-				{
-					sb.append(taskId);
-				}
-				taskQuery += "task.external_id NOT IN (" + sb.toString() + ")";
-			}
-			
 			String sql="SELECT task.external_id, stu_bkt.utility FROM stu_bkt,task,t_bkt "
 					+ "where stu_bkt.task_id=task.id and task.id = t_bkt.task_id and "
 					+ "task.course_id="+course.getId()+" and stu_bkt.student_id="+stu.getId()
@@ -423,8 +413,6 @@ public class RecommenderAPI_BKT {
 			}
 			
 			hqlQuery.setMaxResults(10);
-			
-			System.out.println("we are here 1");
 			/*
 			sqlQuery.addScalar("task.external_id", IntegerType.INSTANCE);
 			sqlQuery.addScalar("utility", DoubleType.INSTANCE);
@@ -446,9 +434,6 @@ public class RecommenderAPI_BKT {
 			session.close();
 			count++;
 		} while(task_u_list.isEmpty() && count<2);
-		
-		System.out.println("we are here 2");
-		System.out.println(task_u_list.size());
 		return task_u_list;
 	}
 	
