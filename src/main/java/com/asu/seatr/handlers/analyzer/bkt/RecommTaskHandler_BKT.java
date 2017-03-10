@@ -448,6 +448,14 @@ public class RecommTaskHandler_BKT {
 		sqlQuery.addScalar("p", DoubleType.INSTANCE);
 		sqlQuery.addScalar("l", DoubleType.INSTANCE);
 		String taskType = st_type;//the student may have mc as well as an input choice and depending on what the student chose we will use the appropriate slip and guess
+		if(taskType.equals("mc"))
+		{
+			taskType = "multiple-choice";
+		}
+		else
+		{
+			taskType = task.getT_BKT().getType();
+		}
 		TaskFeature taskFeature=Calculation_BKT.getTaskFeature(taskType);
 		List<Object[]> kc_list=sqlQuery.list();
 		if (kc_list==null || kc_list.isEmpty()){
