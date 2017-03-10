@@ -90,8 +90,27 @@ public class Calculation_BKT {
 			result.add((p_list1.get(i)-p_list2.get(i))*p_list3.get(i));
 		return result;
 	}
+	static private double calc_utility(List<Double> kc_p_list, List<Double> kc_u_list)
+	{
+		double utility=0.0;
+		for(int i=0;i<kc_p_list.size();i++)
+		{
+			utility += ((1 - kc_p_list.get(i)) * kc_u_list.get(i));
+		}
+		return utility;
+	}
 	
+	static private double calc_probability(List<Double> kc_p_list,List<Double> kc_l_list)
+	{
+		double probability = 1.0;
+		for(int i = 0; i < kc_p_list.size();i++)
+		{
+			probability *= (kc_p_list.get(i) + ((1-kc_p_list.get(i)) * kc_l_list.get(i)));
+		}
+		return probability;
+	}
 	static public double task_utility_kc(List<Double> kc_p_list, List<Double> kc_l_list, List<Double> kc_u_list, double slip, double guess){
+		/*
 		List<Double> kc_p_list_correct=update_kc_p(new LinkedList<Double>(kc_p_list),kc_l_list,slip, guess,true);
 		List<Double> kc_p_list_incorrect=update_kc_p(new LinkedList<Double>(kc_p_list),kc_l_list,slip, guess,false);
 		double task_correct_p=cal_task_correct_p(kc_p_list, slip, guess);
@@ -99,6 +118,10 @@ public class Calculation_BKT {
 		double utility=task_correct_p*cal_sum(p_list_comb(kc_p_list_correct,kc_p_list,kc_u_list))*Math.pow(DISCOUNT, kc_p_list.size())
 				+task_incorrect_p*cal_sum(p_list_comb(kc_p_list_incorrect,kc_p_list,kc_u_list))*Math.pow(DISCOUNT, kc_p_list.size());
 		return utility;
+		*/
+		double utility = calc_utility(kc_p_list, kc_u_list);
+		double probability = calc_probability(kc_p_list, kc_l_list);
+		return utility * probability;
 		
 	}
 	

@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.apache.log4j.Logger;
+import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -143,7 +144,8 @@ public class RecommenderAPI_BKT {
 	public List<TUReader_BKT> getRecommTasks(
 			@QueryParam("external_student_id") String external_student_id,
 			@QueryParam("external_course_id") String external_course_id,
-			@QueryParam("number_of_tasks") Integer number_of_tasks
+			@QueryParam("number_of_tasks") Integer number_of_tasks,
+			@QueryParam("possible_tasks") String possible_tasks
 			)
 	{
 		Long requestTimestamp = System.currentTimeMillis();
@@ -161,7 +163,8 @@ public class RecommenderAPI_BKT {
 			}
 			Course course = CourseHandler.getByExternalId(external_course_id);
 			Student student = StudentHandler.getByExternalId(external_student_id, external_course_id);
-			return getRecommTasks(student, course, number_of_tasks);
+			String[] taskList = (possible_tasks == null || possible_tasks.trim().isEmpty())? null : possible_tasks.split(",");
+			return getRecommTasks(student, course, number_of_tasks,taskList);
 		}
 		catch(StudentException e)
 		{	
@@ -367,7 +370,7 @@ public class RecommenderAPI_BKT {
 		return task_u_list;
 	}
 	
-	private static List<TUReader_BKT> getRecommTasks(Student stu, Course course, int num) throws StudentException, CourseException
+	private static List<TUReader_BKT> getRecommTasks(Student stu, Course course, int num, String[] taskList) throws StudentException, CourseException
 	{
 		if(stu == null || stu.getS_BKT()==null)
 		{
@@ -385,15 +388,37 @@ public class RecommenderAPI_BKT {
 		int count=0;
 		do{
 			Session session = sf.openSession();
+			String taskQuery = "";
+			/*
 			String sql="SELECT task.external_id, stu_bkt.utility FROM stu_bkt,task,t_bkt "
 					+ "where stu_bkt.task_id=task.id and task.id = t_bkt.task_id and "
 					+ "task.course_id="+course.getId()+" and stu_bkt.student_id="+stu.getId()
 					+ " order by utility desc";
-			SQLQuery sqlQuery=session.createSQLQuery(sql);
+			*/
+			String hql = "SELECT stu_bkt.task.external_id, stu_bkt.utility from StuTaskUtility_BKT AS stu_bkt,"
+					+ " Task_BKT as t_bkt WHERE t_bkt.task = stu_bkt.task AND "
+					+ " stu_bkt.task.course = :pCourse AND stu_bkt.student= :pStudent ";
+			
+			if (taskList != null && taskList.length > 0) {
+				hql += "AND stu_bkt.task.external_id IN :pTaskList ";
+			}
+			
+			hql += "ORDER BY stu_bkt.utility DESC";
+			
+			Query hqlQuery=session.createQuery(hql);
+			hqlQuery.setParameter("pCourse", course);
+			hqlQuery.setParameter("pStudent", stu);
+			if (taskList != null && taskList.length > 0) {
+				hqlQuery.setParameterList("pTaskList", taskList);
+			}
+			
+			hqlQuery.setMaxResults(10);
+			/*
 			sqlQuery.addScalar("task.external_id", IntegerType.INSTANCE);
 			sqlQuery.addScalar("utility", DoubleType.INSTANCE);
 			sqlQuery.setMaxResults(num);
-			List<Object[]> result_list=sqlQuery.list();
+			*/
+			List<Object[]> result_list=hqlQuery.list();
 			
 			DecimalFormat df=new DecimalFormat("0.000");
 			for (Object[] stu_task_u: result_list){
@@ -409,7 +434,6 @@ public class RecommenderAPI_BKT {
 			session.close();
 			count++;
 		} while(task_u_list.isEmpty() && count<2);
-		
 		return task_u_list;
 	}
 	
