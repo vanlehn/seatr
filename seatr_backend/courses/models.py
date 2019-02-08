@@ -17,7 +17,7 @@ class CoursesKcsMap(models.Model):
     kc     = models.ForeignKey(kcsModel.KCs, on_delete=models.PROTECT)
 
 
-class CourseQuestionMap(models.Model):
+class CoursesQuestionsMap(models.Model):
     course   = models.ForeignKey(Courses, on_delete=models.PROTECT)
     question = models.ForeignKey(questionsModel.Questions, on_delete=models.PROTECT)
 

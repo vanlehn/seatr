@@ -15,7 +15,7 @@ STATUS_CHOICES = (
 )
 
 
-class QuestionsStudentMap(models.Model):
+class QuestionsStudentsMap(models.Model):
     students  = models.ForeignKey(studentsModel.Students, on_delete=models.PROTECT)
     questions = models.ForeignKey(Questions, on_delete=models.PROTECT)
     status    = models.IntegerField(choices=STATUS_CHOICES, default=2)
