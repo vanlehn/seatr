@@ -1,3 +1,5 @@
 Django==2.1.5
 djangorestframework==3.9.1
 django-filter==2.1.0
+mongoengine==0.16.3
+django-rest-framework-mongoengine==3.3.1
