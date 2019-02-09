@@ -10,8 +10,10 @@ class Questions(models.Model):
 
 
 STATUS_CHOICES = (
-    (1, "solved"),
-    (2, "studied/seen"),
+    (1, "attempted"),
+    (2, "seen"),
+    (3, "correct"),
+    (4, "incorrect")
 )
 
 
