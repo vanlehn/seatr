@@ -8,3 +8,4 @@ DEV Notes: These notes are meant to help developers while setting up the machine
     * ```sudo cp /private/etc/php-fpm.conf.default  /private/etc/php-fpm.conf ```
     * ``` php-fpm ``` this is the binary
 * the php-fpm by default writes the logs in */usr/var/log/php-fpm.logs*. To change this go inside the */private/etc/php-fpm.conf* file and write ``` error_log=/var/log/php-fpm/php-fpm.log ```
+* https://github.com/perusio/php-fpm-example-config: sample php-fpm file
