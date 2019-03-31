@@ -2,10 +2,8 @@
 1. virtualenv venv
 2. pip install -r requirements.txt
 
-DEV Notes: These notes are meant to help developers while setting up the machine and running code (in MAC)
-* if you want to run ope using nginx php-fpm will be required. It's a WGI for PHP. The config files for both php and php-fpm ie. *php.ini* and *php-fpm.conf* both are present, at the required locations ie. */private/etc/php.ini* and */private/etc/php-fpm.conf* and but they are named as */private/etc/php.ini.default* and */private/etc/php-fpm.conf.default*. So, to successfully run php and php-fpm, just copy these files ie.
-    * ``` sudo cp /private/etc/php.ini.default       /private/etc/php.ini ```
-    * ```sudo cp /private/etc/php-fpm.conf.default  /private/etc/php-fpm.conf ```
-    * ``` php-fpm ``` this is the binary
-* the php-fpm by default writes the logs in */usr/var/log/php-fpm.logs*. To change this go inside the */private/etc/php-fpm.conf* file and write ``` error_log=/var/log/php-fpm/php-fpm.log ```
-* https://github.com/perusio/php-fpm-example-config: sample php-fpm file
+**DEV NOTES:**
+*these are meant to help setup the software and solution to some of the possible issues that might arise
+Deploying static files*
+
+1. Before running nginx, you have to collect all Django static files in the static folder. First of all you have to edit *mysite/settings.py* `adding:STATIC_ROOT = os.path.join(BASE_DIR, "static/")` and then run `python manage.py collectstatic`
