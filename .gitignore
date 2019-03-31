@@ -3,3 +3,5 @@ venv
 *.pyc
 *.log
 .idea
+seatr_backend/scripts/csvDumps/
+*temp*

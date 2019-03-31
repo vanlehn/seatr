@@ -142,5 +142,9 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/
-
+# all static files must be collected using
+# python manage.py collectstatic
 STATIC_URL = '/static/'
+# collect all static files into one folder
+STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+

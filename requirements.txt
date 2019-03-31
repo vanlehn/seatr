@@ -3,3 +3,7 @@ djangorestframework==3.9.1
 django-filter==2.1.0
 mongoengine==0.16.3
 django-rest-framework-mongoengine==3.3.1
+numpy==1.16.1
+scikit-learn==0.20.2
+pymysql==0.9.3
+uwsgi==2.0.18
