@@ -10,7 +10,7 @@ from students.models  import Students
 import json
 
 
-class Analyzer1(APIView):
+class AnalyzerSimple(APIView):
     ATTEMPTED = 1
     SEEN      = 2
     CORRECT   = 3
