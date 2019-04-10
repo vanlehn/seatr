@@ -21,5 +21,6 @@ urlpatterns = [
     path(r'analyzers/', include('analyzers.urls')),
     path(r'students/', include('students.urls')),
     path(r'kcs/', include('kcs.urls')),
-    path(r'questions/', include('questions.urls'))
+    path(r'questions/', include('questions.urls')),
+    path(r'courses/', include('courses.urls'))
 ]
