@@ -2,8 +2,6 @@ from django.core.management.base import BaseCommand, CommandError
 from kcs.models import KCs
 
 import pymysql.cursors
-import csv
-from collections import defaultdict
 
 
 class Command(BaseCommand):

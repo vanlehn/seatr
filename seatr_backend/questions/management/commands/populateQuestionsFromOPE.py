@@ -2,8 +2,6 @@ from django.core.management.base import BaseCommand, CommandError
 from questions.models import Questions
 
 import pymysql.cursors
-import csv
-from collections import defaultdict
 
 
 class Command(BaseCommand):
