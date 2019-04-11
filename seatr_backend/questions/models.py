@@ -1,6 +1,5 @@
 from django.db import models
 
-
 from students import models as studentsModel
 # Create your models here.
 
@@ -19,5 +18,5 @@ STATUS_CHOICES = (
 class QuestionsStudentsMap(models.Model):
     student  = models.ForeignKey(studentsModel.Students, on_delete=models.PROTECT)
     question = models.ForeignKey(Questions, on_delete=models.PROTECT)
-    status   = models.IntegerField(choices=STATUS_CHOICES, default=2)
+    status   = models.IntegerField(choices=STATUS_CHOICES, default=None)
 
