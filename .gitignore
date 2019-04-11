@@ -7,3 +7,4 @@ venv
 seatr_backend/scripts/csvDumps/
 *temp*
 *.DS_Store
+*.swp

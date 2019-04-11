@@ -24,11 +24,10 @@ class UpdateCreateStatus(APIView):
         STUDIED = 1
         CORRECT = 2
         INCORRECT = 3
-
         try:
-            questionExternalId = int(request.POST.get('external_task_id'))
-            studentExternalId  = int(request.POST.get('external_student_id'))
-            _status            = int(request.POST.get('status'))
+            questionExternalId = int(request.data.get('external_task_id'))
+            studentExternalId  = int(request.data.get('external_student_id'))
+            _status            = int(request.data.get('status'))
         except TypeError as e:
             raise TypeError("POST parameters can't be None") from e
         except ValueError as e:
