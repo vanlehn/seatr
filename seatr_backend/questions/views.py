@@ -26,7 +26,7 @@ class UpdateCreateStatus(APIView):
         INCORRECT = 3
 
         try:
-            questionExternalId = int(request.POST.get('question_id'))
+            questionExternalId = int(request.POST.get('external_task_id'))
             studentExternalId  = int(request.POST.get('external_student_id'))
             _status            = int(request.POST.get('status'))
         except TypeError as e:
