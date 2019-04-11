@@ -8,14 +8,11 @@ from kcs.models       import KCsQuestionsMap
 from students.models  import Students
 from courses.models   import Courses, CoursesStudentsMap
 
-import json
-
 
 class AnalyzerSimple(APIView):
-    ATTEMPTED = 1
-    SEEN      = 2
-    CORRECT   = 3
-    INCORRECT = 4
+    STUDIED   = 1
+    CORRECT   = 2
+    INCORRECT = 3
 
     def get(self, request):
         # get the GET data: studentId and questionIds of the candidate questions given by OPE
@@ -89,8 +86,6 @@ class AnalyzerSimple(APIView):
             for kc in questionKcMap[questionId]:
                 if expertise == self.ATTEMPTED:
                     kcScoreMap[kc][self.ATTEMPTED] += 1
-                elif expertise == self.SEEN:
-                    kcScoreMap[kc][self.SEEN] += 1
                 elif expertise == self.CORRECT:
                     kcScoreMap[kc][self.CORRECT] += 1
                 else:
@@ -108,7 +103,7 @@ class AnalyzerSimple(APIView):
             if kc not in kcScoreMap:
                 finalKcScore[kc] = 5
             # at least 1 studied but not in solved
-            elif kcScoreMap[kc][self.SEEN] >= 1 and kcScoreMap[kc][self.SOLVED] == 0:
+            elif kcScoreMap[kc][self.ATTEMPTED] >= 1 and kcScoreMap[kc][self.SOLVED] == 0:
                 finalKcScore[kc] = max(finalKcScore[kc], 4)
             # at least 1 incorrect, but never solved correctly
             elif kcScoreMap[kc][self.INCORRECT] >= 1 and kcScoreMap[kc][self.CORRECT] == 0:
