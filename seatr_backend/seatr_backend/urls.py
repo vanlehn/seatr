@@ -22,5 +22,6 @@ urlpatterns = [
     path(r'students/', include('students.urls')),
     path(r'kcs/', include('kcs.urls')),
     path(r'questions/', include('questions.urls')),
-    path(r'courses/', include('courses.urls'))
+    path(r'courses/', include('courses.urls')),
+    path(r'testing/', include('testing.urls')),
 ]
