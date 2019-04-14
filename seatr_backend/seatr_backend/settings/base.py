@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 import mongoengine
+import logging
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -45,6 +46,7 @@ INSTALLED_APPS = [
     'kcs',
     'questions',
     'students',
+    'testing',
 ]
 
 MIDDLEWARE = [
@@ -147,4 +149,61 @@ USE_TZ = True
 STATIC_URL = '/static/'
 # collect all static files into one folder
 STATIC_ROOT = os.path.join(BASE_DIR, "static/")
+
+
+# LOGGING = {
+#     'version': 1,
+#     # should the loggers provided
+#     'disable_existing_loggers': False,
+#     # describe the exact format of that text.
+#     'formatters': {
+#         'standard': {
+#             'format': '{asctime} {levelname} {name} {message}',
+#             'style': '{',
+#         },
+#     },
+#     # provide additional control over which logs are passed from logger to handler, if filters are not applied all the logs that satisfy the logging level are passed to handler.
+#     # filters can also be used to modify the logging record prior to being emitted, eg, a filter can downgrade ERROR to WARNING if a particular set of criteria are met.
+#     # filters can be installed on loggers or on handlers; multiple filters can be used in a chain to perform multiple filtering actions.
+#     'filters': {
+#         'special': {
+#             '()': 'project.logging.SpecialFilter',
+#             'foo': 'bar',
+#         },
+#         'require_debug_true': {
+#             '()': 'django.utils.log.RequireDebugTrue',
+#         },
+#     },
+#     # once the logger decides that a message it gets needs to be handled, it passed to the handler: what happens to the message that the logger gets like write to screen etc
+#     'handlers': {
+#         'console': {
+#             'level': 'INFO',
+#             'filters': ['require_debug_true'],
+#             'class': 'logging.StreamHandler',
+#             'formatter': 'simple'
+#         },
+#         'mail_admins': {
+#             'level': 'ERROR',
+#             'class': 'django.utils.log.AdminEmailHandler',
+#             'filters': ['special']
+#         }
+#     },
+#     # entry point to the logging system, each logger can have multiple handlers
+#     'loggers': {
+#         'django': {
+#             'handlers': ['console'],
+#             'propagate': True,
+#         },
+#         'django.request': {
+#             'handlers': ['mail_admins'],
+#             'level': 'ERROR',
+#             'propagate': False,
+#         },
+#         'myproject.custom': {
+#             'handlers': ['console', 'mail_admins'],
+#             'level': 'INFO',
+#             'filters': ['special']
+#         }
+#     }
+# }
 
