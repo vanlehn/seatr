@@ -1,5 +1,4 @@
 from django.shortcuts import render
-
 from rest_framework          import generics, status, exceptions
 from rest_framework.views    import APIView
 from rest_framework.response import Response
@@ -20,7 +19,6 @@ class ListCreateQuestions(generics.ListCreateAPIView):
 
 class UpdateCreateStatus(APIView):
     def post(self, request, format=None):
-
         STUDIED = 1
         CORRECT = 2
         INCORRECT = 3
@@ -43,11 +41,11 @@ class UpdateCreateStatus(APIView):
         try:
             questions = Questions.objects.filter(external_id=questionExternalId)
         except Questions.DoesNotExist:
-            raise exceptions.NotFound("question_external_id" + questionExternalId + "is invalid")
+            raise exceptions.NotFound("question_external_id " + str(questionExternalId) + " is invalid")
         try:
             student = Students.objects.get(external_id=studentExternalId)
         except Students.DoesNotExist:
-            raise exceptions.NotFound("student_external_id" + studentExternalId + "is invalid")
+            raise exceptions.NotFound("student_external_id " + str(studentExternalId) + " is invalid")
 
         for question in questions:
             questionStudentMap = QuestionsStudentsMap.objects.get_or_create(student=student, question=question)
@@ -55,4 +53,6 @@ class UpdateCreateStatus(APIView):
                 questionStudentMap[0].status = _status
                 questionStudentMap[0].save()
 
-        return Response(status=status.HTTP_201_CREATED)
+        return Response({
+            "text": "entry created"
+        }, status=status.HTTP_201_CREATED)
