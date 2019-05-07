@@ -3,24 +3,29 @@ from rest_framework.response import Response
 from rest_framework          import status, exceptions
 from collections             import defaultdict
 
-from questions.models import Questions, QuestionsStudentsMap
-from kcs.models       import KCsQuestionsMap
-from students.models  import Students
+from questions.models import Questions, QuestionsStudentsMap, CategoryStudentMap, QuestionAttempts, KCsQuestionsMap
+from users.models  import User
 from courses.models   import Courses, CoursesStudentsMap
 
 
 class AnalyzerSimple(APIView):
+    UNSTUDIED = 0
     STUDIED   = 1
     CORRECT   = 2
     INCORRECT = 3
 
+    LOCKED     = 0
+    UNLOCKED   = 1
+    FAMILIAR   = 2
+    UNFAMILIAR = 3
+
     def get(self, request):
-        # get the GET data: studentId and questionIds of the candidate questions given by OPE
+        # get the GET data: studentId and courseId given by OPE
+        # numbTasks: number of questions seatr should recommend
         try:
             studentId   = int(request.query_params.get('external_student_id', None))
             courseId    = int(request.query_params.get('external_course_id',  None))
-            numbTasks   = int(request.query_params.get('number_of_tasks',     None))
-            questionIds = list(map(int, request.query_params.get('possible_tasks', None).split(",")))
+            # numbTasks   = int(request.query_params.get('number_of_tasks',     None))
         except TypeError as e:
             raise TypeError("get parameters can't be None") from e
         except ValueError as e:
@@ -34,12 +39,12 @@ class AnalyzerSimple(APIView):
 
         # check if the student exists in SEATR
         try:
-            Students.objects.get(external_id=studentId)
-        except Students.DoesNotExist:
+            User.objects.get(external_id=studentId)
+        except User.DoesNotExist:
             print("student with id=" + str(studentId) + " not present in SEATR creating one now")
             try:
                 # create the student
-                Students.objects.create(external_id=studentId)
+                User.objects.create(external_id=studentId)
             except TypeError as e:
                 raise TypeError("external_student_id can't be None") from e
             except ValueError as e:
@@ -48,13 +53,89 @@ class AnalyzerSimple(APIView):
             try:
                 # create entry in CoursesStudentMap for the new studentId
                 course  = Courses.objects.get(external_id=courseId)
-                student = Students.objects.get(external_id=studentId)
+                student = User.objects.get(external_id=studentId)
                 CoursesStudentsMap.objects.create(course=course, student=student)
             # no need to check for valid external_student_id as its created above
             except TypeError as e:
                 raise TypeError("external_course_id can't be None") from e
             except ValueError as e:
                 raise ValueError("external_course_id can't be a string") from e
+        
+        # get all the familiar subcategories
+        validCategories = CategoryStudentMap.objects.filter(student=student, course=course, status=FAMILIAR)
+
+        # get the recent Questions
+        recentAttempts = QuestionAttempts.objects.all()
+        if recentAttempts >= 8:
+            recentAttempts = recentAttempts[-7]
+
+        # get all the questions from the subcategories minus the recent attempts
+        possibleQuestions = validCategories.questions.exclude(recentAttempts)
+
+        # 1. find the kcs of all the possibleQuestions
+        kcsPossibleQuestions =  KCsQuestionsMap.objects.filter(question__in=possibleQuestions)
+        
+        # 2. find the priority of the kcs of the user
+        kcsStudent = KCsStudentsMap.objects.filter(student=studentId)
+        studentKcPriorityMap = defaultdict(int)
+        for x in kcsStudent:
+            studentKcPriorityMap[x["kc"]] = x["priority"]
+
+
+        # 3. for each kcsPossibleQuestion in kcsPossibleQuestions, find priority of the question
+        # kcScoreMap stores the scores of the {kc} = score
+        questionPriorityMap   = defaultdict(lambda: defaultdict(int))
+        questionComplexityMap = defaultdict(lambda: defaultdict(int))
+        for x in kcsPossibleQuestions:
+            kc = x["kc"] 
+            questionPriorityMap[x["question"]]    = max(questionPriorityMap[x["question"]], studentKcPriorityMap[kc])
+            questionComplexityMap[x["question"]] += studentKcPriorityMap[kc]
+
+        # do the actual recommendation ie. maximum priority and minimal complexity
+        # get the questions which have maximum priority
+        maxiVal = 0
+        priorityQuestions = []
+        for k, v in questionPriorityMap.items():
+            if v == maxiVal:
+                priorityQuestions.append(k)
+            elif v > maxiVal:
+                maxiVal = v
+                priorityQuestions = []
+                priorityQuestions.append(k)
+
+        # now get the questions with minimal complexity from the above
+        finalQuestions = []
+        for question in priorityQuestions:
+            finalQuestions.append((questionComplexityMap[question], question))
+        finalQuestions.sort()
+        answer = [x[1] for x in finalQuestions]
+
+        # 1. get the kcs for the final questions
+        # 2. sort them based on importance
+        if len(answer) > 5:
+            kcs           = KCsQuestionsMap.objects.filter(question__in=answer)
+            ##### TODO move this to mongo
+            importanceKcs = importanceKcs.objects.filter(kc__in=kcs)
+            answer        = [(x["importance"], x["kc"], KCsQuestionsMap[x["kc"]]) for x in importanceKcs]
+            answer.sort()
+            answer = [x[2] for x in answer]
+            answer = answer[:5]
+
+        return Response({
+            "questions": answer
+        }, status=status.HTTP_200_OK)
+
+
+
+
+
+
+
+
+
+
+
+
 
         # get all the questions solved/seen by the student and get the KCs of those questions
         # ie. get all the KCs that the student has seen/mastered

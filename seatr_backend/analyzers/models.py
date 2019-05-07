@@ -2,13 +2,13 @@
 
 from django.db   import models
 from mongoengine import Document, EmbeddedDocument, fields
-from students    import models as studentsModel
-from courses     import models as coursesModel
+from users.models import User
+from courses.models  import Courses
 
 
 class Analyzers(models.Model):
-    student = models.ForeignKey(studentsModel.Students, on_delete=models.PROTECT)
-    course  = models.ForeignKey(coursesModel.Courses, on_delete=models.PROTECT)
+    user = models.ForeignKey(User, on_delete=models.PROTECT)
+    course  = models.ForeignKey(Courses, on_delete=models.PROTECT)
 
 
 class Analyzer1Properties(Document):

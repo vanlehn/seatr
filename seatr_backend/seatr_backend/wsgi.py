@@ -8,15 +8,9 @@ https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
 """
 
 import os
-import sys
-
-
-# add the virtualenv site-packages path to the sys.path
-# sys.path.append('../venv/lib/python3.7/site-packages')
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'seatr_backend.settings.dev')
 
 from django.core.wsgi import get_wsgi_application
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'seatr_backend.settings.dev')
 
 application = get_wsgi_application()

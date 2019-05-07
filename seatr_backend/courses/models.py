@@ -1,10 +1,6 @@
 from django.db import models
 
-from analyzers import models as analyzersModel
-
-from kcs       import models as kcsModel
-from students  import models as studentsModel
-from questions import models as questionsModel
+from users  import models as usersModel
 
 
 class Courses(models.Model):
@@ -12,21 +8,6 @@ class Courses(models.Model):
     description = models.CharField(null=True, max_length=2000)
 
 
-class CoursesKcsMap(models.Model):
-    course = models.ForeignKey(Courses, on_delete=models.PROTECT)
-    kc     = models.ForeignKey(kcsModel.KCs, on_delete=models.PROTECT)
-
-
-class CoursesQuestionsMap(models.Model):
-    course   = models.ForeignKey(Courses, on_delete=models.PROTECT)
-    question = models.ForeignKey(questionsModel.Questions, on_delete=models.PROTECT)
-
-
-class CoursesStudentsMap(models.Model):
+class CoursesUserMap(models.Model):
     course  = models.ForeignKey(Courses, on_delete=models.PROTECT)
-    student = models.ForeignKey(studentsModel.Students, on_delete=models.PROTECT)
-
-
-
-
-
+    user    = models.ForeignKey(usersModel.User, on_delete=models.PROTECT)

@@ -1,10 +1,10 @@
-*.pyc
 venv-seatr
 venv
-*.pyc
-*.log
+.vscode
 .idea
 seatr_backend/scripts/csvDumps/
+*.pyc
+*.log
 *temp*
 *.DS_Store
 *.swp
