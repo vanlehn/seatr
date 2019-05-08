@@ -1,6 +1,6 @@
-from django.db import models
+from django.db                  import models
+from django.conf                import settings
 from django.contrib.auth.models import AbstractUser
-from django.conf import settings
 
 
 class User(AbstractUser):
@@ -11,7 +11,10 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'external_id'
     # the fields that are required by the createsuperuser command, username is must
-    REQUIRED_FIELDS = ['username', 'password', 'email']
+    REQUIRED_FIELDS = ['username', 'email']
+
+    def __str__(self):
+        return str(self.external_id) + " " + self.username +  " " + self.email
 
 
 # additional fields specified here, for future use
@@ -23,5 +26,6 @@ ROLES =(
 class UserProfile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_profile')
     role = models.IntegerField(choices=ROLES, null=False, default=0)
+
 
     

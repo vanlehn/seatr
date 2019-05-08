@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 """
 
 import os
+import mongoengine
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -87,32 +88,6 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'seatr_backend.wsgi.application'
-
-
-# Database
-# https://docs.djangoproject.com/en/2.1/ref/settings/#databases
-
-DATABASES = {
-    # default db is the SEATR database
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            # convert the warnings to errors to solve integrity issues
-            'sql_mode': 'STRICT_TRANS_TABLES',
-            'read_default_file': '/etc/mysql/seatr.conf',
-            'init_command': 'SET foreign_key_checks = 0;',
-        }
-
-    },
-    'ope': {
-        'ENGINE': 'django.db.backends.mysql',
-        'OPTIONS': {
-            'sql_mode': 'STRICT_TRANS_TABLES',
-            'read_default_file': '/etc/mysql/ope.conf',
-        }
-    }
-}
-
 
 mongoengine.connect(
     db="tools",

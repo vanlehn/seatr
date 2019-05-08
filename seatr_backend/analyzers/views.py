@@ -3,9 +3,9 @@ from rest_framework.response import Response
 from rest_framework          import status, exceptions
 from collections             import defaultdict
 
-from questions.models import Questions, QuestionsStudentsMap, CategoryStudentMap, QuestionAttempts, KCsQuestionsMap
+from questions.models import Questions, QuestionsUserMap, CategoryUserMap, QuestionAttempts, KCsQuestionsMap
 from users.models  import User
-from courses.models   import Courses, CoursesStudentsMap
+from courses.models   import Courses, CoursesUserMap
 
 
 class AnalyzerSimple(APIView):

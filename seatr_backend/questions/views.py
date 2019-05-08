@@ -1,17 +1,15 @@
-from rest_framework          import generics, status, exceptions
-from rest_framework.views    import APIView
-from rest_framework.response import Response
+from rest_framework                  import generics, status, exceptions
+from rest_framework.views            import APIView
+from rest_framework.response         import Response
 
 # import the models
-from questions.models import Questions, Category, QuestionsStudentsMap, QuestionAttempts, KCsStudentsMap, KCsQuestionsMap, KCs
+from questions.models import Questions, Category, QuestionsUserMap, QuestionAttempts, KCsUserMap, KCsQuestionsMap, KCs
 from users.models  import User
 
 # import the serializers
 from questions.serializers import QuestionsSerializer, KCsSerializer
 
-
 from collections import defaultdict
-
 
 class ListCreateQuestions(generics.ListCreateAPIView):
     queryset         = Questions.objects.all()
@@ -26,20 +24,21 @@ class ListCreateKCs(generics.ListCreateAPIView):
 
 
 class UpdateCreateStatus(APIView):
+    # populates/updates the QuestionsStudentsMap table
     def post(self, request, format=None):
-        STUDIED = 1
-        CORRECT = 2
-        INCORRECT = 3
+        STUDIED   = 0
+        CORRECT   = 1
+        INCORRECT = 2
         try:
             questionExternalId = int(request.data.get('external_task_id'))
             studentExternalId  = int(request.data.get('external_student_id'))
             _status            = request.data.get('status')
             if _status == "studied":
-                _status = 1
+                _status = STUDIED
             elif _status == "correct":
-                _status = 2
+                _status = CORRECT
             else:
-                _status = 3
+                _status = INCORRECT
         except TypeError as e:
             raise TypeError("POST parameters can't be None") from e
         except ValueError as e:
@@ -47,7 +46,7 @@ class UpdateCreateStatus(APIView):
 
         # get the student.id, question.id, from the externalIds
         try:
-            questions = Questions.objects.filter(external_id=questionExternalId)
+            questions = Questions.objects.get(external_id=questionExternalId)
         except Questions.DoesNotExist:
             raise exceptions.NotFound("question_external_id " + str(questionExternalId) + " is invalid")
         try:
@@ -55,11 +54,11 @@ class UpdateCreateStatus(APIView):
         except Students.DoesNotExist:
             raise exceptions.NotFound("student_external_id " + str(studentExternalId) + " is invalid")
 
-        for question in questions:
-            questionStudentMap = QuestionsStudentsMap.objects.get_or_create(student=student, question=question)
-            if questionStudentMap[1] is True or questionStudentMap[0].status is None or questionStudentMap[0].status == INCORRECT:
-                questionStudentMap[0].status = _status
-                questionStudentMap[0].save()
+        questionStudentMap = QuestionsStudentsMap.objects.get_or_create(student=student, question=question)
+        created = True if questionStudentMap[1] is True else False
+        if created is True or questionStudentMap[0].status is not CORRECT:
+            questionStudentMap[0].status = _status
+            questionStudentMap[0].save()
 
         return Response({
             "text": "entry created"
@@ -80,7 +79,7 @@ class MarkQuestionInteraction(APIView):
     # it does the following:
     # 1. unlocking categories, marking subcategories familiar: when student interacts with a question, the status might change ie. unstudied -> correct, incorrect -> correct etc depending upon the interaction, new categories might be unlocked and subcategories might change to familiar
     def post(self, request, format=None):
-        username   = request.user.username
+        username   = int(request.user.external_id)
         _status    = int(request.query_params.get('status', None))
         studentId  = int(request.query_params.get('external_student_id', None))
         courseId   = int(request.query_params.get('external_course_id',  None))

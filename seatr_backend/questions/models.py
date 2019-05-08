@@ -11,21 +11,25 @@ class Category(models.Model):
     external_id = models.IntegerField(primary_key=True)
     parent_id   = models.IntegerField(default=-1, null=False)
     order       = models.IntegerField(default=1,  null=False)
-    course      = models.ForeignKey(coursesModel.Courses, on_delete=models.PROTECT)
 
 
 # explicit primary_key added to keep seatr in sync with ope
 class Questions(models.Model):
     external_id = models.IntegerField(primary_key=True)
-    category    = models.ForeignKey(Category, on_delete=models.PROTECT, related_name='questions')
     
 
 class KCs(models.Model):
     pass
 
+
 #### TODO: move this to mongo
 class QuestionAttempts(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.PROTECT)
+
+
+class QuestionsCategoryMap(models.Model):
+    question = models.ForeignKey(Questions, on_delete=models.PROTECT)
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
 
 
 STATUS_CHOICES = (
@@ -71,3 +75,8 @@ class KCsQuestionsMap(models.Model):
 class CoursesKcsMap(models.Model):
     course = models.ForeignKey(coursesModel.Courses, on_delete=models.PROTECT)
     kc     = models.ForeignKey(KCs, on_delete=models.PROTECT)
+
+
+class CategoryCourseMap(models.Model):
+    category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    course   = models.ForeignKey(coursesModel.Courses, on_delete=models.PROTECT)
