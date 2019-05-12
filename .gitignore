@@ -8,3 +8,4 @@ seatr_backend/scripts/csvDumps/
 *temp*
 *.DS_Store
 *.swp
+db.sqlite3

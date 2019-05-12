@@ -4,7 +4,7 @@ from users  import models as usersModel
 
 
 class Courses(models.Model):
-    external_id = models.IntegerField(unique=True, null=False)
+    external_id = models.IntegerField(primary_key=True, unique=True, null=False)
     description = models.CharField(null=True, max_length=2000)
 
 

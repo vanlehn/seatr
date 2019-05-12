@@ -6,9 +6,9 @@ import pymysql.cursors
 
 
 class Command(BaseCommand):
-    help     = '                                            \
-                    populate SEATR Category from OPE Category \
-                    takes in the class id as an argument \
+    help     = '                                                                            \
+                    populate SEATR Category from OPE Category                               \
+                    takes in the class id as an argument                                    \
                     algorithm: takes ope_class_45.category and populates the seatr.Category \
                 '
     usage    = 'python manage.py populateCategoriesFromOPE 45'

@@ -19,7 +19,8 @@ class Questions(models.Model):
     
 
 class KCs(models.Model):
-    pass
+    external_id = models.IntegerField(primary_key=True)
+    importance  = models.IntegerField(null=True)
 
 
 #### TODO: move this to mongo
@@ -27,9 +28,10 @@ class QuestionAttempts(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.PROTECT)
 
 
-class QuestionsCategoryMap(models.Model):
+class QuestionsCategoryCourseMap(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.PROTECT)
     category = models.ForeignKey(Category, on_delete=models.PROTECT)
+    course   = models.ForeignKey(coursesModel.Courses, on_delete=models.PROTECT)
 
 
 STATUS_CHOICES = (
@@ -56,9 +58,9 @@ class CategoryUserMap(models.Model):
     status      = models.IntegerField(choices=STATUS_CHOICES, default=0, null=False)
 
 
-class CoursesQuestionsMap(models.Model):
-    course   = models.ForeignKey(coursesModel.Courses, on_delete=models.PROTECT)
-    question = models.ForeignKey(questionsModel.Questions, on_delete=models.PROTECT)
+# class CoursesQuestionsMap(models.Model):
+#     course   = models.ForeignKey(coursesModel.Courses, on_delete=models.PROTECT)
+#     question = models.ForeignKey(questionsModel.Questions, on_delete=models.PROTECT)
 
 
 class KCsUserMap(models.Model):
