@@ -1,7 +1,7 @@
 from rest_framework                  import serializers
 from rest_framework.authtoken.models import Token
 
-from users.models import User
+from users.models import User, Platform
 
 
 class UsersSerializer(serializers.ModelSerializer):
@@ -20,3 +20,15 @@ class UsersSerializer(serializers.ModelSerializer):
 #     class Meta:
 #         model  = Token
 #         fields = ('user', )
+
+class PlatformSerializer(serializers.ModelSerializer):
+    class Meta:
+        model  = Platform
+        fields = ("username", "password")
+    
+        def create(self, validated_data):
+            password = validated_data.pop('password')
+            platform = Platform(**validated_data)
+            platform.set_password(password)
+            platform.save()
+            return platform

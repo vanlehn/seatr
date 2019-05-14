@@ -1,31 +1,29 @@
-from django.db                  import models
-from django.conf                import settings
-from django.contrib.auth.models import AbstractUser
+from django.db                       import models
+from django.conf                     import settings
+from django.contrib.auth.models      import AbstractUser
+from rest_framework.authtoken.models import Token
+from django.dispatch                 import receiver
+from django.db.models.signals        import post_save
 
-
-class User(AbstractUser):
-    # username by default is unique and can't be null, overwritten here
-    username    = models.CharField(blank=True, null=True, max_length=150)
-    email       = models.EmailField(null=True, blank=True)
-    external_id = models.IntegerField(primary_key=True, null=False, unique=True)
-
-    USERNAME_FIELD = 'external_id'
-    # the fields that are required by the createsuperuser command, username is must
-    REQUIRED_FIELDS = ['username', 'email']
-
-    def __str__(self):
-        return str(self.external_id) + " " + self.username +  " " + self.email
-
-
-# additional fields specified here, for future use
 ROLES =(
     (0, "user"),
     (1, "professor"),
     (2, "admin")
 )
-class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='user_profile')
-    role = models.IntegerField(choices=ROLES, null=False, default=0)
+class User(models.Model):
+    external_id = models.IntegerField(primary_key=True, null=False, unique=True)
+    role        = models.IntegerField(choices=ROLES, null=False, default=0)
+    
+
+@receiver(post_save, sender=settings.AUTH_USER_MODEL)
+def create_auth_token(sender, instance=None, created=False, **kwargs):
+    if created:
+        Token.objects.create(user=instance)
+class Platform(AbstractUser):
+    pass
+
+
+
 
 
     
