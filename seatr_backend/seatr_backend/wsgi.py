@@ -9,7 +9,11 @@ https://docs.djangoproject.com/en/2.1/howto/deployment/wsgi/
 
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'seatr_backend.settings.dev')
+if "PROD" in os.environ:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'seatr_backend.settings.production')
+else:
+    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'seatr_backend.settings.dev')
+
 
 from django.core.wsgi import get_wsgi_application
 

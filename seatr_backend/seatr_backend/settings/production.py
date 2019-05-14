@@ -4,6 +4,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = ["*"]
 
+print("\n\n****** running in production environment ******\n\n")
+
 DATABASES = {
     # default db is the SEATR database
     'default': {
