@@ -26,9 +26,9 @@ class PlatformSerializer(serializers.ModelSerializer):
         model  = Platform
         fields = ("username", "password")
     
-        def create(self, validated_data):
-            password = validated_data.pop('password')
-            platform = Platform(**validated_data)
-            platform.set_password(password)
-            platform.save()
-            return platform
+    def create(self, validated_data):
+        password = validated_data.pop('password')
+        platform = Platform(**validated_data)
+        platform.set_password(password)
+        platform.save()
+        return platform
