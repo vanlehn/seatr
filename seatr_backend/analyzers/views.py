@@ -77,22 +77,22 @@ class AnalyzerSimple(APIView):
 
         # 1. find the kcs of all the possibleQuestionIds
         kcsPossibleQuestions =  KCsQuestionsMap.objects.filter(question_id__in=possibleQuestionIds)
-        
+
         # 2. find the priority of the kcs of the user
         kcsStudent = KCsUserMap.objects.filter(user_id=userId)
         studentKcPriorityMap = defaultdict(int)
         for x in kcsStudent:
             studentKcPriorityMap[x.kc_id] = x.priority
-
-
+        
         # 3. for each kcsPossibleQuestion in kcsPossibleQuestions, find priority of the question
         # kcScoreMap stores the scores of the {kc} = score
         questionPriorityMap   = defaultdict(int)
         questionComplexityMap = defaultdict(int)
         for x in kcsPossibleQuestions:
-            kc = x.kc
-            questionPriorityMap[x.question_id]    = max(questionPriorityMap[x.question_id], studentKcPriorityMap[kc])
-            questionComplexityMap[x.question_id] += studentKcPriorityMap[kc]
+            kcId = x.kc_id
+            questionPriorityMap[x.question_id]    = max(questionPriorityMap[x.question_id], studentKcPriorityMap[kcId])
+            questionComplexityMap[x.question_id] += studentKcPriorityMap[kcId]
+
 
         if len(questionPriorityMap.keys()) <= 5:
             return Response({
@@ -118,8 +118,8 @@ class AnalyzerSimple(APIView):
 
         # now get the questions with minimal complexity from the above
         finalQuestions = []
-        for question in priorityQuestions:
-            finalQuestions.append((questionComplexityMap[question], question))
+        for questionIds in priorityQuestions:
+            finalQuestions.append((questionComplexityMap[questionIds], questionIds))
         finalQuestions.sort()
         answer = [x[1] for x in finalQuestions]
 
@@ -131,7 +131,7 @@ class AnalyzerSimple(APIView):
             for kc in importanceKcs:
                 kcImportanceMap[kc.external_id] = kc.importance
                 
-            kcs    = KCsQuestionsMap.objects.filter(question__in=answer)
+            kcs    = KCsQuestionsMap.objects.filter(question_id__in=answer)
             answer = []
             for kc in kcs:
                 answer.append((kcImportanceMap[kc.kc_id], kc.question_id))
