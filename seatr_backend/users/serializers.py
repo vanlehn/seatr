@@ -10,17 +10,6 @@ class UsersSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-# class TokenSerializer(serializers.ModelSerializer):
-#     # user = UsersSerializer(read_only=True)
-#     def getUser(self, obj):
-#         uid = self.context['request'].POST["external_id"]
-#         return UsersSerializer.data()
-    
-#     user = serializers.SerializerMethodField('getUser')
-#     class Meta:
-#         model  = Token
-#         fields = ('user', )
-
 class PlatformSerializer(serializers.ModelSerializer):
     class Meta:
         model  = Platform
@@ -32,3 +21,11 @@ class PlatformSerializer(serializers.ModelSerializer):
         platform.set_password(password)
         platform.save()
         return platform
+    
+    # TODO: doesn't work for some reason, says PUT not allowed
+    def update(self, instance, validated_data):
+        password = validated_data.pop('new_password')
+        # platform = Platform.objects.get(validated_data.get('username'))
+        instance.set_password(password)
+        instance.save()
+        return instance

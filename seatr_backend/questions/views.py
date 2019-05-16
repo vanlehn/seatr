@@ -78,10 +78,11 @@ class MarkQuestionInteraction(APIView):
     # it does the following:
     # 1. unlocking categories, marking subcategories familiar: when student interacts with a question, the status might change ie. unstudied -> correct, incorrect -> correct etc depending upon the interaction, new categories might be unlocked and subcategories might change to familiar
     def post(self, request, format=None):
-        userId     = int(request.user.external_id)
-        _status    = int(request.query_params.get('status', None))
-        courseId   = int(request.query_params.get('external_course_id',  None))
-        questionId = int(request.query_params.get('external_question_id',  None))
+        print(request.data)
+        userId     = int(request.data.get('external_student_id', None))
+        _status    = int(request.data.get('status', None))
+        courseId   = int(request.data.get('external_course_id',  None))
+        questionId = int(request.data.get('external_task_id',  None))
 
         if _status not in [STUDIED, CORRECT, INCORRECT]:
             return Response({
@@ -89,14 +90,14 @@ class MarkQuestionInteraction(APIView):
             }, status=status.HTTP_417_EXPECTATION_FAILED)
         
         # mark that the question has been attempted
-        QuestionAttempts.objects.create(question=questionId)
+        QuestionAttempts.objects.create(question_id=questionId)
         
         # canChanged answers the question-- Can this interaction potentially "unlock" a new category or make a subcategory "familiar"?
         # this can only happen if the question is a new question ie. is being stdudied or attempted (either correctly or incorrectly) the first time
         canChange = False
         # see if the student has studied/attempted this question before
         try:
-            questionsUserMap = QuestionsUserMap.objects.get(student=studentId, course=courseId, question=questionId)
+            questionsUserMap = QuestionsUserMap.objects.get(user_id=userId, course_id=courseId, question_id=questionId)
             currentStatus    = questionsUserMap.status
         except:
             currentStatus    = None
@@ -131,13 +132,15 @@ class MarkQuestionInteraction(APIView):
                         "msg": "the student studied the question again" 
                     }, status=status.HTTP_200_OK)
 
-                
+        if currentStatus is None:
+            questionsUserMap = QuestionsUserMap(user_id=userId, course_id=courseId, question_id=questionId)
         questionsUserMap.status = _status
-        questionsUserMap.save(update_fields=['status'])
+        # questionsUserMap.save(update_fields=['status'])
+        questionsUserMap.save()
         
         if canChange is False:
             return Response({
-                "msg": "the question:" +  questionId + " " + "was previously studied or attempted (correctly/incorrectly)"
+                "msg": "the question:" +  str(questionId) + " " + "was previously studied or attempted (correctly/incorrectly)"
             }, status=status.HTTP_201_CREATED)
 
         
@@ -156,14 +159,14 @@ class MarkQuestionInteraction(APIView):
         subCategoryQuestions = set(QuestionsCategoryCourseMap.objects.filter(category__in=subCategories, course_id=courseId))
 
         # get all the questions answered correctly, incorrectly or studied by the user
-        userQuestions = set(QuestionsUserMap.objects.filter(student_id=userId, course_id=courseId))
+        userQuestions = set(QuestionsUserMap.objects.filter(user_id=userId, course_id=courseId))
 
         # intersection of questions solved by student and questions in the current category
         combinedQuestions = userQuestions.intersection(subCategoryQuestions)
 
         # unlock the category of 3 or more questions from that category solved
         if len(combinedQuestions) >= 3:
-            x = CategoryUserMap.objects.get(student_id=studentId, category_id=categoryId)
+            x = CategoryUserMap.objects.get(user_id=userId, category_id=categoryId)
             x.status = UNLOCKED
             x.save(update_fields=["status"])
         

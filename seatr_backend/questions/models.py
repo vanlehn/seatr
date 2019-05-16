@@ -43,6 +43,7 @@ class QuestionsUserMap(models.Model):
     user     = models.ForeignKey(usersModel.User, on_delete=models.PROTECT)
     question = models.ForeignKey(Questions, on_delete=models.PROTECT)
     status   = models.IntegerField(choices=STATUS_CHOICES, default=0, null=False)
+    course   = models.ForeignKey(coursesModel.Courses, on_delete=models.PROTECT)
 
 
 #### TODO: categories should have "locked", "unlocked"; subcategories should have "familiar", "unfamiliar"

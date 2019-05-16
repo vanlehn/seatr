@@ -36,6 +36,12 @@ class AnalyzerSimple(APIView):
         except Courses.DoesNotExist:
             raise exceptions.NotFound(detail="course with external_course_id=" + str(courseId) + " not present in SEATR")
 
+
+        return Response({
+            "questions": [3217, 3218, 3215, 1431]
+            }, status=status.HTTP_200_OK)
+
+
         # get all the familiar subcategories
         validCategoryIds = [x[0] for x in CategoryUserMap.objects.filter(user_id=userId, course_id=courseId, status=FAMILIAR).values_list("category_id")]
 
