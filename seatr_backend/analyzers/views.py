@@ -18,7 +18,6 @@ UNFAMILIAR = 3
 
 class AnalyzerSimple(APIView):
 
-
     def get(self, request):
         # get the GET data: studentId and courseId given by OPE
         try:
@@ -35,20 +34,43 @@ class AnalyzerSimple(APIView):
             Courses.objects.get(external_id=courseId)
         except Courses.DoesNotExist:
             raise exceptions.NotFound(detail="course with external_course_id=" + str(courseId) + " not present in SEATR")
-
-
-        return Response({
-            "questions": [3217, 3218, 3215, 1431]
-            }, status=status.HTTP_200_OK)
-
-
+        
         # get all the familiar subcategories
-        validCategoryIds = [x[0] for x in CategoryUserMap.objects.filter(user_id=userId, course_id=courseId, status=FAMILIAR).values_list("category_id")]
+        validCategoryIds = [x[0] for x in CategoryUserMap.objects.filter(user_id=userId, status=FAMILIAR).values_list("category_id")]
+
+        # find the edge sub-category
+        validCategoryIds.sort()
+        if len(validCategoryIds) > 0:
+            try:
+                i = 1
+                # subCategory may be category, in that case fetch the next Category 
+                subCategory = Category.objects.get(external_id=validCategoryIds[-1] + i)
+                while subCategory.parent_id == -1:
+                    i += 1
+                    subCategory = Category.objects.get(external_id=validCategoryIds[-1] + i)
+            except:
+                # all Categories have been exhausted and still no sub-category found
+                subCategory = None
+
+        # mark the first sub-category as familiar 
+        else:
+            i = 1
+            subCategory = Category.objects.get(external_id=i)
+            while subCategory.parent_id == -1:
+                subCategory.status = UNLOCKED
+                i += 1
+                subCategory = Category.objects.get(external_id=i)
+        
+        if subCategory:
+            subCategory.status = FAMILIAR
+            validCategoryIds.append(subCategory.external_id)
+        
+        print(validCategoryIds)
 
         # get the recent Questions
-        recentAttempts = [x[0] for x in QuestionAttempts.objects.all().values_list("question_id")]
-        if recentAttempts >= 8:
-            recentAttempts = recentAttempts[-7]
+        recentAttempts = [x[0] for x in QuestionAttempts.objects.all().order_by("id").values_list("question_id")]
+        if len(recentAttempts) >= 8:
+            recentAttempts = recentAttempts[-7:]
 
         # get all the questions from the subcategories minus the recent attempts
         possibleQuestionIds = QuestionsCategoryCourseMap.objects.filter(category_id__in=validCategoryIds).exclude(question_id__in=recentAttempts).values_list("question_id")
@@ -57,7 +79,7 @@ class AnalyzerSimple(APIView):
         kcsPossibleQuestions =  KCsQuestionsMap.objects.filter(question_id__in=possibleQuestionIds)
         
         # 2. find the priority of the kcs of the user
-        kcsStudent = KCsStudentsMap.objects.filter(student_id=studentId)
+        kcsStudent = KCsUserMap.objects.filter(user_id=userId)
         studentKcPriorityMap = defaultdict(int)
         for x in kcsStudent:
             studentKcPriorityMap[x.kc_id] = x.priority
@@ -65,8 +87,8 @@ class AnalyzerSimple(APIView):
 
         # 3. for each kcsPossibleQuestion in kcsPossibleQuestions, find priority of the question
         # kcScoreMap stores the scores of the {kc} = score
-        questionPriorityMap   = defaultdict(lambda: defaultdict(int))
-        questionComplexityMap = defaultdict(lambda: defaultdict(int))
+        questionPriorityMap   = defaultdict(int)
+        questionComplexityMap = defaultdict(int)
         for x in kcsPossibleQuestions:
             kc = x.kc
             questionPriorityMap[x.question_id]    = max(questionPriorityMap[x.question_id], studentKcPriorityMap[kc])
