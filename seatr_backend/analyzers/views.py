@@ -15,6 +15,7 @@ LOCKED     = 0
 UNLOCKED   = 1
 FAMILIAR   = 2
 UNFAMILIAR = 3
+EDGE       = 4
 
 class AnalyzerSimple(APIView):
 
@@ -25,52 +26,55 @@ class AnalyzerSimple(APIView):
             userId   = int(request.query_params.get('external_user_id',  None))
             courseId = int(request.query_params.get('external_course_id',  None))
         except TypeError as e:
-            raise TypeError("external_course_id can't be None") from e
+            raise TypeError("external_course_id and external_user_id can't be None") from e
         except ValueError as e:
-            raise ValueError("the data type of external_course_id is incorrect") from e
+            raise ValueError("the data type of external_course_id or external_user_id is incorrect") from e
 
         # check if course with courseId exists
         try:
             Courses.objects.get(external_id=courseId)
         except Courses.DoesNotExist:
             raise exceptions.NotFound(detail="course with external_course_id=" + str(courseId) + " not present in SEATR")
-        
+
+        # check if the user with userId exists
+        try:
+            User.objects.get(external_id=userId)
+        except User.DoesNotExist:
+            raise exceptions.NotFound(detail="user with external_user_id=" + str(userId) + " not present in SEATR")
+
         # get all the familiar subcategories
-        validCategoryIds = [x[0] for x in CategoryUserMap.objects.filter(user_id=userId, status=FAMILIAR).values_list("category_id")]
+        validCategoryIds = sorted([x[0] for x in CategoryUserMap.objects.filter(user_id=userId, status=FAMILIAR).values_list("category_id")])
 
         # find the edge sub-category
-        validCategoryIds.sort()
-        if len(validCategoryIds) > 0:
+        # edge subcategory exists
+        try:
+            edgeCategory = CategoryUserMap.objects.get(user_id=userId, status=EDGE)
+        # edge subcategory doesn't exist
+        except:
             try:
+                edgeCategory = None
                 i = 1
-                # subCategory may be category, in that case fetch the next Category 
-                subCategory = Category.objects.get(external_id=validCategoryIds[-1] + i)
-                while subCategory.parent_id == -1:
+                while edgeCategory is None or edgeCategory.parent_id == -1:
+                    if len(validCategoryIds) == 0:
+                        edgeCategory = Category.objects.get(external_id=i)
+                    else:
+                        edgeCategory = Category.objects.get(external_id=validCategoryIds[-1] + i)
                     i += 1
-                    subCategory = Category.objects.get(external_id=validCategoryIds[-1] + i)
+                edgeCategory = CategoryUserMap(status=EDGE, user_id=userId, category=edgeCategory)
+                edgeCategory.save()
             except:
-                # all Categories have been exhausted and still no sub-category found
-                subCategory = None
-
-        # mark the first sub-category as familiar 
-        else:
-            i = 1
-            subCategory = Category.objects.get(external_id=i)
-            while subCategory.parent_id == -1:
-                subCategory.status = UNLOCKED
-                i += 1
-                subCategory = Category.objects.get(external_id=i)
-        
-        if subCategory:
-            subCategory.status = FAMILIAR
-            validCategoryIds.append(subCategory.external_id)
-        
-        print(validCategoryIds)
-
+                edgeCategory = None
+        finally:
+            if edgeCategory is not None:
+                validCategoryIds.append(edgeCategory.category_id)
+                
         # get the recent Questions
         recentAttempts = [x[0] for x in QuestionAttempts.objects.all().order_by("id").values_list("question_id")]
         if len(recentAttempts) >= 8:
             recentAttempts = recentAttempts[-7:]
+        
+        print("recentAttempts")
+        print(recentAttempts)
 
         # get all the questions from the subcategories minus the recent attempts
         possibleQuestionIds = QuestionsCategoryCourseMap.objects.filter(category_id__in=validCategoryIds).exclude(question_id__in=recentAttempts).values_list("question_id")

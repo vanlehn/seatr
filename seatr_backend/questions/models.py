@@ -51,7 +51,9 @@ STATUS_CHOICES = (
     (0, "locked"),
     (1, "unlocked"),
     (2, "familiar"),
-    (3, "unfamiliar")
+    (3, "unfamiliar"),
+    (4, "edge")
+
 )
 class CategoryUserMap(models.Model):
     user        = models.ForeignKey(usersModel.User, on_delete=models.PROTECT)
