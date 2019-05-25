@@ -78,7 +78,6 @@ class MarkQuestionInteraction(APIView):
     # it does the following:
     # 1. unlocking categories, marking subcategories familiar: when student interacts with a question, the status might change ie. unstudied -> correct, incorrect -> correct etc depending upon the interaction, new categories might be unlocked and subcategories might change to familiar
     def post(self, request, format=None):
-        print(request.data)
         userId     = int(request.data.get('external_student_id', None))
         _status    = int(request.data.get('status', None))
         courseId   = int(request.data.get('external_course_id',  None))
@@ -222,7 +221,7 @@ class MarkQuestionInteraction(APIView):
 
         # create question -> kc map
         questionsKcMap  = defaultdict(set)
-        kCsQuestionsMap = KCsQuestionsMap.objects.filter(question_id__in=questions)
+        kCsQuestionsMap = KCsQuestionsMap.objects.filter(question_id__in=questionIds)
         for x in kCsQuestionsMap:
             questionsKcMap[x.question_id].add(x.kc_id)
 
