@@ -91,7 +91,7 @@ class MarkQuestionInteraction(APIView):
         # mark that the question has been attempted
         QuestionAttempts.objects.create(question_id=questionId)
         
-        # canChanged answers the question-- Can this interaction potentially "unlock" a new category or make a subcategory "familiar"?
+        # canChange answers the question-- Can this interaction potentially "unlock" a new category or make a subcategory "familiar"?
         # this can only happen if the question is a new question ie. is being stdudied or attempted (either correctly or incorrectly) the first time
         canChange = False
         # see if the student has studied/attempted this question before
@@ -134,7 +134,6 @@ class MarkQuestionInteraction(APIView):
         if currentStatus is None:
             questionsUserMap = QuestionsUserMap(user_id=userId, course_id=courseId, question_id=questionId)
         questionsUserMap.status = _status
-        # questionsUserMap.save(update_fields=['status'])
         questionsUserMap.save()
         
         if canChange is False:
@@ -250,10 +249,10 @@ class MarkQuestionInteraction(APIView):
                 familiarCategories.append(categoryId)
 
         # update the status of familiar sub-categories
-        categories = Category.objects.filter(external_id__in=familiarCategories)
+        categories = CategoryUserMap.objects.filter(category_id__in=familiarCategories)
         for category in categories:
             category.status = FAMILIAR
-        Category.objects.bulk_update(categories, ["status"])
+        CategoryUserMap.objects.bulk_update(categories, ["status"])
 
         return Response({
             "msg": "all tables updated"
