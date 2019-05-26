@@ -147,20 +147,19 @@ class MarkQuestionInteraction(APIView):
         # check if due to the new interaction any category gets unlocked
         # get the sub-category and category of the question
         questionsCategoryCourseMap = QuestionsCategoryCourseMap.objects.get(question_id=questionId, course_id=courseId)
-        subCategory                = questionsCategoryCourseMap.category
-        categoryId                 = subCategory.parent_id
+        categoryId                 = questionsCategoryCourseMap.category.parent_id
 
-        print("subCategory", subCategory, "categoryId", categoryId)
+        print("categoryId", categoryId)
 
         # see if the new interaction changes the status of the category and subcategory
         # get all questions solved by user in that category
         # find all the subCategories of the category 
-        subCategories  = Category.objects.filter(parent_id=categoryId).values_list("external_id")
+        subCategoryIds  = Category.objects.filter(parent_id=categoryId).values_list("external_id")
 
-        print("subCategories", subCategories)
+        print("subCategories", subCategoryIds)
 
         # get all the questions in the subcategories
-        subCategoryQuestionIds = set(QuestionsCategoryCourseMap.objects.filter(category_id__in=subCategories, course_id=courseId).values_list("question_id"))
+        subCategoryQuestionIds = set(QuestionsCategoryCourseMap.objects.filter(category_id__in=subCategoryIds, course_id=courseId).values_list("question_id"))
 
         print("subCategoryQuestionIds", subCategoryQuestionIds)
 
