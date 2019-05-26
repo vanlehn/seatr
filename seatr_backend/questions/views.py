@@ -164,16 +164,14 @@ class MarkQuestionInteraction(APIView):
         # intersection of question ids solved by student and questions in the current category
         combinedQuestions = userQuestionIds.intersection(subCategoryQuestionIds)
 
-
-        print("$$$$$", subCategoryQuestionIds)
-        print("#####", userQuestionIds)
-        print("*****", combinedQuestions)
-
         # unlock the category of 3 or more questions from that category solved
         if len(combinedQuestions) >= 3:
-            x = CategoryUserMap.objects.get(user_id=userId, category_id=categoryId)
+            try:
+                x = CategoryUserMap.objects.get(user_id=userId, category_id=categoryId)
+            except:
+                x = CategoryUserMap.objects.create(user_id=userId, category_id=categoryId)
             x.status = UNLOCKED
-            x.save(update_fields=["status"])
+            x.save()
         
         # get all the kc_ids that the question involved
         kcsQuestionIds = [x[0] for x in  KCsQuestionsMap.objects.filter(question_id=questionId).values_list("kc_id")]
