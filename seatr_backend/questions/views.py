@@ -150,19 +150,29 @@ class MarkQuestionInteraction(APIView):
         subCategory                = questionsCategoryCourseMap.category
         categoryId                 = subCategory.parent_id
 
+        print("subCategory", subCategory, "categoryId", categoryId)
+
         # see if the new interaction changes the status of the category and subcategory
         # get all questions solved by user in that category
         # find all the subCategories of the category 
-        subCategories  = Category.objects.filter(parent_id=categoryId)
+        subCategories  = Category.objects.filter(parent_id=categoryId).values_list("external_id")
+
+        print("subCategories", subCategories)
 
         # get all the questions in the subcategories
-        subCategoryQuestionIds = set(QuestionsCategoryCourseMap.objects.filter(category__in=subCategories, course_id=courseId).values_list("question_id"))
+        subCategoryQuestionIds = set(QuestionsCategoryCourseMap.objects.filter(category_id__in=subCategories, course_id=courseId).values_list("question_id"))
+
+        print("subCategoryQuestionIds", subCategoryQuestionIds)
 
         # get all the questions answered correctly, incorrectly or studied by the user
         userQuestionIds = set(QuestionsUserMap.objects.filter(user_id=userId, course_id=courseId).values_list("question_id"))
 
+        print("userQuestionIds", userQuestionIds)
+
         # intersection of question ids solved by student and questions in the current category
         combinedQuestions = userQuestionIds.intersection(subCategoryQuestionIds)
+
+        print("combinedQuestions", combinedQuestions)
 
         # unlock the category of 3 or more questions from that category solved
         if len(combinedQuestions) >= 3:
