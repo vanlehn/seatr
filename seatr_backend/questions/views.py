@@ -78,10 +78,12 @@ class MarkQuestionInteraction(APIView):
     # it does the following:
     # 1. unlocking categories, marking subcategories familiar: when student interacts with a question, the status might change ie. unstudied -> correct, incorrect -> correct etc depending upon the interaction, new categories might be unlocked and subcategories might change to familiar
     def post(self, request, format=None):
+        print("*****", request.data)
+
         userId     = int(request.data.get('external_student_id', None))
         _status    = int(request.data.get('status', None))
         courseId   = int(request.data.get('external_course_id',  None))
-        questionId = int(request.data.get('external_task_id',  None))
+        questionId = int(request.data.get('external_task_id', None))
 
         if _status not in [STUDIED, CORRECT, INCORRECT]:
             return Response({
@@ -154,13 +156,18 @@ class MarkQuestionInteraction(APIView):
         subCategories  = Category.objects.filter(parent_id=categoryId)
 
         # get all the questions in the subcategories
-        subCategoryQuestions = set(QuestionsCategoryCourseMap.objects.filter(category__in=subCategories, course_id=courseId))
+        subCategoryQuestionIds = set(QuestionsCategoryCourseMap.objects.filter(category__in=subCategories, course_id=courseId).values_list("question_id"))
 
         # get all the questions answered correctly, incorrectly or studied by the user
-        userQuestions = set(QuestionsUserMap.objects.filter(user_id=userId, course_id=courseId))
+        userQuestionIds = set(QuestionsUserMap.objects.filter(user_id=userId, course_id=courseId).values_list("question_id"))
 
-        # intersection of questions solved by student and questions in the current category
-        combinedQuestions = userQuestions.intersection(subCategoryQuestions)
+        # intersection of question ids solved by student and questions in the current category
+        combinedQuestions = userQuestionIds.intersection(subCategoryQuestionIds)
+
+
+        print("$$$$$", userQuestions)
+        print(combinedQuestions)
+        print("*****", combinedQuestions)
 
         # unlock the category of 3 or more questions from that category solved
         if len(combinedQuestions) >= 3:
