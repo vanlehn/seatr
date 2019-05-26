@@ -254,7 +254,7 @@ class MarkQuestionInteraction(APIView):
             for kcId in kcIds:
                 if kcPriorityMap[kcId] == 5:
                     priority5 += 1
-            if priority5 / total * 1.0 <= 0.05:
+            if priority5 / total * 1.0 <= 0.5:
                 familiarCategories.append(categoryId)
 
         print("familiarCategories", familiarCategories)
