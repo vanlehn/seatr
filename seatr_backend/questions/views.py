@@ -181,6 +181,9 @@ class MarkQuestionInteraction(APIView):
         for x in KCsUserMap.objects.filter(user_id=userId).values_list("kc_id", "priority"):
             kcPriorityMap[x[0]] = x[1]
 
+        # find the KCs which weren't studied, correct or incorrect but due to this interaction have been interacted with
+        newKcs = list(set([x[0] for x in KCsUserMap.objects.filter(user_id=userId, priority=5, kc_id__in=kcsQuestionIds).values_list("kc_id")]))
+
         # update the KCsStudentsMap
         # 1. get all the kc ids associated with the interacted question => kcsQuestionIds
         # 2. for each kc, check if the priority changes using the following matrix conversionMatrix[currPriority][currResponse]
@@ -210,9 +213,8 @@ class MarkQuestionInteraction(APIView):
         # get all the KCs of the combinedQuestions
 
 
-        ###### BUG
         # 1. find the KCs which weren't studied, correct or incorrect but due to this interaction have been interacted with
-        newKcs = list(set([x[0] for x in KCsUserMap.objects.filter(user_id=userId).exclude(kc_id__in=kcsQuestionIds).values_list("kc_id")]))
+        # newKcs has these values 
         
         # 2. find all Questions which involve these new KCs
         questionIds = list(set([x[0] for x in KCsQuestionsMap.objects.filter(kc__in=newKcs).values_list('question_id')]))
@@ -255,6 +257,7 @@ class MarkQuestionInteraction(APIView):
             if priority5 / total * 1.0 <= 0.05:
                 familiarCategories.append(categoryId)
 
+        print("#####", familiarCategories)
         # update the status of familiar sub-categories
         categories = CategoryUserMap.objects.filter(category_id__in=familiarCategories)
         for category in categories:
