@@ -258,6 +258,9 @@ class MarkQuestionInteraction(APIView):
                 familiarCategories.append(categoryId)
 
         print("#####", familiarCategories)
+        print("!!!!!", questionsKcMap)
+        print("~~~~~", categoryQuestionMap)
+        print("$$$$$", categoryKcMap)
         # update the status of familiar sub-categories
         categories = CategoryUserMap.objects.filter(category_id__in=familiarCategories)
         for category in categories:
