@@ -165,8 +165,8 @@ class MarkQuestionInteraction(APIView):
         combinedQuestions = userQuestionIds.intersection(subCategoryQuestionIds)
 
 
-        print("$$$$$", userQuestions)
-        print(combinedQuestions)
+        print("$$$$$", subCategoryQuestionIds)
+        print("#####", userQuestionIds)
         print("*****", combinedQuestions)
 
         # unlock the category of 3 or more questions from that category solved
