@@ -150,31 +150,36 @@ class MarkQuestionInteraction(APIView):
         categoryId                 = questionsCategoryCourseMap.category.parent_id
 
         print("categoryId", categoryId)
+        print("\n")
 
         # see if the new interaction changes the status of the category and subcategory
         # get all questions solved by user in that category
         # find all the subCategories of the category 
         subCategoryIds  = Category.objects.filter(parent_id=categoryId).values_list("external_id")
 
-        print("subCategories", subCategoryIds)
+        print("subCategoryIds", subCategoryIds)
+        print("\n")
 
         # get all the questions in the subcategories
-        subCategoryQuestionIds = set(QuestionsCategoryCourseMap.objects.filter(category_id__in=subCategoryIds, course_id=courseId).values_list("question_id"))
+        subCategoryQuestionIds = set([x[0] for x in QuestionsCategoryCourseMap.objects.filter(category_id__in=subCategoryIds, course_id=courseId).values_list("question_id")])
 
         print("subCategoryQuestionIds", subCategoryQuestionIds)
+        print("\n")
 
         # get all the questions answered correctly, incorrectly or studied by the user
-        userQuestionIds = set(QuestionsUserMap.objects.filter(user_id=userId, course_id=courseId).values_list("question_id"))
+        userQuestionIds = set([x[0] for x in QuestionsUserMap.objects.filter(user_id=userId, course_id=courseId).values_list("question_id")])
 
         print("userQuestionIds", userQuestionIds)
+        print("\n")
 
         # intersection of question ids solved by student and questions in the current category
-        combinedQuestions = userQuestionIds.intersection(subCategoryQuestionIds)
+        combinedQuestionIds = userQuestionIds.intersection(subCategoryQuestionIds)
 
-        print("combinedQuestions", combinedQuestions)
+        print("combinedQuestionIds", combinedQuestionIds)
+        print("\n")
 
         # unlock the category of 3 or more questions from that category solved
-        if len(combinedQuestions) >= 3:
+        if len(combinedQuestionIds) >= 3:
             try:
                 x = CategoryUserMap.objects.get(user_id=userId, category_id=categoryId)
             except:
@@ -184,6 +189,8 @@ class MarkQuestionInteraction(APIView):
         
         # get all the kc_ids that the question involved
         kcsQuestionIds = [x[0] for x in  KCsQuestionsMap.objects.filter(question_id=questionId).values_list("kc_id")]
+
+        print("kcsQuestionIds", kcsQuestionIds)
 
         # create kc -> priority
         kcPriorityMap = {}
