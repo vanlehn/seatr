@@ -254,7 +254,7 @@ class MarkQuestionInteraction(APIView):
             for kcId in kcIds:
                 if kcPriorityMap[kcId] == 5:
                     priority5 += 1
-            if priority5 / total * 1.0 <= 0.5:
+            if priority5 / total * 1.0 <= 0.9:
                 familiarCategories.append(categoryId)
 
         print("familiarCategories", familiarCategories)
@@ -264,6 +264,8 @@ class MarkQuestionInteraction(APIView):
         print("categoryQuestionMap", categoryQuestionMap)
         print("\n\n")
         print("categoryKcMap", categoryKcMap)
+        print("\n\n")
+        print("kcPriorityMap", kcPriorityMap)
         print("\n\n")
         # update the status of familiar sub-categories
         categories = CategoryUserMap.objects.filter(category_id__in=familiarCategories)
