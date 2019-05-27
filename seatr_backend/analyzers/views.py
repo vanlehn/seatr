@@ -83,7 +83,7 @@ class AnalyzerSimple(APIView):
         print(recentAttempts)
 
         # get all the questions from the subcategories minus the recent attempts
-        possibleQuestionIds = QuestionsCategoryCourseMap.objects.filter(category_id__in=familiarSubCategoryIds).exclude(question_id__in=recentAttempts).values_list("question_id")
+        possibleQuestionIds = [x[0] for x in QuestionsCategoryCourseMap.objects.filter(category_id__in=familiarSubCategoryIds).exclude(question_id__in=recentAttempts).values_list("question_id")]
 
         print("possibleQuestionIds", possibleQuestionIds)
 
@@ -107,7 +107,7 @@ class AnalyzerSimple(APIView):
 
         print("questionPriorityMap", questionPriorityMap)
         print("questionComplexityMap", questionComplexityMap)
-        
+
         if len(questionPriorityMap.keys()) <= 5:
             return Response({
                 "questions": questionPriorityMap.keys()
@@ -125,6 +125,8 @@ class AnalyzerSimple(APIView):
                 priorityQuestions = []
                 priorityQuestions.append(k)
 
+        print("priorityQuestions", priorityQuestions)
+
         if len(priorityQuestions) <= 5:
             return Response({
                 "questions": priorityQuestions
@@ -132,10 +134,12 @@ class AnalyzerSimple(APIView):
 
         # now get the questions with minimal complexity from the above
         finalQuestions = []
-        for questionIds in priorityQuestions:
-            finalQuestions.append((questionComplexityMap[questionIds], questionIds))
+        for questionId in priorityQuestions:
+            finalQuestions.append((questionComplexityMap[questionId], questionId))
         finalQuestions.sort()
         answer = [x[1] for x in finalQuestions]
+
+        print("complex-answer", answer)
 
         # 1. get the kcs for the final questions
         # 2. sort them based on importance
@@ -152,7 +156,7 @@ class AnalyzerSimple(APIView):
             answer.sort()
             answer = [x[1] for x in answer]
             answer = answer[:5]
-
+        print("answer", answer)
         return Response({
             "questions": answer
         }, status=status.HTTP_200_OK)
