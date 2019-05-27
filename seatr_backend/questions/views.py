@@ -91,7 +91,7 @@ class MarkQuestionInteraction(APIView):
             }, status=status.HTTP_417_EXPECTATION_FAILED)
         
         # mark that the question has been attempted
-        QuestionAttempts.objects.create(question_id=questionId)
+        QuestionAttempts.objects.create(question_id=questionId, user_id=userId)
         
         # canChange answers the question-- Can this interaction potentially "unlock" a new category or make a subcategory "familiar"?
         # this can only happen if the question is a new question ie. is being stdudied or attempted (either correctly or incorrectly) the first time

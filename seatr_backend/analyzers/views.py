@@ -94,7 +94,7 @@ class AnalyzerSimple(APIView):
                 
         # get the recent Questions
         ##### TODO: do pagination here
-        recentAttempts = [x[0] for x in QuestionAttempts.objects.all().order_by("id").values_list("question_id")]
+        recentAttempts = [x[0] for x in QuestionAttempts.objects.filter(user_id=userId).order_by("id").values_list("question_id")]
         if len(recentAttempts) >= 8:
             recentAttempts = recentAttempts[-7:]
         
