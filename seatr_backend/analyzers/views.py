@@ -88,9 +88,10 @@ class AnalyzerSimple(APIView):
 
         # get all the familiar subcategories
         familiarSubCategoryIds = sorted([x[0] for x in CategoryUserMap.objects.filter(user_id=userId, status=FAMILIAR).values_list("category_id")])
-
+        print("familiarSubCategoryIds", familiarSubCategoryIds)
         # find the edge sub-category
         self.getEdgeCategory(userId, familiarSubCategoryIds)
+        print("familiarSubCategoryIds + edgeSubCategories", familiarSubCategoryIds)
                 
         # get the recent Questions
         ##### TODO: do pagination here
