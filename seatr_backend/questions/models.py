@@ -30,6 +30,7 @@ class KCs(models.Model):
 #### TODO: move this to mongo
 class QuestionAttempts(models.Model):
     question = models.ForeignKey(Questions, on_delete=models.PROTECT)
+    user     = models.ForeignKey(usersModel.User, on_delete=models.PROTECT)
 
 
 class QuestionsCategoryCourseMap(models.Model):
