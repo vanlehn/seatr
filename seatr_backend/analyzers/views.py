@@ -25,16 +25,15 @@ class AnalyzerSimple(APIView):
             edgeCategory = CategoryUserMap.objects.get(user_id=userId, status=EDGE)
         # edge subcategory doesn't exist
         except:
-            try:
-                edgeCategory = None
-                categories = Category.objects.all().order_by("external_id")
-                for category in categories:
-                    if category.parent_id == -1 or category.status == UNLOCKED or category.status == FAMILIAR:
-                        continue
-                    category.status = EDGE
-                    category.save(update_fields=['status'])
-                    break
-                edgeCategory = category
+            edgeCategory = None
+            categories = Category.objects.all().order_by("external_id")
+            for category in categories:
+                if category.parent_id == -1 or category.status == UNLOCKED or category.status == FAMILIAR:
+                    continue
+                category.status = EDGE
+                category.save(update_fields=['status'])
+                break
+            edgeCategory = category
         finally:
             if edgeCategory is not None:
                 print("edgeCategory", edgeCategory.category_id)
