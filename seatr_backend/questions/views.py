@@ -240,8 +240,13 @@ class MarkQuestionInteraction(APIView):
         # 2. find all Questions which involve these new KCs
         questionIds = list(set([x[0] for x in KCsQuestionsMap.objects.filter(kc__in=newKcs).values_list('question_id')]))
         
+        print("questionIds", questionIds)
+        print("\n")
+
         # 3. find all subcategories related to these Questions
         subCategoriesIds = list(set([x[0] for x in QuestionsCategoryCourseMap.objects.filter(question_id__in=questionIds, course_id=courseId).values_list('category_id')]))
+        print("subCategoriesIds", subCategoriesIds)
+        print("\n")
 
         # 4. mark the sub-categories "familiar" if needed
         categoryQuestionMap        = defaultdict(list)
