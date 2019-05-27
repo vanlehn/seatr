@@ -38,7 +38,7 @@ class AnalyzerSimple(APIView):
 
                 categoryUserMap        = CategoryUserMap.objects.get(category=category, user_id=userId)
                 categoryUserMap.status = EDGE
-                edgeCategory           = category
+                edgeCategory           = categoryUserMap
                 categoryUserMap.save(update_fields=['status'])
                 break
         finally:
