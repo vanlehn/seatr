@@ -59,6 +59,18 @@ STATUS_CHOICES = (
     (4, "edge")
 
 )
+@receiver(post_save, sender=usersModel.User)
+def createCategoryUserMap(sender, instance=None, created=False, **kwargs):
+    if created:
+        print("creating CategoryUserMap")
+        categories = Category.objects.all()
+        toCreate   = []
+        for category in categories:
+            if category.parent_id == -1:
+                toCreate.append(CategoryUserMap(user=instance, category=category, status=0))
+            else:
+                toCreate.append(CategoryUserMap(user=instance, category=category, status=3))
+        CategoryUserMap.objects.bulk_create(toCreate)
 class CategoryUserMap(models.Model):
     user        = models.ForeignKey(usersModel.User, on_delete=models.PROTECT)
     category    = models.ForeignKey(Category, on_delete=models.PROTECT)
@@ -73,12 +85,12 @@ class CategoryUserMap(models.Model):
 @receiver(post_save, sender=usersModel.User)
 def createKCsUserMap(sender, instance=None, created=False, **kwargs):
     if created:
+        print("creating KCsUserMap")
         kCs      = [x[0] for x in KCs.objects.all().values_list("external_id")]
         toCreate = []
         for kc in kCs:
             toCreate.append(KCsUserMap(user=instance, kc_id=kc, priority=5))
         KCsUserMap.objects.bulk_create(toCreate)
-
 class KCsUserMap(models.Model):
     user     = models.ForeignKey(usersModel.User, on_delete=models.PROTECT)
     kc       = models.ForeignKey(KCs, on_delete=models.PROTECT)
