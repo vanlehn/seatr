@@ -191,6 +191,7 @@ class MarkQuestionInteraction(APIView):
         kcsQuestionIds = [x[0] for x in  KCsQuestionsMap.objects.filter(question_id=questionId).values_list("kc_id")]
 
         print("kcsQuestionIds", kcsQuestionIds)
+        print("\n")
 
         # create kc -> priority
         kcPriorityMap = {}
@@ -199,6 +200,10 @@ class MarkQuestionInteraction(APIView):
 
         # find the KCs which weren't studied, correct or incorrect but due to this interaction have been interacted with
         newKcs = list(set([x[0] for x in KCsUserMap.objects.filter(user_id=userId, priority=5, kc_id__in=kcsQuestionIds).values_list("kc_id")]))
+
+        print("newKcs", newKcs)
+        print("\n")
+
 
         # update the KCsStudentsMap
         # 1. get all the kc ids associated with the interacted question => kcsQuestionIds
