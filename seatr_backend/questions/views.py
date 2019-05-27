@@ -155,7 +155,7 @@ class MarkQuestionInteraction(APIView):
         # see if the new interaction changes the status of the category and subcategory
         # get all questions solved by user in that category
         # find all the subCategories of the category 
-        subCategoryIds  = Category.objects.filter(parent_id=categoryId).values_list("external_id")
+        subCategoryIds  = [x[0] for x in Category.objects.filter(parent_id=categoryId).values_list("external_id")]
 
         print("subCategoryIds", subCategoryIds)
         print("\n")
