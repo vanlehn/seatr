@@ -62,7 +62,6 @@ STATUS_CHOICES = (
 @receiver(post_save, sender=usersModel.User)
 def createCategoryUserMap(sender, instance=None, created=False, **kwargs):
     if created:
-        print("creating CategoryUserMap")
         categories = Category.objects.all()
         toCreate   = []
         for category in categories:
@@ -85,7 +84,6 @@ class CategoryUserMap(models.Model):
 @receiver(post_save, sender=usersModel.User)
 def createKCsUserMap(sender, instance=None, created=False, **kwargs):
     if created:
-        print("creating KCsUserMap")
         kCs      = [x[0] for x in KCs.objects.all().values_list("external_id")]
         toCreate = []
         for kc in kCs:

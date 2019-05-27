@@ -4,7 +4,7 @@ from rest_framework          import status, exceptions
 from collections             import defaultdict
 
 from questions.models import *
-from users.models  import User
+from users.models     import User
 from courses.models   import Courses, CoursesUserMap
 
 STUDIED   = 0
@@ -25,15 +25,22 @@ class AnalyzerSimple(APIView):
             edgeCategory = CategoryUserMap.objects.get(user_id=userId, status=EDGE)
         # edge subcategory doesn't exist
         except:
-            edgeCategory = None
-            categories = Category.objects.all().order_by("external_id")
+            edgeCategory        = None
+            categories          = Category.objects.all().order_by("external_id")
+            categoryUserMaps    = CategoryUserMap.objects.filter(user_id=userId)
+            categoryIdStatusMap = {}
+            for categoryUserMap in categoryUserMaps:
+                categoryIdStatusMap[categoryUserMap.category_id] = categoryUserMap.status
+
             for category in categories:
-                if category.parent_id == -1 or category.status == UNLOCKED or category.status == FAMILIAR:
-                    continue
-                category.status = EDGE
-                category.save(update_fields=['status'])
+                if category.parent_id == -1 or (category.external_id in categoryIdStatusMap and categoryIdStatusMap[category.external_id] == FAMILIAR):
+                    continue 
+
+                categoryUserMap        = CategoryUserMap.objects.get(category=category, user_id=userId)
+                categoryUserMap.status = EDGE
+                edgeCategory           = category
+                categoryUserMap.save(update_fields=['status'])
                 break
-            edgeCategory = category
         finally:
             if edgeCategory is not None:
                 print("edgeCategory", edgeCategory.category_id)
