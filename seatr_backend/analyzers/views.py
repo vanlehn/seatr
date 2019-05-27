@@ -27,21 +27,34 @@ class AnalyzerSimple(APIView):
         except:
             try:
                 edgeCategory = None
-                i = 1
-                while edgeCategory is None or edgeCategory.parent_id == -1:
-                    if len(familiarSubCategoryIds) == 0:
-                        edgeCategory = Category.objects.get(external_id=i)
-                    else:
-                        edgeCategory = Category.objects.get(external_id=familiarSubCategoryIds[-1] + i)
-                    i += 1
-                edgeCategory = CategoryUserMap(status=EDGE, user_id=userId, category=edgeCategory)
-                edgeCategory.save()
-            except:
-                edgeCategory = None
+                categories = Category.objects.all().order_by("external_id")
+                for category in categories:
+                    if category.parent_id == -1 or category.status == UNLOCKED or category.status == FAMILIAR:
+                        continue
+                    category.status = EDGE
+                    category.save(update_fields=['status'])
+                    break
+                edgeCategory = category
         finally:
             if edgeCategory is not None:
-                print("edgeCategory", edgeCategory)
+                print("edgeCategory", edgeCategory.category_id)
                 familiarSubCategoryIds.append(edgeCategory.category_id)
+
+        #         i = 1
+        #         while edgeCategory is None or edgeCategory.parent_id == -1:
+        #             if len(familiarSubCategoryIds) == 0:
+        #                 edgeCategory = Category.objects.get(external_id=i)
+        #             else:
+        #                 edgeCategory = Category.objects.get(external_id=familiarSubCategoryIds[-1] + i)
+        #             i += 1
+        #         edgeCategory = CategoryUserMap(status=EDGE, user_id=userId, category=edgeCategory)
+        #         edgeCategory.save()
+        #     except:
+        #         edgeCategory = None
+        # finally:
+        #     if edgeCategory is not None:
+        #         print("edgeCategory", edgeCategory.category_id)
+        #         familiarSubCategoryIds.append(edgeCategory.category_id)
 
 
     def get(self, request):
