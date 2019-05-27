@@ -197,6 +197,8 @@ class MarkQuestionInteraction(APIView):
         kcPriorityMap = {}
         for x in KCsUserMap.objects.filter(user_id=userId).values_list("kc_id", "priority"):
             kcPriorityMap[x[0]] = x[1]
+        print("kcPriorityMap", kcPriorityMap)
+        print("\n\n")
 
         # find the KCs which weren't studied, correct or incorrect but due to this interaction have been interacted with
         newKcs = list(set([x[0] for x in KCsUserMap.objects.filter(user_id=userId, priority=5, kc_id__in=kcsQuestionIds).values_list("kc_id")]))
@@ -257,12 +259,17 @@ class MarkQuestionInteraction(APIView):
             categoryQuestionMap[x[0]].append(x[1])
             questionIds.add(x[1])
         questionIds = list(questionIds)
+        print("categoryQuestionMap", categoryQuestionMap)
+        print("\n\n")
+
 
         # create question -> kc map
         questionsKcMap  = defaultdict(set)
         kCsQuestionsMap = KCsQuestionsMap.objects.filter(question_id__in=questionIds)
         for x in kCsQuestionsMap:
             questionsKcMap[x.question_id].add(x.kc_id)
+        print("questionsKcMap", questionsKcMap)
+        print("\n\n")
 
         # create category -> kc
         categoryKcMap = defaultdict(set)
@@ -271,11 +278,13 @@ class MarkQuestionInteraction(APIView):
                 kcs = questionsKcMap[questionId]
                 for kc in kcs:
                     categoryKcMap[categoryId].add(kc)
+        print("categoryKcMap", categoryKcMap)
+        print("\n\n")
         
         # do final calculations ie. if the category has < 10% 5 priority in these
         familiarCategories = []
         for categoryId, kcIds in categoryKcMap.items():
-            total     = len(kcs)
+            total     = len(kcIds)
             priority5 = 0
             for kcId in kcIds:
                 if kcPriorityMap[kcId] == 5:
@@ -285,14 +294,8 @@ class MarkQuestionInteraction(APIView):
 
         print("familiarCategories", familiarCategories)
         print("\n\n")
-        print("questionsKcMap", questionsKcMap)
-        print("\n\n")
-        print("categoryQuestionMap", categoryQuestionMap)
-        print("\n\n")
-        print("categoryKcMap", categoryKcMap)
-        print("\n\n")
-        print("kcPriorityMap", kcPriorityMap)
-        print("\n\n")
+        
+        
         # update the status of familiar sub-categories
         categories = CategoryUserMap.objects.filter(category_id__in=familiarCategories)
         for category in categories:
