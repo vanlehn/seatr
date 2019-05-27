@@ -19,6 +19,31 @@ EDGE       = 4
 
 class AnalyzerSimple(APIView):
 
+    def getEdgeCategory(self, userId, familiarSubCategoryIds):
+        # edge subcategory exists
+        try:
+            edgeCategory = CategoryUserMap.objects.get(user_id=userId, status=EDGE)
+        # edge subcategory doesn't exist
+        except:
+            try:
+                edgeCategory = None
+                i = 1
+                while edgeCategory is None or edgeCategory.parent_id == -1:
+                    if len(familiarSubCategoryIds) == 0:
+                        edgeCategory = Category.objects.get(external_id=i)
+                    else:
+                        edgeCategory = Category.objects.get(external_id=familiarSubCategoryIds[-1] + i)
+                    i += 1
+                edgeCategory = CategoryUserMap(status=EDGE, user_id=userId, category=edgeCategory)
+                edgeCategory.save()
+            except:
+                edgeCategory = None
+        finally:
+            if edgeCategory is not None:
+                print("edgeCategory", edgeCategory)
+                familiarSubCategoryIds.append(edgeCategory.category_id)
+
+
     def get(self, request):
         # get the GET data: studentId and courseId given by OPE
         try:
@@ -43,32 +68,13 @@ class AnalyzerSimple(APIView):
             raise exceptions.NotFound(detail="user with external_user_id=" + str(userId) + " not present in SEATR")
 
         # get all the familiar subcategories
-        validCategoryIds = sorted([x[0] for x in CategoryUserMap.objects.filter(user_id=userId, status=FAMILIAR).values_list("category_id")])
+        familiarSubCategoryIds = sorted([x[0] for x in CategoryUserMap.objects.filter(user_id=userId, status=FAMILIAR).values_list("category_id")])
 
         # find the edge sub-category
-        # edge subcategory exists
-        try:
-            edgeCategory = CategoryUserMap.objects.get(user_id=userId, status=EDGE)
-        # edge subcategory doesn't exist
-        except:
-            try:
-                edgeCategory = None
-                i = 1
-                while edgeCategory is None or edgeCategory.parent_id == -1:
-                    if len(validCategoryIds) == 0:
-                        edgeCategory = Category.objects.get(external_id=i)
-                    else:
-                        edgeCategory = Category.objects.get(external_id=validCategoryIds[-1] + i)
-                    i += 1
-                edgeCategory = CategoryUserMap(status=EDGE, user_id=userId, category=edgeCategory)
-                edgeCategory.save()
-            except:
-                edgeCategory = None
-        finally:
-            if edgeCategory is not None:
-                validCategoryIds.append(edgeCategory.category_id)
+        self.getEdgeCategory(userId, familiarSubCategoryIds)
                 
         # get the recent Questions
+        ##### TODO: do pagination here
         recentAttempts = [x[0] for x in QuestionAttempts.objects.all().order_by("id").values_list("question_id")]
         if len(recentAttempts) >= 8:
             recentAttempts = recentAttempts[-7:]
@@ -77,7 +83,9 @@ class AnalyzerSimple(APIView):
         print(recentAttempts)
 
         # get all the questions from the subcategories minus the recent attempts
-        possibleQuestionIds = QuestionsCategoryCourseMap.objects.filter(category_id__in=validCategoryIds).exclude(question_id__in=recentAttempts).values_list("question_id")
+        possibleQuestionIds = QuestionsCategoryCourseMap.objects.filter(category_id__in=familiarSubCategoryIds).exclude(question_id__in=recentAttempts).values_list("question_id")
+
+        print("possibleQuestionIds", possibleQuestionIds)
 
         # 1. find the kcs of all the possibleQuestionIds
         kcsPossibleQuestions =  KCsQuestionsMap.objects.filter(question_id__in=possibleQuestionIds)
@@ -97,7 +105,9 @@ class AnalyzerSimple(APIView):
             questionPriorityMap[x.question_id]    = max(questionPriorityMap[x.question_id], studentKcPriorityMap[kcId])
             questionComplexityMap[x.question_id] += studentKcPriorityMap[kcId]
 
-
+        print("questionPriorityMap", questionPriorityMap)
+        print("questionComplexityMap", questionComplexityMap)
+        
         if len(questionPriorityMap.keys()) <= 5:
             return Response({
                 "questions": questionPriorityMap.keys()
