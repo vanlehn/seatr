@@ -164,16 +164,31 @@ class AnalyzerSimple(APIView):
         # 1. get the kcs for the final questions
         # 2. sort them based on importance
         if len(answer) > 5:
+            # map the questions with the kcs
+            kcQuestionMapper = defaultdict(list)
+            kcs              = []
+            kCsQuestionsMaps = KCsQuestionsMap.objects.filter(question_id__in=answer)
+            for kCsQuestionsMap in kCsQuestionsMaps:
+                kcQuestionMapper[kCsQuestionsMap.question_id].append(kCsQuestionsMap.kc_id)
+                kcs.append(kCsQuestionsMap.kc_id)
+            kcs = list(set(kcs))
+
+            # map the kcs and their importances
+            kcs             = KCs.objects.filter(external_id__in=kcs)
             kcImportanceMap = {}
-            importanceKcs   = KCs.objects.all()
-            for kc in importanceKcs:
-                kcImportanceMap[kc.external_id] = kc.importance
-                
-            kcs    = KCsQuestionsMap.objects.filter(question_id__in=answer)
-            answer = []
             for kc in kcs:
-                answer.append((kcImportanceMap[kc.kc_id], kc.question_id))
-            answer.sort()
+                kcImportanceMap[kc.external_id] = kc.importance
+            
+            # find the importance of questions based on the importance of the involved kcs
+            questionImportanceMap = defaultdict(int)
+            for questionId, kcIds in kcQuestionMapper.items():
+                for kcId in kcIds:
+                    questionImportanceMap[questionId] = max(questionImportanceMap[questionId], kcImportanceMap[kcId])
+                
+            answer = []
+            for questionId, importance in questionImportanceMap.items():
+                answer.append((importance, questionId))
+            answer.sort(reverse=True)
             answer = [x[1] for x in answer]
             answer = answer[:5]
         print("answer", answer)
